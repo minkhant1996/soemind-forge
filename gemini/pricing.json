@@ -1,0 +1,572 @@
+{
+  "lastVerified": "2026-07-03",
+  "models": {
+    "gemini-3.5-flash": {
+      "name": "Gemini 3.5 Flash",
+      "type": "text",
+      "pricing": {
+        "input": 1.5,
+        "output": 9.0,
+        "cached_input": 0.15
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-3.1-flash-lite": {
+      "name": "Gemini 3.1 Flash-Lite",
+      "type": "text",
+      "pricing": {
+        "input": 0.25,
+        "output": 1.5,
+        "cached_input": 0.025,
+        "audio_input": 0.5
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM"
+      ],
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-3-flash-preview": {
+      "name": "Gemini 3 Flash Preview",
+      "type": "text",
+      "pricing": {
+        "input": 0.5,
+        "output": 3.0,
+        "cached_input": 0.05,
+        "audio_input": 1.0
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-3.1-pro-preview": {
+      "name": "Gemini 3.1 Pro Preview",
+      "type": "text",
+      "pricing": {
+        "input_under_200k": 2.0,
+        "input_over_200k": 4.0,
+        "output_under_200k": 12.0,
+        "output_over_200k": 18.0,
+        "cached_input_under_200k": 0.2,
+        "cached_input_over_200k": 0.4
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-2.5-flash": {
+      "name": "Gemini 2.5 Flash",
+      "type": "text",
+      "pricing": {
+        "input": 0.3,
+        "output": 2.5,
+        "cached_input": 0.03,
+        "audio_input": 1.0
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "thinkingBudget": true,
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-2.5-flash-lite": {
+      "name": "Gemini 2.5 Flash-Lite",
+      "type": "text",
+      "pricing": {
+        "input": 0.1,
+        "output": 0.4,
+        "cached_input": 0.01,
+        "audio_input": 0.3
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-2.5-pro": {
+      "name": "Gemini 2.5 Pro",
+      "type": "text",
+      "pricing": {
+        "input_under_200k": 1.25,
+        "input_over_200k": 2.5,
+        "output_under_200k": 10.0,
+        "output_over_200k": 15.0,
+        "cached_input_under_200k": 0.13,
+        "cached_input_over_200k": 0.25
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "thinkingBudget": true,
+      "maxOutputTokens": 8192,
+      "contextWindow": 1000000
+    },
+    "gemini-3.1-flash-lite-image": {
+      "name": "Gemini 3.1 Flash Lite Image (Nano Banana 2 Lite)",
+      "type": "image",
+      "pricing": {
+        "input": 0.25,
+        "output_text": 1.5,
+        "output_image": 0.0336
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens_or_per_image",
+      "imageSizes": [
+        "1K",
+        "2K"
+      ],
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "gemini-3.1-flash-image-preview": {
+      "name": "Gemini 3.1 Flash Image",
+      "type": "image",
+      "pricing": {
+        "input": 0.5,
+        "output_text": 3.0,
+        "output_image_512": 0.045,
+        "output_image_1k": 0.067,
+        "output_image_2k": 0.101,
+        "output_image_4k": 0.15
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens_or_per_image",
+      "imageSizes": [
+        "512",
+        "1K",
+        "2K",
+        "4K"
+      ],
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "gemini-3-pro-image-preview": {
+      "name": "Gemini 3 Pro Image",
+      "type": "image",
+      "pricing": {
+        "input": 2.0,
+        "output_text": 12.0,
+        "output_image_1k_2k": 0.134,
+        "output_image_4k": 0.24
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens_or_per_image",
+      "imageSizes": [
+        "1K",
+        "2K",
+        "4K"
+      ]
+    },
+    "gemini-3-pro-image": {
+      "name": "Gemini 3 Pro Image",
+      "type": "image",
+      "pricing": {
+        "input": 2.0,
+        "output_text": 12.0,
+        "output_image_1k_2k": 0.134,
+        "output_image_4k": 0.24
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens_or_per_image",
+      "imageSizes": [
+        "1K",
+        "2K",
+        "4K"
+      ]
+    },
+    "veo-3.1-lite-generate-preview": {
+      "name": "Veo 3.1 Lite",
+      "type": "video",
+      "pricing": {
+        "video_per_second": 0.03,
+        "video_audio_per_second": 0.05
+      },
+      "currency": "USD",
+      "unit": "per_second",
+      "videoResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "videoDurations": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "maxDurationSeconds": 8
+    },
+    "veo-3.1-generate-preview": {
+      "name": "Veo 3.1",
+      "type": "video",
+      "pricing": {
+        "video_per_second": 0.2,
+        "video_audio_per_second": 0.4
+      },
+      "currency": "USD",
+      "unit": "per_second",
+      "videoResolutions": [
+        "720p",
+        "1080p",
+        "4k"
+      ],
+      "videoDurations": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "maxDurationSeconds": 8
+    },
+    "veo-3.1-fast-generate-preview": {
+      "name": "Veo 3.1 Fast",
+      "type": "video",
+      "pricing": {
+        "video_per_second": 0.08,
+        "video_audio_per_second": 0.1
+      },
+      "currency": "USD",
+      "unit": "per_second",
+      "videoResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "videoDurations": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "maxDurationSeconds": 8
+    },
+    "veo-3-generate-preview": {
+      "name": "Veo 3",
+      "type": "video",
+      "pricing": {
+        "video_per_second": 0.2,
+        "video_audio_per_second": 0.4
+      },
+      "currency": "USD",
+      "unit": "per_second",
+      "videoResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "videoDurations": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "maxDurationSeconds": 8
+    },
+    "veo-3-fast-generate-preview": {
+      "name": "Veo 3 Fast",
+      "type": "video",
+      "pricing": {
+        "video_per_second": 0.08,
+        "video_audio_per_second": 0.1
+      },
+      "currency": "USD",
+      "unit": "per_second",
+      "videoResolutions": [
+        "720p"
+      ],
+      "videoDurations": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "maxDurationSeconds": 8
+    },
+    "gemini-omni-flash-preview": {
+      "name": "Gemini Omni Flash Preview",
+      "type": "video",
+      "pricing": {
+        "input": 1.5,
+        "output": 9.0,
+        "video_output": 17.5
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "modalities": {
+        "input": [
+          "text",
+          "image",
+          "audio",
+          "video"
+        ],
+        "output": [
+          "text",
+          "audio",
+          "video"
+        ]
+      },
+      "videoAspectRatios": [
+        "9:16",
+        "16:9",
+        "1:1"
+      ],
+      "videoDurations": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "maxDurationSeconds": 10,
+      "maxOutputTokens": 65536,
+      "thinkingLevels": [
+        "MINIMAL",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "knowledgeCutoff": "2025-01",
+      "releaseDate": "2026-06-30"
+    },
+    "gemini-2.5-flash-preview-tts": {
+      "name": "Gemini 2.5 Flash TTS",
+      "type": "audio",
+      "pricing": {
+        "input": 0.5,
+        "audio_output": 12.0
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "voiceNames": [
+        "Achernar",
+        "Achird",
+        "Algenib",
+        "Algieba",
+        "Alnilam",
+        "Aoede",
+        "Autonoe",
+        "Callirrhoe",
+        "Charon",
+        "Despina",
+        "Enceladus",
+        "Erinome",
+        "Fenrir",
+        "Gacrux",
+        "Iapetus",
+        "Kore",
+        "Laomedeia",
+        "Leda",
+        "Orus",
+        "Puck",
+        "Pulcherrima",
+        "Rasalgethi",
+        "Sadachbia",
+        "Sadaltager",
+        "Schedar",
+        "Sulafat",
+        "Umbriel",
+        "Vindemiatrix",
+        "Zephyr",
+        "Zubenelgenubi"
+      ],
+      "voiceStyles": [
+        "neutral",
+        "vocal_smile",
+        "newscaster",
+        "whisper",
+        "empathetic",
+        "promo_hype",
+        "deadpan",
+        "excited",
+        "sarcastic",
+        "serious",
+        "casual"
+      ],
+      "voicePaces": [
+        "natural",
+        "rapid_fire",
+        "slow",
+        "the_drift",
+        "staccato",
+        "energetic"
+      ],
+      "voiceAccents": [
+        "neutral",
+        "american_general",
+        "american_valley",
+        "american_southern",
+        "british_rp",
+        "british_brixton",
+        "british_scottish",
+        "transatlantic",
+        "australian",
+        "indian"
+      ]
+    },
+    "gemini-3.1-flash-tts-preview": {
+      "name": "Gemini 3.1 Flash TTS",
+      "type": "audio",
+      "pricing": {
+        "input": 0.75,
+        "audio_output": 12.0
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "voiceNames": [
+        "Achernar",
+        "Achird",
+        "Algenib",
+        "Algieba",
+        "Alnilam",
+        "Aoede",
+        "Autonoe",
+        "Callirrhoe",
+        "Charon",
+        "Despina",
+        "Enceladus",
+        "Erinome",
+        "Fenrir",
+        "Gacrux",
+        "Iapetus",
+        "Kore",
+        "Laomedeia",
+        "Leda",
+        "Orus",
+        "Puck",
+        "Pulcherrima",
+        "Rasalgethi",
+        "Sadachbia",
+        "Sadaltager",
+        "Schedar",
+        "Sulafat",
+        "Umbriel",
+        "Vindemiatrix",
+        "Zephyr",
+        "Zubenelgenubi"
+      ],
+      "voiceStyles": [
+        "neutral",
+        "vocal_smile",
+        "newscaster",
+        "whisper",
+        "empathetic",
+        "promo_hype",
+        "deadpan",
+        "excited",
+        "sarcastic",
+        "serious",
+        "casual"
+      ],
+      "voicePaces": [
+        "natural",
+        "rapid_fire",
+        "slow",
+        "the_drift",
+        "staccato",
+        "energetic"
+      ],
+      "voiceAccents": [
+        "neutral",
+        "american_general",
+        "american_valley",
+        "american_southern",
+        "british_rp",
+        "british_brixton",
+        "british_scottish",
+        "transatlantic",
+        "australian",
+        "indian"
+      ]
+    },
+    "lyria-3": {
+      "name": "Lyria 3",
+      "type": "music",
+      "pricing": {
+        "music_per_30sec": 0.04
+      },
+      "currency": "USD",
+      "unit": "per_30_second_clip",
+      "maxDurationSeconds": 30
+    },
+    "lyria-3-pro": {
+      "name": "Lyria 3 Pro",
+      "type": "music",
+      "pricing": {
+        "music_per_song": 0.08
+      },
+      "currency": "USD",
+      "unit": "per_full_song",
+      "maxDurationSeconds": 180
+    },
+    "lyria-3-pro-preview": {
+      "name": "Lyria 3 Pro Preview",
+      "type": "music",
+      "pricing": {
+        "music_per_song": 0.08
+      },
+      "currency": "USD",
+      "unit": "per_full_song",
+      "maxDurationSeconds": 180
+    },
+    "lyria-2": {
+      "name": "Lyria 2",
+      "type": "music",
+      "pricing": {
+        "music_per_30sec": 0.06
+      },
+      "currency": "USD",
+      "unit": "per_30_second_clip",
+      "maxDurationSeconds": 30
+    }
+  },
+  "thinkingLevels": {
+    "MINIMAL": {
+      "description": "Fastest, least reasoning",
+      "multiplier": 1.0
+    },
+    "LOW": {
+      "description": "Light reasoning",
+      "multiplier": 1.2
+    },
+    "MEDIUM": {
+      "description": "Balanced reasoning",
+      "multiplier": 1.5
+    },
+    "HIGH": {
+      "description": "Deep reasoning",
+      "multiplier": 2.0
+    }
+  }
+}

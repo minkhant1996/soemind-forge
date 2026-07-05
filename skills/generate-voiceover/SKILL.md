@@ -1,0 +1,215 @@
+---
+name: generate-voiceover
+description: Generate voiceover audio using Gemini TTS. Use for narration, voiceovers, podcasts, multi-speaker dialogue.
+allowed-tools: Bash Read Write Edit
+---
+
+# Generate Voiceover
+
+## How to run it (IMPORTANT) — CALL THE CLI, DON'T WRITE A SCRIPT
+
+**Do NOT create a `projects/{name}/scripts/*.ts` file. Run the workflow command:**
+
+```bash
+node workflows/cli.cjs generateVoiceover \
+  '{"text":"...","outputPath":"projects/{name}/output-contents/vo.wav","voice":"..."}'
+```
+
+For dialogue between voices use `generateMultiSpeakerVoiceover`. For long scripts, put the
+args in a file and pass `@args.json`. The CLI loads `.env` and prints the JSON result
+(path + cost). Argument shapes are in `workflows/WORKFLOWS.md`.
+
+**Output Location:** `projects/{name}/output-contents/`
+
+---
+
+## Step 1: Check Project & Get Script
+
+```
+Does projects/{project-name}/ exist?
+  YES → Read these files for context:
+  NO  → Ask user for the script directly
+```
+
+**If project exists, READ and USE:**
+
+From `projects/{name}/templates/project.md`:
+- `product.name` → What to mention
+- `offer.headline` → What to promote
+- `cta.primary` → Call to action to say
+
+From `projects/{name}/templates/brand.md`:
+- `tone.voice` → How character speaks (professional, casual, energetic)
+- `tone.energy` → Pacing and intensity
+- `restrictions.never_say` → Words to AVOID in script
+
+From `projects/{name}/content-plans/`:
+- Read the video plan for the dialogue/narration script
+
+Ask: **"What text do you want to convert to speech?"**
+(Or use script from video plan)
+
+## Step 1b: Confirm whether this needs a voiceover at all
+
+**Always ask first — don't assume.** A piece may want: a voiceover (off-screen
+narrator), an on-screen character speaking (handled by the video skill, not here),
+music only, or silence.
+
+> "Do you want a **voiceover** (off-screen narration) on this? Or character-speaks /
+> music-only / silent?"
+
+If **no voiceover** → stop here. If **yes** → go to Step 2.
+
+## Step 1c: Check the registry for a locked voice
+
+A project (or a specific character) may already have a locked voice identity so
+narration stays consistent across pieces.
+
+```bash
+# Check the locked voice's files on disk. Pass the project name — the CLI loads the
+# registry itself. id = "voice-main" (or a character's linked_voice id).
+node workflows/cli.cjs resolveAsset '["{name}","voice-main"]'
+# → { ok, existing[], missing[] }
+```
+
+- Found → **pre-fill** the parameters below from it, but **still show them and confirm**
+  (Step 3) — don't silently auto-run.
+- On-screen character? use that character's `linked_voice` so voice matches the face.
+- Not found → choose params with the user, then `registerAsset('{name}', 'voices', {...})`.
+
+## Step 2: Suggest each parameter (with reasoning)
+
+Read `brand.md` tone, then **propose** a value for every parameter and say *why* — the
+user adjusts, you don't decide alone.
+
+**Voice** (suggest 1, offer 2 alternatives):
+
+| Voice | Gender | Best For | Matches brand tone |
+|-------|--------|----------|--------------------|
+| Zephyr | Male | Professional, calm narration | "professional", "calm" |
+| Puck | Male | Energetic, casual, youthful | "energetic", "casual" |
+| Charon | Male | Deep, authoritative | "authoritative", "serious" |
+| Kore | Female | Professional, clear | "professional", "clear" |
+| Aoede | Female | Warm, friendly, approachable | "friendly", "warm" |
+| Fenrir | Male | Strong, dramatic | "bold", "dramatic" |
+| Leda | Female | Soft, gentle | "gentle", "calm" |
+| Orus | Male | Mature, wise | "wise", "trustworthy" |
+
+**Other parameters to propose:**
+- **Style** — neutral · professional · casual · energetic · calm · excited · serious
+- **Pace** — natural · slow · fast
+- **Accent** — american_general · british_rp · australian · indian
+- **Audio profile** (optional, fine control) — a free-text line, e.g.
+  *"warm radio host with a slight smile"* → maps to `voiceStyle.audioProfile`
+- **Script** — the exact words. Estimate length: ~2.5 words/sec at natural pace, so an
+  N-second piece ≈ N×2.5 words. Flag if the script is too long/short for the target.
+- **Pronunciation** — call out brand names / foreign / unusual words and ask for the
+  intended pronunciation (e.g. "Acme" → "AK-mee"); for non-English/Myanmar/Thai confirm
+  language + script handling.
+- **Music under the voiceover?** — yes/no; if yes, note volume (e.g. 30%) for the mix.
+
+## Step 3: Show the full setup and CONFIRM (do NOT auto-run)
+
+Present everything back as one summary and wait for explicit go — let the user change any
+single field:
+
+```
+🎙️ VOICEOVER SETUP — confirm or adjust each line
+  Voice:        Kore           (suggested — matches your "professional, warm" brand tone)
+                 alt: Aoede (friendlier) · Charon (deeper male)
+  Style:        professional
+  Pace:         natural
+  Accent:       american_general
+  Audio profile: (none)        — add a custom description?
+  Script:       "…"            (~38 words ≈ 15s at natural pace ✓)
+  Pronunciation: "Acme" → AK-mee?
+  Music under VO: no           (or: yes @ 30%)
+  Output:       projects/{name}/output-contents/voiceover.wav
+
+Proceed, or change a field? (proceed / change voice / slower / edit script / add music …)
+```
+
+Only after the user confirms → Step 4. If the user says "just do it", still **show this
+summary once** and state the assumed defaults before running.
+
+## Step 4: Single Speaker Generation
+
+**Use the pre-built workflow function — do NOT re-implement file saving, retry, or cost handling.**
+It validates input, retries on transient errors, writes the `.wav`, and returns the cost.
+
+**Only run after the user confirmed the setup in Step 3.** Use the exact values they
+approved:
+
+```bash
+# voiceName = the CONFIRMED voice; voiceStyle fields all confirmed in Step 3;
+# audioProfile is optional free-text, only if the user added one.
+node workflows/cli.cjs generateVoiceover '{"script":"The confirmed script text","outputPath":"projects/{name}/output-contents/voiceover.wav","voiceName":"Kore","voiceStyle":{"style":"professional","pace":"natural","accent":"american_general","audioProfile":""}}'
+# → { success:true, data:{ audioPath, cost:{ totalCost } } }  |  { success:false, error:{ code, message } }
+```
+
+If it succeeded, save the voice identity so future narration stays consistent (ask the
+user first if it should become the project's locked voice):
+
+```bash
+node workflows/cli.cjs registerAsset '["{name}","voices",{"id":"voice-main","label":"Main narrator","voice_name":"Kore","style":"professional","pace":"natural","accent":"american_general"},{"date":"<today ISO>"}]'
+```
+
+## Step 5: Multi-Speaker (Podcast/Interview)
+
+Ask user to format script with speaker labels:
+```
+Host: Welcome to the show!
+Guest: Thanks for having me.
+Host: Let's dive right in...
+```
+
+Then generate with the pre-built workflow function:
+```bash
+node workflows/cli.cjs generateMultiSpeakerVoiceover '{"script":"<speaker-labeled script>","speakers":[{"speaker":"Host","voiceName":"Zephyr"},{"speaker":"Guest","voiceName":"Aoede"}],"outputPath":"projects/{name}/output-contents/podcast.wav"}'
+# → { success:true, data:{ audioPath } }
+```
+
+## Step 6: Combine with Video (if needed)
+
+If this voiceover is for a video:
+```bash
+ffmpeg -i video.mp4 -i voiceover.wav -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 output.mp4
+```
+
+## Step 7: Save Output
+
+Save to: `projects/{name}/output-contents/` or current directory
+- `voiceover.wav`
+- `script.txt` (keep the script)
+
+## Pipeline-first + audit trail (mandatory)
+
+- Author `<content-id>.pipeline.json` IN the content folder BEFORE generating
+  (nodes = CLI commands, `{{node.data.field}}` refs), then
+  `node workflows/cli.cjs runPipeline @<file>` — see `workflows/pipelines/README.md`.
+- The content folder gets a `prompts.txt` with the VO script (including audio tags)
+  and voice/style params; update it on every retry with a one-line RESULT note.
+- Log each generation via the `createGenerationManifest` / `addManifestEntry`
+  CLI commands (AGENT-GUIDE Step 5).
+
+## Cost
+
+~$0.001 per sentence (very cheap)
+
+Example: 100-word script = ~$0.01
+
+## Tips
+
+- Keep sentences short for natural pauses
+- Use punctuation to control pacing
+- Test different voices for best fit
+- For dramatic effect, use style: 'excited' or 'serious'
+
+## Expressive delivery is the default (2026-07-05)
+
+Voiceovers now use gemini-3.1-flash-tts-preview: embed inline audio tags IN the
+script — "[excited] …", "[pause]", "[whispers]", "[dry chuckle]" (200+ tags) —
+plus audioProfile as director's notes. Never ship a flat read: every script
+should carry 2-4 tags placed where the emotion turns. Old model available via
+ttsModel:"gemini-2.5-flash-preview-tts". ffprobe the duration — expressive reads
+run longer.

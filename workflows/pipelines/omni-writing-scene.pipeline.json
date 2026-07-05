@@ -1,0 +1,22 @@
+{
+  "name": "omni-writing-scene",
+  "description": "TEMPLATE: character writes text on camera — NBP keyframe (props/text baked) → Omni image_to_video with stroke-order direction → QA. The proven live-writing pipeline.",
+  "project": "PROJECT_NAME",
+  "nodes": [
+    { "id": "keyframe", "command": "generateImageVariation",
+      "args": { "referenceImagePath": "projects/PROJECT_NAME/assets/characters/CHARACTER_REF.png",
+        "prompt": "The same person from the reference — same face and clothing — standing beside a completely BLANK white whiteboard holding an uncapped marker, SCENE_DETAILS, photorealistic, 9:16 vertical",
+        "outputPath": "projects/PROJECT_NAME/output-contents/CONTENT_ID/keyframe.png",
+        "aspectRatio": "9:16", "imageModel": "pro" } },
+    { "id": "clip", "command": "generateOmniVideoClip",
+      "args": { "referenceImagePath": "{{keyframe.data.imagePath}}",
+        "prompt": "Animate this exact scene: the person writes on the whiteboard. [00:00-00:01] Uncaps the marker. SFX: cap click. [00:01-00:07] Writes in large clear block capitals the words BOARD_TEXT — writing naturally LEFT TO RIGHT in stroke order, one letter at a time, SPELL_OUT_LETTERS, exactly as a person writes, correctly spelled, no stray marks. SFX: marker squeak. [00:07-00:10] Steps aside so BOARD_TEXT stays fully visible, turns to camera and says, \"SPOKEN_LINE\" Keep face, clothing and room exactly as in the image. (no subtitles)",
+        "duration": "10s",
+        "outputPath": "projects/PROJECT_NAME/output-contents/CONTENT_ID/final.mp4" } },
+    { "id": "qa", "command": "reviewVideoOutput",
+      "args": { "videoPath": "{{clip.data.videoPath}}", "frameCount": 4,
+        "checks": ["consistency", "aspect", "quality"],
+        "expectedAspect": "9:16", "expectAudio": true, "expectedDurationSeconds": 10,
+        "expectedSubject": "CHARACTER_DESCRIPTION writing BOARD_TEXT on a whiteboard" } }
+  ]
+}

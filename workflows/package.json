@@ -1,0 +1,33 @@
+{
+  "name": "gemini-workflows",
+  "version": "1.0.0",
+  "description": "Pre-built content generation workflows using Gemini AI",
+  "type": "module",
+  "main": "dist/workflows/index.js",
+  "types": "dist/workflows/index.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run fix-paths",
+    "fix-paths": "find dist/workflows -type f \\( -name '*.js' -o -name '*.d.ts' \\) -exec sed -i.bak \"s|'\\.\\./gemini/dist/index\\.js'|'../../../gemini/dist/index.js'|g\" {} + && find dist/workflows -name '*.bak' -delete",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "gemini",
+    "ai",
+    "workflows",
+    "content-generation"
+  ],
+  "author": "Min Khant Soe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minkhant1996/min-ai-content-studio-kit.git",
+    "directory": "workflows"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  }
+}

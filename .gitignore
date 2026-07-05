@@ -1,0 +1,205 @@
+# Dependencies
+node_modules/
+gemini/node_modules/
+openrouter/node_modules/
+
+# Build output
+dist/
+gemini/dist/
+openrouter/dist/
+workflows/dist/
+
+# Environment variables (contains API keys)
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+!.env.example
+*.env.backup
+.env.backup
+**/.env.backup
+
+# API keys that might be stored separately
+gemini-api-key.txt
+openrouter-api-key.txt
+api-keys.txt
+
+# ===========================================
+# Secrets & credentials (NEVER commit)
+# ===========================================
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.*
+*.secret
+.secrets/
+credentials.json
+*credentials*.json
+service-account*.json
+*-service-account.json
+gcp-key*.json
+*.apikey
+apikey.txt
+
+# ===========================================
+# User Projects (contains real business data)
+# ===========================================
+projects/
+
+# ===========================================
+# Private one-off generation scripts — PRIVATE, not for the repo
+# -------------------------------------------------------
+# Ad-hoc scripts written to generate content for a specific project under
+# projects/ (they embed business copy, names, strategy, brand assets).
+# These are personal working files, NOT reusable toolkit code.
+#
+# Root-anchored (leading /) so legit toolkit docs like
+# skills/generate-*/SKILL.md stay tracked.
+#
+# Real toolkit code lives in subdirs (gemini/, workflows/, openrouter/, skills/);
+# per-project generation scripts belong under projects/ (already ignored). So ANY
+# .cjs/.ts sitting at the repo ROOT is a one-off (agent- or human-authored) that may
+# embed private project content — never commit it. If you ever add a genuinely shared
+# root script, force it in with:  git add -f <file>
+# ===========================================
+/*.cjs
+/*.ts
+
+# ===========================================
+# Generated Content Outputs (can be large)
+# ===========================================
+
+# Any folder containing "output" in the name
+*output/
+*output*/
+output-*/
+*-output/
+
+# Specific output folders
+examples/content-output/
+tests/results/
+test-output/
+gemini/output/
+
+# Generated media files
+*.mp4
+*.wav
+*.mp3
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Keep example images if needed (uncomment)
+# !examples/*.png
+
+# ===========================================
+# Claude Code Local Data
+# -------------------------------------------
+# .claude/ is LOCAL ONLY — setup.sh/setup.bat installs skills + agents here
+# (or into the other tools' dirs). Never committed.
+# ===========================================
+.claude/
+*.jsonl
+
+# ===========================================
+# OS files
+# ===========================================
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===========================================
+# IDE and Editor
+# ===========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# ===========================================
+# Logs and Debug
+# ===========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ===========================================
+# Temporary files
+# ===========================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+scratchpad/
+
+# ===========================================
+# Development / planning notes — PRIVATE, not for the repo
+# -------------------------------------------------------
+# Personal notes you write while building. These patterns are intentionally
+# specific so they do NOT hide the real, user-facing docs:
+#   WORKFLOWS.md, CREATING_WORKFLOWS.md, content-requirements.md,
+#   *.template.md, SKILL.md, README.md  → all stay tracked.
+#
+# Conventions you can use to keep a file private:
+#   • prefix the name with an underscore   → _my-notes.md
+#   • use a private suffix                 → design.local.md, plan.draft.md
+#   • drop it in a _dev/ or notes/ folder
+# ===========================================
+_*.md
+*.local.md
+*.private.md
+*.draft.md
+*.wip.md
+*.notes.md
+*.scratch.md
+
+# Common dev-doc filenames (any directory)
+PLAN.md
+PLANNING.md
+IMPLEMENTATION.md
+IMPLEMENTATION_PLAN.md
+IMPLEMENTATION-PLAN.md
+DEV_NOTES.md
+DEV-NOTES.md
+DEVLOG.md
+SCRATCH.md
+SCRATCHPAD.md
+DRAFT.md
+TODO.local.md
+
+# Private dev folders
+dev-doc/
+_dev/
+_scratch/
+_notes/
+_planning/
+.scratch/
+.notes/
+dev-notes/
+planning/
+notes/
+
+# ===========================================
+# Package manager locks (optional - uncomment if needed)
+# ===========================================
+# package-lock.json
+# yarn.lock
+
+# ===========================================
+# Remotion working dirs (renders + staged media + per-run props)
+# ===========================================
+remotion/out/
+remotion/public/
+remotion/.props-*.json

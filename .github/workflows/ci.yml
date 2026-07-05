@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build & smoke test (Node ${{ matrix.node }} / ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            gemini/package-lock.json
+            workflows/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Build gemini module
+        working-directory: gemini
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build workflows module
+        working-directory: workflows
+        run: |
+          npm ci
+          npm run build
+
+      # Generation tests need real API keys and spend credits, so CI stops at
+      # a dispatcher smoke test: the CLI must load, list its commands, and fail
+      # cleanly (exit 1, no key leak) when a command runs without keys.
+      - name: CLI smoke test
+        run: |
+          node workflows/cli.cjs list
+          if node workflows/cli.cjs generateText '{"prompt":"hi"}'; then
+            echo "expected failure without API keys" && exit 1
+          fi

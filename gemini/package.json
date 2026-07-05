@@ -1,0 +1,41 @@
+{
+  "name": "gemini-ai-tools",
+  "version": "1.0.0",
+  "description": "Google Gemini AI tools for text, image, video, speech, and music generation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "npx ts-node tests/scripts/run-all-tests.ts"
+  },
+  "keywords": [
+    "gemini",
+    "google-ai",
+    "text-generation",
+    "image-generation",
+    "video-generation",
+    "tts",
+    "text-to-speech",
+    "music-generation",
+    "ai-tools",
+    "mcp"
+  ],
+  "dependencies": {
+    "@google/genai": "^2.10.0",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minkhant1996/min-ai-content-studio-kit.git",
+    "directory": "gemini"
+  },
+  "author": "Min Khant Soe",
+  "license": "MIT"
+}

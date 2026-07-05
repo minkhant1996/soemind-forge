@@ -1,0 +1,21 @@
+{
+  "name": "remotion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "still": "remotion still src/index.ts",
+    "render": "remotion render src/index.ts"
+  },
+  "keywords": [],
+  "author": "Min Khant Soe",
+  "license": "MIT",
+  "dependencies": {
+    "@remotion/cli": "^4.0.484",
+    "@remotion/google-fonts": "^4.0.484",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "remotion": "^4.0.484"
+  }
+}

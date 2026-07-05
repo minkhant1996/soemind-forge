@@ -1,0 +1,469 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "gemini-ai-tools",
+  "description": "Google Gemini AI capabilities for text, image, video, speech, and music generation",
+  "version": "1.0.0",
+  "setup": {
+    "package": "@google/genai",
+    "environment": {
+      "GEMINI_API_KEY": {
+        "required": true,
+        "description": "Google Gemini API key from https://aistudio.google.com/app/apikey"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "gemini25Flash",
+      "description": "Generate text using Gemini 2.5 Flash (RECOMMENDED default). Best for general use, cost-effective.",
+      "category": "text",
+      "cost": {
+        "input": 0.30,
+        "output": 2.50,
+        "unit": "per_million_tokens"
+      },
+      "input": {
+        "type": "object",
+        "required": ["userPrompt"],
+        "properties": {
+          "userPrompt": {
+            "type": "string",
+            "description": "The question, task, or prompt to process"
+          },
+          "systemPrompt": {
+            "type": "string",
+            "description": "Instructions for model behavior (e.g., 'You are a helpful assistant')"
+          },
+          "imageInput": {
+            "type": ["string", "object"],
+            "description": "Base64 string or Buffer for image input (multimodal)"
+          },
+          "imageMimeType": {
+            "type": "string",
+            "enum": ["image/jpeg", "image/png", "image/gif", "image/webp"],
+            "default": "image/jpeg"
+          },
+          "audioInput": {
+            "type": ["string", "object"],
+            "description": "Base64 string or Buffer for audio input"
+          },
+          "audioMimeType": {
+            "type": "string",
+            "enum": ["audio/mp3", "audio/wav", "audio/flac"],
+            "default": "audio/mp3"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "temperature": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 2,
+                "default": 1,
+                "description": "Randomness control: 0=deterministic, 2=creative"
+              },
+              "maxOutputTokens": {
+                "type": "integer",
+                "default": 8192,
+                "description": "Maximum response length in tokens"
+              },
+              "thinkingBudget": {
+                "type": "integer",
+                "default": -1,
+                "description": "-1=unlimited, 0=none, N=token limit"
+              },
+              "enableGoogleSearch": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enable web search for real-time info"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "usage": {
+                "type": "object",
+                "properties": {
+                  "inputTokens": { "type": "integer" },
+                  "outputTokens": { "type": "integer" },
+                  "totalTokens": { "type": "integer" }
+                }
+              },
+              "cost": {
+                "type": "object",
+                "properties": {
+                  "inputCost": { "type": "number" },
+                  "outputCost": { "type": "number" },
+                  "totalCost": { "type": "number" },
+                  "currency": { "type": "string", "const": "USD" }
+                }
+              },
+              "latencyMs": { "type": "integer" },
+              "finishReason": { "type": "string", "enum": ["STOP", "MAX_TOKENS", "SAFETY", "RECITATION"] }
+            }
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "gemini31FlashImage",
+      "description": "Generate images from text descriptions using Gemini 3.1 Flash Image model",
+      "category": "image",
+      "cost": {
+        "512": 0.045,
+        "1K": 0.067,
+        "2K": 0.101,
+        "4K": 0.15,
+        "unit": "per_image"
+      },
+      "input": {
+        "type": "object",
+        "required": ["userPrompt"],
+        "properties": {
+          "userPrompt": {
+            "type": "string",
+            "description": "Description of the image to generate"
+          },
+          "systemPrompt": {
+            "type": "string",
+            "description": "Style instructions for image generation"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "imageSize": {
+                "type": "string",
+                "enum": ["512", "1K", "2K", "4K"],
+                "default": "1K"
+              },
+              "aspectRatio": {
+                "type": "string",
+                "description": "e.g., '1:1', '16:9', '9:16', '4:3'"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "images": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "type": "object", "description": "Buffer" },
+                    "mimeType": { "type": "string" },
+                    "fileName": { "type": "string" }
+                  }
+                }
+              },
+              "cost": { "$ref": "#/definitions/CostCalculation" },
+              "latencyMs": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "veo31Lite",
+      "description": "Generate short videos from text descriptions (budget option)",
+      "category": "video",
+      "cost": {
+        "video_per_second": 0.03,
+        "video_audio_per_second": 0.05
+      },
+      "input": {
+        "type": "object",
+        "required": ["prompt"],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Description of the video to generate"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "aspectRatio": {
+                "type": "string",
+                "enum": ["9:16", "16:9", "1:1"],
+                "default": "9:16"
+              },
+              "resolution": {
+                "type": "string",
+                "enum": ["720p", "1080p"],
+                "default": "720p"
+              },
+              "durationSeconds": {
+                "type": "integer",
+                "minimum": 5,
+                "maximum": 8,
+                "default": 6
+              },
+              "numberOfVideos": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4,
+                "default": 1
+              },
+              "generateAudio": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "videos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "data": { "type": "object", "description": "Buffer (MP4)" },
+                    "mimeType": { "type": "string", "const": "video/mp4" },
+                    "durationSeconds": { "type": "number" }
+                  }
+                }
+              },
+              "cost": { "$ref": "#/definitions/CostCalculation" },
+              "latencyMs": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "textToSpeech",
+      "description": "Convert text to natural-sounding speech",
+      "category": "audio",
+      "cost": {
+        "input": 0.50,
+        "audio_output": 12.00,
+        "unit": "per_million_tokens"
+      },
+      "input": {
+        "type": "object",
+        "required": ["text"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text to convert to speech. Can include audio tags like [excited], [whispers]"
+          },
+          "voiceName": {
+            "type": "string",
+            "enum": [
+              "Achernar", "Achird", "Algenib", "Algieba", "Alnilam", "Aoede", "Autonoe",
+              "Callirrhoe", "Charon", "Despina", "Enceladus", "Erinome", "Fenrir", "Gacrux",
+              "Iapetus", "Kore", "Laomedeia", "Leda", "Orus", "Puck", "Pulcherrima",
+              "Rasalgethi", "Sadachbia", "Sadaltager", "Schedar", "Sulafat", "Umbriel",
+              "Vindemiatrix", "Zephyr", "Zubenelgenubi"
+            ],
+            "default": "Zephyr",
+            "description": "Voice to use for speech synthesis"
+          },
+          "voiceSettings": {
+            "type": "object",
+            "properties": {
+              "style": {
+                "type": "string",
+                "enum": ["neutral", "vocal_smile", "newscaster", "whisper", "empathetic", "promo_hype", "deadpan", "excited", "sarcastic", "serious", "casual"],
+                "description": "Speaking style"
+              },
+              "pace": {
+                "type": "string",
+                "enum": ["natural", "rapid_fire", "slow", "the_drift", "staccato", "energetic"],
+                "description": "Speaking pace"
+              },
+              "accent": {
+                "type": "string",
+                "enum": ["neutral", "american_general", "american_valley", "american_southern", "british_rp", "british_brixton", "british_scottish", "transatlantic", "australian", "indian"],
+                "description": "Voice accent"
+              },
+              "audioProfile": {
+                "type": "string",
+                "description": "Custom natural language description of the speaker"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "audio": {
+                "type": "object",
+                "properties": {
+                  "data": { "type": "object", "description": "Buffer (WAV)" },
+                  "mimeType": { "type": "string", "const": "audio/wav" }
+                }
+              },
+              "cost": { "$ref": "#/definitions/CostCalculation" },
+              "latencyMs": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "multiSpeakerTTS",
+      "description": "Generate multi-speaker conversation audio",
+      "category": "audio",
+      "input": {
+        "type": "object",
+        "required": ["text", "speakers"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text with speaker annotations (e.g., 'Speaker 1: Hello!')"
+          },
+          "speakers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["speaker", "voiceName"],
+              "properties": {
+                "speaker": { "type": "string", "description": "Speaker identifier" },
+                "voiceName": { "type": "string", "description": "Voice name" },
+                "voiceSettings": { "$ref": "#/definitions/VoiceSettings" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "generateMusic",
+      "description": "Generate music from text descriptions",
+      "category": "music",
+      "cost": {
+        "lyria-3": { "per_30sec": 0.04 },
+        "lyria-3-pro": { "per_song": 0.08 }
+      },
+      "input": {
+        "type": "object",
+        "required": ["model", "prompt"],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": ["lyria-3", "lyria-3-pro"],
+            "description": "lyria-3: 30sec clips, lyria-3-pro: up to 3min songs"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Description of the music to generate"
+          },
+          "imageInput": {
+            "type": ["string", "object"],
+            "description": "Reference image for mood (base64 or Buffer)"
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "durationSeconds": {
+                "type": "integer",
+                "description": "Duration in seconds (lyria-3 max 30, lyria-3-pro max 180)"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "music": {
+                "type": "object",
+                "properties": {
+                  "data": { "type": "object", "description": "Buffer (WAV/MP3)" },
+                  "mimeType": { "type": "string" },
+                  "durationSeconds": { "type": "number" }
+                }
+              },
+              "cost": { "$ref": "#/definitions/CostCalculation" },
+              "latencyMs": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "CostCalculation": {
+      "type": "object",
+      "properties": {
+        "inputCost": { "type": "number", "description": "Cost in USD" },
+        "outputCost": { "type": "number", "description": "Cost in USD" },
+        "totalCost": { "type": "number", "description": "Cost in USD" },
+        "currency": { "type": "string", "const": "USD" }
+      }
+    },
+    "VoiceSettings": {
+      "type": "object",
+      "properties": {
+        "style": { "type": "string" },
+        "pace": { "type": "string" },
+        "accent": { "type": "string" },
+        "audioProfile": { "type": "string" }
+      }
+    }
+  },
+  "allModels": {
+    "text": [
+      { "id": "gemini-2.5-flash-lite", "function": "gemini25FlashLite", "cost": { "input": 0.10, "output": 0.40 }, "best_for": "Simple tasks, budget" },
+      { "id": "gemini-2.5-flash", "function": "gemini25Flash", "cost": { "input": 0.30, "output": 2.50 }, "best_for": "RECOMMENDED default" },
+      { "id": "gemini-3.1-flash-lite", "function": "gemini31FlashLite", "cost": { "input": 0.25, "output": 1.50 }, "best_for": "Budget with thinking" },
+      { "id": "gemini-3.5-flash", "function": "gemini35Flash", "cost": { "input": 1.50, "output": 9.00 }, "best_for": "Latest with thinking" },
+      { "id": "gemini-2.5-pro", "function": "gemini25Pro", "cost": { "input": 1.25, "output": 10.00 }, "best_for": "Complex reasoning" },
+      { "id": "gemini-3.1-pro-preview", "function": "gemini31ProPreview", "cost": { "input": 2.00, "output": 12.00 }, "best_for": "Highest quality" }
+    ],
+    "image": [
+      { "id": "gemini-3.1-flash-image-preview", "function": "gemini31FlashImage", "cost": { "1K": 0.067 }, "best_for": "Fast image generation" },
+      { "id": "gemini-3-pro-image", "function": "gemini3ProImage", "cost": { "1K": 0.134 }, "best_for": "High quality images" }
+    ],
+    "video": [
+      { "id": "veo-3.1-lite-generate-preview", "function": "veo31Lite", "cost": { "per_second": 0.03 }, "best_for": "Budget video" },
+      { "id": "veo-3.1-generate-preview", "function": "veo31", "cost": { "per_second": 0.20 }, "best_for": "Balanced quality" },
+      { "id": "veo-3-generate-preview", "function": "veo3", "cost": { "per_second": 0.20 }, "best_for": "Best quality with audio" }
+    ],
+    "audio": [
+      { "id": "gemini-2.5-flash-preview-tts", "function": "textToSpeech", "cost": { "input": 0.50, "output": 12.00 }, "best_for": "Text to speech" }
+    ],
+    "music": [
+      { "id": "lyria-3", "function": "generateMusic", "cost": { "per_30sec": 0.04 }, "best_for": "30sec clips" },
+      { "id": "lyria-3-pro", "function": "generateMusic", "cost": { "per_song": 0.08 }, "best_for": "Full songs (3min)" }
+    ]
+  }
+}

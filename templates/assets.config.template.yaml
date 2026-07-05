@@ -1,0 +1,284 @@
+# =============================================================================
+# ASSET REGISTRY  —  projects/{name}/config/assets.yaml
+# =============================================================================
+# Persistent, reusable record of every visual/audio identity in a project:
+# characters (talent), products, logos, voices, locations, music, style refs.
+#
+# WHY THIS EXISTS
+#   So an agent never re-describes or re-generates the same character/product
+#   for every piece of content. Generate (or register) once → save the path →
+#   reuse forever with consistency.
+#
+# RULES FOR THE AGENT
+#   1. Read this file during pre-flight (see skills/content-preflight).
+#   2. Before generating any visual subject, look for an existing asset here.
+#   3. When you generate or receive a new reusable asset, APPEND an entry and
+#      save the file under projects/{name}/assets/<type>/.
+#   4. NEVER invent a `path:` — only record paths to files that actually exist.
+#   5. `locked: true` means "do not regenerate" — reuse the exact files for
+#      visual consistency across all content.
+#   6. All paths are RELATIVE to the project root (projects/{name}/).
+# =============================================================================
+
+project: ""                 # project slug, e.g. "summer-campaign"
+updated: ""                 # ISO date of last change, e.g. "2026-06-26"
+
+# -----------------------------------------------------------------------------
+# CHARACTERS / TALENT  — any human (or mascot) that appears on screen or speaks
+# -----------------------------------------------------------------------------
+characters: []
+# - id: char-founder                 # stable kebab-case id, referenced by content plans
+#   label: "Founder – Sarah"
+#   description: >
+#     Late-20s East-Asian woman, shoulder-length black hair, warm smile,
+#     minimalist beige knit, small gold hoop earrings.
+#   role: spokesperson                # spokesperson | customer | mascot | extra
+#   source: generated                 # generated | provided | real-person
+#   status: ready                     # ready | needs-generation | placeholder
+#   locked: true                      # reuse exact files; do not regenerate
+#   files:                            # one ref per angle/state — more angles = better consistency
+#     front: assets/characters/sarah-front.png
+#     three_quarter: assets/characters/sarah-34.png
+#     profile: assets/characters/sarah-profile.png
+#     full_body: assets/characters/sarah-body.png
+#   wardrobe: ["beige knit", "white tee"]   # outfits to keep consistent
+#   linked_voice: voice-sarah          # id of a voice entry below (audio identity)
+#   consent:                           # REQUIRED when source: real-person
+#     real_person: false
+#     release_on_file: false           # signed likeness release exists?
+#     notes: ""
+#   person_generation: allow           # allow | block  (passed to image/video API)
+#   notes: ""
+#   created: ""
+
+# -----------------------------------------------------------------------------
+# PRODUCTS  — physical/digital items shown in content
+# -----------------------------------------------------------------------------
+products: []
+# - id: prod-bottle
+#   label: "Hydro Bottle 1L"
+#   description: "Matte-black insulated steel bottle, laser-etched logo."
+#   type: physical                     # physical | digital | app | course | service
+#   source: provided                   # provided | generated (mockup)
+#   status: ready
+#   files:                             # multiple angles strongly recommended
+#     - assets/products/bottle-front.png
+#     - assets/products/bottle-angle.png
+#     - assets/products/bottle-lifestyle.png
+#   key_features: ["24h cold", "leakproof", "1L"]
+#   colorways: ["matte black", "sand"]
+#   packaging: assets/products/bottle-box.png   # optional
+#   notes: ""
+#   created: ""
+
+# -----------------------------------------------------------------------------
+# LOGOS / BRAND MARKS
+# -----------------------------------------------------------------------------
+logos: []
+# - id: logo-primary
+#   label: "Primary logo"
+#   files:
+#     color: assets/logo/logo.png
+#     white: assets/logo/logo-white.png
+#     mark: assets/logo/mark.png          # icon-only
+#   clear_space: "padding ≥ logo height"
+#   min_size_px: 48
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# VOICES  — locks an audio identity (TTS voice + settings) for reuse
+# -----------------------------------------------------------------------------
+voices: []
+# - id: voice-sarah
+#   label: "Sarah – warm friendly female"
+#   voice_name: Kore                    # a Gemini TTS voice name
+#   style: friendly                     # neutral|professional|casual|energetic|calm|excited|serious
+#   pace: natural                       # natural|slow|fast
+#   accent: american_general
+#   sample: assets/audio/voice-sarah-sample.wav   # optional reference clip
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# LOCATIONS / ENVIRONMENTS  — recurring settings to keep consistent
+# -----------------------------------------------------------------------------
+locations: []
+# - id: loc-studio
+#   label: "Home office studio"
+#   description: "Warm-lit desk, oak shelf with plants, soft window light."
+#   source: generated
+#   files:
+#     - assets/locations/studio-wide.png
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# MUSIC BEDS  — reusable generated/standard tracks
+# -----------------------------------------------------------------------------
+music: []
+# - id: music-upbeat
+#   label: "Upbeat brand bed"
+#   description: "Lo-fi hip-hop, mellow Rhodes, 70 BPM"
+#   source: generated
+#   path: assets/music/upbeat-bed.wav
+#   duration_seconds: 30
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# STYLE REFERENCES  — look/aesthetic samples (not a subject, a vibe)
+# -----------------------------------------------------------------------------
+style_references: []
+# - id: style-clean
+#   label: "Clean minimal product look"
+#   files:
+#     - assets/style/ref-01.jpg
+#   what_we_like: "Soft shadows, lots of negative space, pastel background."
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# BACKGROUNDS  — reusable scene backgrounds (different from locations)
+# -----------------------------------------------------------------------------
+backgrounds: []
+# - id: bg-studio-white
+#   label: "Clean white studio"
+#   description: "Pure white cyclorama, soft diffused lighting"
+#   source: generated
+#   files:
+#     - assets/backgrounds/bg-studio-white.png
+#   use_for: ["product shots", "testimonials"]
+#   notes: ""
+
+# - id: bg-gradient-brand
+#   label: "Brand gradient background"
+#   description: "Purple to teal gradient matching brand colors"
+#   source: generated
+#   files:
+#     - assets/backgrounds/bg-gradient-brand.png
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# THUMBNAILS  — reference thumbnails for style consistency
+# -----------------------------------------------------------------------------
+thumbnails: []
+# - id: thumb-face-template
+#   label: "Face + emotion template"
+#   description: "Close-up face, bold expression, high contrast"
+#   style: face-emotion
+#   source: generated
+#   files:
+#     - assets/thumbnails/thumb-face-template.png
+#   platform: youtube
+#   notes: "Use as reference for all face thumbnails"
+
+# - id: thumb-product-template
+#   label: "Product hero template"
+#   description: "Product on gradient, clean with text space"
+#   style: product-hero
+#   source: generated
+#   files:
+#     - assets/thumbnails/thumb-product-template.png
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# SOCIAL ASSETS  — profile pics, covers, highlights (per platform)
+# -----------------------------------------------------------------------------
+social: []
+# - id: social-profiles
+#   label: "Social Media Profiles"
+#   source: generated
+#   status: ready
+#   files:
+#     facebook: assets/social/profiles/facebook-profile.png
+#     instagram: assets/social/profiles/instagram-profile.png
+#     youtube: assets/social/profiles/youtube-profile.png
+#     linkedin: assets/social/profiles/linkedin-profile.png
+#     tiktok: assets/social/profiles/tiktok-profile.png
+#     twitter: assets/social/profiles/twitter-profile.png
+#   created: ""
+
+# - id: social-covers
+#   label: "Social Media Covers"
+#   source: generated
+#   status: ready
+#   files:
+#     facebook_cover: assets/social/covers/facebook-cover.png
+#     youtube_banner: assets/social/covers/youtube-banner.png
+#     linkedin_banner: assets/social/covers/linkedin-banner.png
+#     twitter_header: assets/social/covers/twitter-header.png
+#   created: ""
+
+# - id: social-highlights
+#   label: "Instagram Highlights"
+#   source: generated
+#   status: ready
+#   files:
+#     about: assets/social/highlights/highlight-about.png
+#     products: assets/social/highlights/highlight-products.png
+#     reviews: assets/social/highlights/highlight-reviews.png
+#     tips: assets/social/highlights/highlight-tips.png
+#   created: ""
+
+# -----------------------------------------------------------------------------
+# SOUND EFFECTS  — reusable SFX for videos
+# -----------------------------------------------------------------------------
+sfx: []
+# - id: sfx-whoosh
+#   label: "Transition whoosh"
+#   description: "Quick whoosh for scene transitions"
+#   source: provided
+#   path: assets/audio/sfx-whoosh.wav
+#   duration_seconds: 0.5
+#   notes: ""
+
+# - id: sfx-notification
+#   label: "App notification"
+#   description: "Soft ping notification sound"
+#   source: provided
+#   path: assets/audio/sfx-notification.wav
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# OVERLAYS  — post-production elements (watermarks, lower thirds, CTAs)
+# -----------------------------------------------------------------------------
+overlays: []
+# - id: overlay-watermark
+#   label: "Video watermark"
+#   description: "Semi-transparent logo for corner placement"
+#   position: bottom-right
+#   opacity: 0.7
+#   files:
+#     - assets/overlays/watermark.png
+#   notes: "Apply to all videos"
+
+# - id: overlay-cta
+#   label: "CTA overlay"
+#   description: "Subscribe button animation"
+#   files:
+#     - assets/overlays/cta-subscribe.png
+#   notes: ""
+
+# - id: overlay-lower-third
+#   label: "Speaker lower third"
+#   description: "Name/title bar for speaker introductions"
+#   files:
+#     - assets/overlays/lower-third.png
+#   notes: ""
+
+# -----------------------------------------------------------------------------
+# ICONS  — app icons, UI icons, favicon
+# -----------------------------------------------------------------------------
+icons: []
+# - id: icon-app
+#   label: "App icon"
+#   source: provided
+#   files:
+#     1024: assets/icons/app-icon-1024.png
+#     512: assets/icons/app-icon-512.png
+#     180: assets/icons/app-icon-180.png
+#   notes: ""
+
+# - id: icon-favicon
+#   label: "Favicon"
+#   source: provided
+#   files:
+#     - assets/icons/favicon.ico
+#     - assets/icons/favicon-32.png
+#   notes: ""

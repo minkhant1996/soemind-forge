@@ -1,0 +1,107 @@
+{
+  "name": "pov-episode",
+  "description": "TEMPLATE: POV-series episode \u2014 keyframe \u2192 Veo clip \u2192 kinetic text over video \u2192 QA \u2192 package. Fill ALL-CAPS placeholders, save into the content folder, run: node workflows/cli.cjs runPipeline @<file>",
+  "project": "PROJECT_NAME",
+  "nodes": [
+    {
+      "id": "keyframe",
+      "command": "generateSingleImage",
+      "args": {
+        "prompt": "First-person POV shot: POV_SCENE_DESCRIPTION, photorealistic, no readable text, 9:16 vertical",
+        "outputPath": "projects/PROJECT_NAME/output-contents/CONTENT_ID/keyframe.png",
+        "aspectRatio": "9:16",
+        "imageSize": "1K"
+      }
+    },
+    {
+      "id": "clip",
+      "command": "generateVideoFromImage",
+      "args": {
+        "referenceImagePath": "{{keyframe.data.imagePath}}",
+        "prompt": "POV scene: MOTION_DESCRIPTION; subtle ambience, no camera movement",
+        "outputPath": "projects/PROJECT_NAME/output-contents/CONTENT_ID/clip.mp4",
+        "duration": 8,
+        "aspectRatio": "9:16",
+        "quality": "fast"
+      }
+    },
+    {
+      "id": "placement",
+      "command": "analyzeImage",
+      "args": {
+        "imagePath": "{{keyframe.data.imagePath}}",
+        "prompt": "Divide this image into vertical thirds: top, center, bottom. Which third is the EMPTIEST \u2014 containing only background, no faces, no hands, no phones, no focal objects? Reply with exactly one lowercase word: top, center, or bottom."
+      }
+    },
+    {
+      "id": "reel",
+      "command": "renderKineticReel",
+      "args": {
+        "scenes": [
+          {
+            "backgroundPath": "{{clip.data.videoPath}}",
+            "seconds": 8,
+            "bgAudioVolume": 0.6,
+            "scrim": true,
+            "align": "{{placement.data.text}}",
+            "lines": [
+              {
+                "text": "POV:",
+                "size": 44,
+                "color": "#C8A24A",
+                "font": "inter",
+                "weight": 600
+              },
+              {
+                "text": "POV_LINE_1",
+                "size": 52
+              },
+              {
+                "text": "POV_PUNCHLINE",
+                "size": 58,
+                "delay": 2.2
+              }
+            ]
+          }
+        ],
+        "outputPath": "projects/PROJECT_NAME/output-contents/CONTENT_ID/final.mp4"
+      }
+    },
+    {
+      "id": "qa",
+      "command": "reviewVideoOutput",
+      "args": {
+        "videoPath": "{{reel.data.videoPath}}",
+        "frameCount": 3,
+        "checks": [
+          "brand-colors",
+          "consistency",
+          "aspect",
+          "quality"
+        ],
+        "expectedAspect": "9:16",
+        "expectAudio": true,
+        "expectedDurationSeconds": 8
+      }
+    },
+    {
+      "id": "package",
+      "command": "packageContent",
+      "args": {
+        "mediaPath": "{{reel.data.videoPath}}",
+        "platforms": [
+          "instagram",
+          "tiktok"
+        ],
+        "contentType": "reel",
+        "caption": "CAPTION_WITH_HOOK",
+        "hashtags": [
+          "buildinpublic",
+          "founders"
+        ],
+        "link": "https://YOURSITE.com",
+        "outputDir": "projects/PROJECT_NAME/output-contents/CONTENT_ID/publish"
+      }
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+# =============================================================================
+# ASSET REGISTRY — Sunrise Roasters (Demo)
+# =============================================================================
+# FICTIONAL DEMO. Shows a registry in its honest starting state: identities are
+# DEFINED but files don't exist yet, so every entry is `status: needs-generation`
+# with no `files:` paths (rule: never record a path that doesn't exist).
+#
+# Ask your agent to generate them — e.g. "Generate the character sheet for
+# char-maya" — and it will create the files, fill in `files:`, set
+# `status: ready`, and lock the asset for reuse.
+# =============================================================================
+
+project: "demo-brand"
+updated: "2026-07-03"
+
+# -----------------------------------------------------------------------------
+# CHARACTERS / TALENT
+# -----------------------------------------------------------------------------
+characters:
+  - id: char-maya
+    label: "Founder/Roaster – Maya"
+    description: >
+      Mid-30s Latina woman, dark hair in a loose low bun, warm easy smile,
+      rust-colored linen shirt with sleeves rolled, forest-green denim apron
+      with a small sun embroidered on the chest pocket. Light freckles,
+      small silver stud earrings.
+    role: spokesperson
+    source: generated
+    status: needs-generation      # run: "generate character sheet for char-maya"
+    locked: false                 # lock after first generation to keep her consistent
+    wardrobe: ["rust linen shirt + green apron", "cream knit sweater"]
+    linked_voice: voice-maya
+    consent:
+      real_person: false
+      release_on_file: false
+      notes: "Fully fictional character"
+    person_generation: allow
+    notes: "Appears in ads and behind-the-scenes roastery content"
+    created: "2026-07-03"
+
+# -----------------------------------------------------------------------------
+# PRODUCTS
+# -----------------------------------------------------------------------------
+products:
+  - id: prod-yirgacheffe-bag
+    label: "Ethiopia Yirgacheffe 12oz bag"
+    description: >
+      Matte forest-green stand-up pouch, cream label with sunrise logo,
+      hand-stamped roast date, "Ethiopia Yirgacheffe — Halo Beriti Farm"
+      in friendly serif type.
+    type: physical
+    source: generated
+    status: needs-generation
+    key_features: ["roast date stamp", "farm name on label", "resealable"]
+    colorways: ["forest green / cream"]
+    notes: "Hero product for the July 2026 launch campaign"
+    created: "2026-07-03"
+
+# -----------------------------------------------------------------------------
+# LOGOS / BRAND MARKS
+# -----------------------------------------------------------------------------
+logos:
+  - id: logo-primary
+    label: "Sunrise Roasters primary logo"
+    status: needs-generation      # run: /generate-brand-assets
+    clear_space: "one sun-ray height on all sides"
+    min_size_px: 80
+    notes: "Half-risen sun over a coffee cup, burnt sienna + gold on cream"
+
+# -----------------------------------------------------------------------------
+# VOICES
+# -----------------------------------------------------------------------------
+voices:
+  - id: voice-maya
+    label: "Maya – warm, calm, a little wry"
+    voice_name: Kore
+    style: calm
+    pace: natural
+    accent: american_general
+    notes: "Primary VO for all ads; keep delivery unhurried"
+
+# -----------------------------------------------------------------------------
+# LOCATIONS / ENVIRONMENTS
+# -----------------------------------------------------------------------------
+locations:
+  - id: loc-kitchen
+    label: "Sunlit morning kitchen"
+    description: >
+      Warm home kitchen at golden hour: wooden counter, ceramic mugs on open
+      shelf, linen towel, pour-over kit by the window, soft steam in the light.
+    source: generated
+    status: needs-generation
+    notes: "Primary setting for lifestyle/ritual content"
+
+  - id: loc-roastery
+    label: "The roastery"
+    description: >
+      Small-batch roastery: vintage drum roaster, burlap sacks of green beans,
+      warm tungsten light, chalkboard with origin names.
+    source: generated
+    status: needs-generation
+    notes: "Behind-the-scenes and craft-story content"
+
+# -----------------------------------------------------------------------------
+# MUSIC BEDS
+# -----------------------------------------------------------------------------
+music:
+  - id: music-morning
+    label: "Slow morning bed"
+    description: "Warm lo-fi with soft Rhodes and vinyl crackle, ~72 BPM, cozy and unhurried"
+    source: generated
+    status: needs-generation
+    notes: "Default bed for lifestyle videos; ~30s"
+
+# -----------------------------------------------------------------------------
+# STYLE REFERENCES
+# -----------------------------------------------------------------------------
+style_references:
+  - id: style-warm-morning
+    label: "Warm morning ritual look"
+    what_we_like: >
+      Golden window light, steam catching the light, shallow depth of field,
+      cream/sienna/green palette, lived-in textures — never sterile.
+    notes: "Applies to ALL visual content; see brand.md aesthetic section"
+
+# Empty categories — the agent appends entries here as assets are created
+backgrounds: []
+thumbnails: []
+social: []
+sfx: []
+overlays: []
+icons: []
