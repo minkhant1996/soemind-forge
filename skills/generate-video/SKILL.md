@@ -43,6 +43,7 @@ Video commands (run `node workflows/cli.cjs list` for all):
 | `generateSpeakingVideoFromImage` | Character image → speaking clip |
 | `generateVideoWithVoiceover` | Video + generated voiceover |
 | `generateVideoFromImageWithVoiceover` | Keyframe → video + voiceover |
+| `generateOmniVideoClip` | Omni Flash: stylized explainers, text-in-scene, multi-ref consistency, edit existing clips |
 
 Example:
 
@@ -187,6 +188,45 @@ cat workflows/WORKFLOWS.md
 
 5. **Reference images?** (check assets folder)
 
+6. **If generating with Omni Flash — ART STYLE (REQUIRED, do not skip):**
+   Present the preset list and ask the user to pick ONE:
+
+   ```
+   Omni Flash art style — which look?
+     1. photorealistic (default — no preset)
+     2. pixel-art            7. low-poly
+     3. claymation           8. 3d-mix
+     4. mixed-media          9. isometric-flat-vector
+     5. 3d-papercraft       10. fluffy-toy
+     6. whiteboard-doodle   11. 2d-illustration
+     …or describe your own custom style
+   ```
+
+   Pass the chosen id as `"artStyle"` (omit for photorealistic). Record the
+   choice in `projects/{name}/templates/brand.md` so the whole series stays
+   in one style. Never silently pick a style for the user.
+
+7. **Camera movement — PROPOSE from the preset library, then confirm:**
+   Don't improvise camera language. Pick 1-2 preset ids from
+   `VIDEO-PROMPT-GUIDE.md §2b` that fit the content intent, tell the user
+   which you chose and why, and confirm. One move per clip.
+
+   | Intent | Propose |
+   |---|---|
+   | Product hero / reveal | `slow-zoom-in`, `orbit-clockwise`, `dolly-in` |
+   | Calm premium B-roll | `static`, `slider-right`, `slow-zoom-out` |
+   | Hype / hook energy | `crash-zoom-in`, `whip-pan-right`, `chase` |
+   | UGC / authentic | `handheld`, `first-person` |
+   | Walking testimonial | `reverse-tracking`, `side-tracking` |
+   | Location / scale reveal | `drone-pull-back`, `crane-up`, `earth-zoom-out` |
+   | Scene transition | `whip-pan-*`, `pass-through`, `infinite-zoom` |
+
+   Pass it as `"cameraMove":"<id>"` on `generateSilentVideo`,
+   `generateVideoFromImage`, or `generateOmniVideoClip` — the full
+   Movement/Speed/Framing/End block is prepended automatically. For
+   scene-array workflows (voiceover scenes, speaking video, Seedance), paste
+   the block text from the guide at the head of each scene prompt instead.
+
 ---
 
 ## WORKFLOW SELECTION
@@ -213,8 +253,11 @@ node workflows/cli.cjs generateSilentVideo '{"prompt":"Cinematic shot of smartwa
 
 ### 2. Product Video from Reference (no person)
 ```bash
-node workflows/cli.cjs generateVideoFromImage '{"referenceImagePath":"projects/my-project/assets/product-watch.png","prompt":"Product rotates slowly, premium lighting","outputPath":"projects/my-project/output-contents/product.mp4","duration":6,"aspectRatio":"9:16"}'
+node workflows/cli.cjs generateVideoFromImage '{"referenceImagePath":"projects/my-project/assets/product-watch.png","prompt":"Product rotates slowly, premium lighting","outputPath":"projects/my-project/output-contents/product.mp4","duration":6,"aspectRatio":"9:16","cameraMove":"orbit-clockwise"}'
 ```
+`cameraMove` (optional, also on `generateSilentVideo` / `generateOmniVideoClip`)
+prepends a tested four-part camera block — 46 preset ids in
+`workflows/VIDEO-PROMPT-GUIDE.md §2b` (see Required Question 7).
 
 ### 3. Speaking Video with Character Reference (RECOMMENDED for consistency)
 ```bash
@@ -242,18 +285,22 @@ node workflows/cli.cjs generateSpeakingVideoFromImage '{"referenceImagePath":"<c
 
 ---
 
-## REFERENCE IMAGE PRIORITY
+## REFERENCE IMAGES: first frame vs asset refs
 
-**When multiple assets exist, prioritize:**
+Two different mechanisms on `generateVideoFromImage`:
 
-1. **Character image** (if video has person) → Use for character consistency
-2. **Product image** (if product-focused) → Use for product consistency
-3. **Environment image** (for scene setting) → Describe in prompt instead
+- `referenceImagePath` — **first frame**: the clip starts from this exact image
+  (animate an approved keyframe).
+- `referenceImagePaths` — **asset references, max 3 (Veo 3.1)**: character
+  sheet + environment sheet + prop in ONE request; they guide what things look
+  like without appearing verbatim. State each ref's role in the prompt
+  ("the girl from the character sheet", "the garden from the environment
+  reference"). Need 4-5 refs → `generateOmniVideoClip` (`<IMG_REF_n>` tags).
 
-**NOTE:** API supports ONE reference image per request. If you need both character AND product:
-1. Use character reference for video generation
-2. Describe product in the prompt
-3. Or generate separate product shots
+**When picking refs for a scene, prioritize:** character sheet (if the scene
+has a person) → prop/product sheet → environment sheet. Drop the environment
+ref first if over the limit — environments survive prompt description better
+than faces do.
 
 ---
 
@@ -327,6 +374,9 @@ node workflows/cli.cjs generateCaptions '{"script":"<voiceover/dialogue script>"
 # 2. One call: concat clips → lay voiceover + music (music auto-ducks) → burn captions
 node workflows/cli.cjs assembleFinal '{"clipPaths":["…/clip-01.mp4","…/clip-02.mp4"],"voiceoverPath":"…/voiceover.wav","musicPath":"…/music.wav","musicVolume":0.3,"captionsSrtPath":"…/captions.srt","outputPath":"projects/{name}/output-contents/final.mp4"}'
 # voiceoverPath / musicPath / captionsSrtPath are optional; omit captionsSrtPath to skip burned-in captions; musicPath reuses the registry music bed
+# Optional between-clip transitions: add "transition":"dissolve" (or fade/fadeblack/
+# wipeleft/slideleft/circleopen…) + "transitionDuration":0.5 — hard cuts when omitted.
+# Each overlap shortens the total by its duration; every clip must outlast it.
 ```
 
 For audio-only mixing (single clip + VO/music, no concat/captions) use `mixVideoAudio()`.
@@ -360,21 +410,86 @@ animated typography (per-line size/color emphasis, gold #C8A24A for THE phrase):
 `node workflows/cli.cjs renderKineticReel '{"scenes":[…],"audioPath":"vo.wav","outputPath":"reel.mp4"}'`
 Args in WORKFLOWS.md § Remotion. Use Veo only when you need real motion/footage.
 
-## Cinematic story film → follow the recipe
+## Story films → follow the recipe (do NOT improvise)
 
-For "brand film" / "cinematic story with a character" requests, do NOT improvise:
-read `workflows/recipes/cinematic-story-film.md` — storyline arc, character sheet →
-keyframes → Veo 3.1 clips → adaptive per-scene VO (pacing trap documented) → one-call
-`assembleStoryFilm`. ~$3.65 at fast tier for 4×8s.
+- **"Brand film" / single-character cinematic story** →
+  `workflows/recipes/cinematic-story-film.md`: storyline arc, character sheet →
+  keyframes → Veo 3.1 clips → adaptive per-scene VO → one-call
+  `assembleStoryFilm`. ~$3.65 at fast tier for 4×8s.
+- **"Short film" / multi-character story with consistent cast, locations, props**
+  → `workflows/recipes/story-short-film.md` — the production-sheet pipeline:
+  1. story bible (`story.md`: storyline, characters+personality, locations,
+     items, shot list) → user approval
+  2. production sheets per character/location/prop (multi-angle + expressions
+     + palette, white bg) → register locked
+  3. storyboard image + per-scene prompts mapped to sheets
+  4. clips via `generateVideoFromImage` `referenceImagePaths` (≤3 sheets/scene;
+     4-5 refs or stylized → Omni Flash)
+  5. `assembleFinal` with `transition` (dissolve/fade) + VO/music/captions
 
-## Model choice: Veo 3.1 vs Gemini Omni Flash (2026-07-05)
+## Model choice: Veo 3.1 vs Gemini Omni Flash (updated 2026-07-06)
 
-- **Veo 3.1** (`generateVideoFromImage` etc.): cinematic fidelity, 8s beats,
-  animating locked NBP keyframes. $0.10/s fast tier.
-- **Omni Flash** (`generateOmniVideoClip`): instruction-precision — live
-  handwriting, text-in-scene, exact choreography. ~$1.03/10s. Pass
-  `referenceImagePath` (NBP keyframe with your locked character) for
-  image_to_video consistency. Timestamped prompts (`[00:00-00:02]…`,
-  `He says,"…"`, `SFX:`, `(no subtitles)`) work on BOTH — see
-  `workflows/VIDEO-PROMPT-GUIDE.md` § Pro syntax for the tested verdicts
-  (set-text vs prop-text vs live-writing reliability).
+- **Veo 3.1** (`generateVideoFromImage` etc.): cinematic fidelity, 1080p+,
+  8s beats, animating locked NBP keyframes. $0.10/s fast tier.
+- **Omni Flash** (`generateOmniVideoClip`): instruction-precision + styling +
+  editing. ~$1.03/10s, **max 10s/clip, 720p only, 16:9 or 9:16**, native audio
+  (VO/SFX prompted in text — no audio input). Timestamped prompts
+  (`[00:00-00:02]…`, `He says,"…"`, `SFX:`, `(no subtitles)`) work on BOTH
+  models — see `workflows/VIDEO-PROMPT-GUIDE.md` § Gemini Omni Flash for the
+  full guide and tested verdicts.
+
+### Omni Flash task selection (auto-detected from args)
+
+| User wants | Pass | Task |
+|---|---|---|
+| Explainer / sizzle reel from text | `prompt` only | text_to_video |
+| Animate a keyframe / scene image (explainer, cinematic) | `referenceImagePath` | image_to_video |
+| Product/character consistency in a new scene | `referenceImagePaths` (2-5) + cite `<IMG_REF_0>`… in prompt | reference_to_video |
+| Add SFX / on-video text / restyle / camera change on an existing clip | `inputVideoPath` + one-change instruction | edit |
+
+**Before any stylized Omni generation:** ask the art-style question (Required
+Question 6 above). **Prefer Omni Flash over Veo for:** explainers in a preset
+art style, live writing/text-in-scene, editing existing clips, and multi-asset
+consistency. **Prefer Veo for:** premium cinematic quality and >10s beats.
+The NO-TEXT-IN-PROMPTS rule is Veo-only — Omni renders and syncs text well.
+
+## Consistency & language routing (production-tested 2026-07-06)
+
+Full playbook: `workflows/VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook.
+The short version that changes decisions:
+
+### Character-consistent scenes — keyframe-first pipeline (MANDATORY for multi-scene character films)
+
+1. Sheets: multi-view sheet for HUMANS; for fictional objects/mascots ALSO crop
+   one clean view (`char-x-hero.png`) — video models blend multi-view object
+   sheets into segmented toys.
+2. Per scene: `generateImageVariation` keyframe (sheets as refs, target aspect,
+   ~$0.07) → show/QA the STILL → animate that exact file with
+   `generateOmniVideoClip` (image_to_video) or `generateVideoFromImage`.
+   Identity lives in the keyframe; the video model only adds motion + speech.
+3. Characters in the FIRST frame of every scene — or in the LAST frame via
+   `generateVideoFromKeyframes` (firstFramePath + lastFramePath, Veo 3.1).
+4. i2v prompts use START FRAME / ACTION / DIALOGUE / END FRAME structure —
+   state WHO must still be in frame at the end.
+
+### Language routing for speaking characters
+
+| Dialogue language | Engine |
+|---|---|
+| English | Veo or Omni |
+| **Myanmar / Thai / non-Latin scripts** | **Omni Flash (image_to_video)** — better pronunciation, no filter drama |
+| Any language + lip-sync UGC realism | Seedance (needs OPENROUTER_API_KEY) |
+
+Veo + non-English script = silent filter blocks ($0, "No video was generated")
+unless the ENTIRE prompt is in the target language — which then weakens
+reference-following. Never write singing/music/voice-direction meta words in
+Veo prompts (instant block); prevent sing-song delivery with "asks casually in
+everyday spoken <language>, plain conversational tone".
+
+### Fixing a 90%-right clip — Omni edit, WITH character refs
+
+`generateOmniVideoClip {inputVideoPath, referenceImagePaths:[<character sheets>], prompt}` —
+open with "Keep everything the same — same motion, camera, timing, audio and
+spoken dialogue. Only <ONE fix>." **Any edit touching a character MUST attach
+that character's reference images** — text-only edits redraw identity. Omit
+duration/aspectRatio (inherited from input video).

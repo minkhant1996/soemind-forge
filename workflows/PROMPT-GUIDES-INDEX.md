@@ -39,6 +39,9 @@ What are you generating?
 │   │
 │   ├─► Silent/B-roll → VIDEO-PROMPT-GUIDE.md (§1-4b)
 │   ├─► Speaking character → VIDEO-PROMPT-GUIDE.md (§4e) or SEEDANCE (§Lip Sync)
+│   ├─► Speaking in Myanmar / non-Latin script → OMNI FLASH — VIDEO-PROMPT-GUIDE.md (§ Production-Tested Playbook, §3)
+│   ├─► Same character across many scenes → keyframe-first pipeline — VIDEO-PROMPT-GUIDE.md (§ Playbook §1-2)
+│   ├─► Fix ONE flaw in a good clip → Omni edit + character refs — VIDEO-PROMPT-GUIDE.md (§ Playbook §4)
 │   ├─► Multi-clip → VIDEO-PROMPT-GUIDE.md (§4c-4d)
 │   └─► With voiceover → generate-voiceover/SKILL.md
 │
@@ -85,7 +88,8 @@ What are you generating?
 | **PLATFORM-SPECS.md** | Aspect ratios, resolutions, file limits for ALL platforms (IG, FB, TikTok, YT, LinkedIn, Twitter, Pinterest) | Before generating ANY content |
 | **THUMBNAIL-GUIDE.md** | Viral thumbnail patterns, face+emotion, before/after, faceless, character reference requirements | Generating ANY thumbnail |
 | **IMAGE-PROMPT-GUIDE.md** | Shot types, camera angles, lighting, composition, lens, effects, color grading | Generating ANY image |
-| **VIDEO-PROMPT-GUIDE.md** | Camera movements, shot types, lighting, effects, transitions, clip chaining, character dialogue | Generating video with Gemini Veo |
+| **PRODUCT-SHOT-GUIDE.md** | 26 e-commerce presets (`productShot` ids): packshots, scale/trust shots, lifestyle, mood, seasonal; channel→shot mapping; fidelity rules | Product photos, listing images, ad variations, seasonal versions |
+| **VIDEO-PROMPT-GUIDE.md** | Camera movements, shot types, lighting, effects, transitions, clip chaining, character dialogue, § Gemini Omni Flash (4 video tasks, 10 art styles, conversational editing) | Generating video with Gemini Veo or Omni Flash |
 | **SEEDANCE-PROMPT-GUIDE.md** | 6-part prompt structure, multimodal refs, integrated audio (dialogue + SFX + music), lip-sync, multi-shot narratives | Seedance 2.0 videos, lip-sync, audio integration |
 | **BRAND-ASSETS-GUIDE.md** | Logo variations, profile images, cover/banner images, Instagram highlights, YouTube watermarks | Setting up brand presence on social platforms |
 | **STYLE-GUIDE.md** | Visual styles (Pixar, anime, vintage, cyberpunk, meme, etc.) | Generating ANY visual content |
@@ -102,6 +106,7 @@ What are you generating?
 |---------|---------|-----------|
 | §1. Shot Types | EWS, wide, medium, close-up, etc. | Always |
 | §2. Camera Movements | Dolly, pan, tilt, crane, orbit, etc. | Always |
+| §2b. Camera-Move Preset Library | 46 ready-to-use four-part blocks (Movement/Speed/Framing/End), `cameraMove` arg ids, pick-by-intent table | Every video — propose a preset instead of improvising camera language |
 | §3. Lens Choices | 16mm to 135mm, depth of field | Always |
 | §4. Lighting | Natural, studio, atmospheric, color temp | Always |
 | §4b. Visual Effects | Lens effects, atmosphere, color grading, glow | When video needs effects |
@@ -111,6 +116,8 @@ What are you generating?
 | §5. Style & Mood | Cinematic, documentary, commercial | Always |
 | §6. Action Verbs | Strong motion language | Action scenes |
 | §7. Keyframe Workflow | First/last frame generation | Character consistency |
+| §7b. Production-Sheet Story Pipeline | Character/environment/prop sheet prompt patterns, storyboard prompt, multi-reference scene clips (asset refs vs first frame), assembly transitions | Multi-character stories → recipes/story-short-film.md |
+| § Gemini Omni Flash | Specs (10s/720p/5 refs), 4 tasks (text/image/reference/edit), `<IMG_REF_n>` tags, 10 art-style presets (ASK user), camera vocab, text sync, conversational editing | Any `generateOmniVideoClip` use |
 
 ---
 
@@ -256,7 +263,8 @@ workflows/
 ├── PROMPT-GUIDES-INDEX.md    ← You are here (start here)
 ├── PLATFORM-SPECS.md         ← Aspect ratios & sizes for all platforms
 ├── IMAGE-PROMPT-GUIDE.md     ← Image generation (Gemini Imagen)
-├── VIDEO-PROMPT-GUIDE.md     ← Video generation (Gemini Veo)
+├── PRODUCT-SHOT-GUIDE.md     ← E-commerce product shots (26 presets)
+├── VIDEO-PROMPT-GUIDE.md     ← Video generation (Gemini Veo + Omni Flash)
 ├── SEEDANCE-PROMPT-GUIDE.md  ← Seedance 2.0 (lip-sync, audio, multimodal)
 ├── THUMBNAIL-GUIDE.md        ← Viral thumbnails (face+emotion, faceless, etc.)
 ├── BRAND-ASSETS-GUIDE.md     ← Logo, profile, cover, highlights

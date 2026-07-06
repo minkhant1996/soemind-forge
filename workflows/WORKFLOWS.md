@@ -242,6 +242,52 @@ shorter than their scene — ffprobe them first (see the recipe's pacing trap).
 
 ---
 
+### generateVideoFromKeyframes — Veo 3.1 first + last frame interpolation
+
+Generate a clip that starts EXACTLY on one image and ends EXACTLY on another —
+reveals, transformations, and guaranteeing characters/composition at both ends
+of a shot. (Exposed in the CLI 2026-07-06.)
+
+```bash
+node workflows/cli.cjs generateVideoFromKeyframes '{
+  "firstFramePath": "projects/x/output-contents/d/keyframes/kf-scene-04.png",
+  "lastFramePath":  "projects/x/output-contents/d/keyframes/kf-scene-04-END.png",
+  "prompt": "Transition: how to get from the first frame to the last — actions in order, camera path, dialogue line if any",
+  "duration": 8, "aspectRatio": "9:16", "quality": "fast",
+  "outputPath": "projects/x/output-contents/d/clips/scene-04.mp4"
+}'
+```
+
+- Both keyframes should share the aspect ratio. Veo fast: $0.10/s.
+- Free END-frame trick: pull it from a previous take —
+  `ffmpeg -sseof -0.2 -i take.mp4 -frames:v 1 kf-END.png`.
+- Rule from production: characters belong in the FIRST frame of a scene; if
+  the shot design hides them at the start, put them in the LAST frame and use
+  this command.
+
+### Omni edit task — surgical fixes on existing clips (WITH character refs)
+
+When a clip is 90% right, edit it instead of re-rolling:
+
+```bash
+node workflows/cli.cjs generateOmniVideoClip '{
+  "inputVideoPath": "clips/scene-05.mp4",
+  "referenceImagePaths": ["assets/characters/char-hero-sheet.png"],
+  "prompt": "Keep everything the same — same motion, same camera, same timing, same audio and spoken dialogue, same lighting. Only <ONE fix>. The character must be IDENTICAL to <IMG_REF_0>: <locked description>. (no subtitles)",
+  "outputPath": "clips/scene-05-fixed.mp4"
+}'
+```
+
+- **Any edit that touches a character MUST attach that character's reference
+  image(s)** — a text-only edit fixes the described shape but silently redraws
+  identity (face/wardrobe) from imagination.
+- Do NOT pass `duration`/`aspectRatio` on edit tasks — inherited from the
+  input video.
+- Non-English dialogue, character-consistency ladder, Veo filter triage:
+  VIDEO-PROMPT-GUIDE.md § Production-Tested Playbook.
+
+---
+
 ## Pipelines — connect workflows as a JSON graph
 
 ```bash
@@ -317,24 +363,75 @@ of scene seconds; match it to the voiceover length (~2.5 words/sec).
 
 ### generateOmniVideoClip — Gemini Omni Flash video (experimental)
 
-The instruction-precision alternative to Veo (~10s cap, ~$1.03/10s measured).
-Wins at: live handwriting, text-in-scene, precise choreography. Production
-path: NBP keyframe with your locked character → `referenceImagePath` →
-timestamped prompt (image_to_video task is selected automatically).
+The instruction-precision alternative to Veo (~10s cap, 720p native,
+~$1.03/10s measured). Wins at: live handwriting, text-in-scene, precise
+choreography, stylized explainers, native audio (VO/SFX generated in the same
+pass). Specs: max 10s/turn · 720p only · aspect `16:9` (default) or `9:16` ·
+up to 5 reference images · audio OUT yes, audio IN no · refuses named real
+people · SynthID watermark on every output.
+
+**Video tasks** (auto-selected from your inputs; override with `task`):
+
+| Task | Trigger inputs | Best for |
+|---|---|---|
+| `text_to_video` | prompt only | Explainers, sizzle reels, word-by-word text sync |
+| `image_to_video` | `referenceImagePath` (1 image) | Explainers, cinematic beats, animating a locked NBP keyframe |
+| `reference_to_video` | `referenceImagePaths` (2-5 images) | Consistency: cite each as `<IMG_REF_0>`, `<IMG_REF_1>`… in the prompt |
+| `edit` | `inputVideoPath` | Add SFX, add/change on-video text, restyle, change camera/action on an existing clip |
+| `extend` | `inputVideoPath` + `task:"extend"` | Continue a scene past its end |
+
+**Art styles** — Omni Flash shines at stylized output. `artStyle` prepends a
+tuned fragment: `pixel-art`, `claymation`, `mixed-media`, `3d-papercraft`,
+`whiteboard-doodle`, `2d-illustration`, `low-poly`, `3d-mix`,
+`isometric-flat-vector`, `fluffy-toy`. **ASK the user which style** (or
+photorealistic = omit) before generating — never silently pick one.
 
 ```bash
+# image_to_video — production path: NBP keyframe with locked character
 node workflows/cli.cjs generateOmniVideoClip '{
   "prompt": "[00:00-00:01] He uncaps the marker... [00:01-00:07] He writes TALK TO USERS — first T-A-L-K, then T-O... He says, \"Thats the whole strategy.\" (no subtitles)",
   "referenceImagePath": "projects/my-brand/output-contents/x/keyframe.png",
   "duration": "10s",
+  "aspectRatio": "9:16",
   "outputPath": "projects/my-brand/output-contents/x/clip.mp4"
+}'
+
+# reference_to_video — multi-image consistency via <IMG_REF_n> tags
+node workflows/cli.cjs generateOmniVideoClip '{
+  "prompt": "A violinist is playing this violin <IMG_REF_0> on this stage <IMG_REF_1>",
+  "referenceImagePaths": ["assets/products/violin.png", "assets/backgrounds/stage.png"],
+  "outputPath": "projects/my-brand/output-contents/x/violin.mp4"
+}'
+
+# edit — add SFX / on-video text to an existing clip
+node workflows/cli.cjs generateOmniVideoClip '{
+  "prompt": "Keep everything the same. Add animated motion effects coming out of the skateboard, with whoosh SFX.",
+  "inputVideoPath": "projects/my-brand/output-contents/x/skate.mp4",
+  "outputPath": "projects/my-brand/output-contents/x/skate-fx.mp4"
+}'
+
+# text_to_video — stylized explainer with art style preset
+node workflows/cli.cjs generateOmniVideoClip '{
+  "prompt": "An explainer of how rain forms: evaporation, condensation, rainfall. A calm voiceover narrates each stage as it appears.",
+  "artStyle": "claymation",
+  "duration": "10s",
+  "outputPath": "projects/my-brand/output-contents/x/rain.mp4"
 }'
 ```
 
-Fields: `prompt` (timestamps/dialogue/SFX syntax — see VIDEO-PROMPT-GUIDE § Pro
-syntax), `referenceImagePath` (optional → image_to_video), `duration` ('4s'-'10s'),
-`thinkingLevel`. Requires @google/genai >= 2.0. Model selection rule and tested
-verdicts: VIDEO-PROMPT-GUIDE.md.
+Fields: `prompt` (timestamps/dialogue/SFX syntax — see VIDEO-PROMPT-GUIDE §
+Omni Flash), `referenceImagePath` / `referenceImagePaths` (max 5),
+`inputVideoPath`, `task`, `artStyle`, `cameraMove` (46 presets —
+VIDEO-PROMPT-GUIDE §2b), `aspectRatio` ('16:9'|'9:16'), `duration`
+('4s'-'10s'), `thinkingLevel`. Requires @google/genai >= 2.0. Model selection
+rule, prompting philosophy, and tested verdicts: VIDEO-PROMPT-GUIDE.md.
+
+**Camera-move presets (all video commands):** `generateSilentVideo`,
+`generateVideoFromImage`, and `generateOmniVideoClip` accept
+`cameraMove: "<id>"` — a four-part block (Movement/Speed/Framing/End) is
+prepended to the prompt from `CAMERA_MOVES`. For scene-array workflows
+(voiceover scenes, speaking video, Seedance), paste the block manually at the
+head of each scene prompt. Ids + when-to-use table: VIDEO-PROMPT-GUIDE.md §2b.
 
 **Video backgrounds:** `backgroundPath` also accepts a video clip
 (.mp4/.mov/.webm — e.g. a Veo render). Set `bgAudioVolume` (0–1, default 0/muted)
@@ -948,7 +1045,7 @@ natural excitement, engaging energy
 | 16 | `character-sheet` | Text | Multi-angle character refs | `generateCharacterSheet()` |
 | 17 | `mix-audio` | Video + VO/music | Video with mixed audio | `mixVideoAudio()` |
 | 18 | `captions` | Script/cues | Subtitle file (.srt) | `generateCaptions()` |
-| 19 | `assemble-final` | Clips + VO + music + captions | Final video | `assembleFinal()` |
+| 19 | `assemble-final` | Clips + VO + music + captions (+ optional xfade transitions) | Final video | `assembleFinal()` |
 | 20 | `image-options` | Text | N cheap candidates | `generateImageOptions()` |
 | 21 | `finalize-image` | Chosen preview | Full-res image | `finalizeImage()` |
 | 22 | `storyboard` | Scenes | Keyframe per scene | `generateStoryboard()` |
@@ -960,7 +1057,7 @@ natural excitement, engaging energy
 | 28 | `render-kinetic-reel` | Text-free bgs + copy + VO | 9:16 kinetic typography reel | `renderKineticReel()` |
 | 29 | `assemble-story-film` | Scene clips + per-scene VO + logo | Multi-scene cinematic cut | `assembleStoryFilm()` |
 | 30 | `review-video` | Generated video + brand rules | Frame-sampled pass/fail QA | `reviewVideoOutput()` |
-| 31 | `omni-video` | Timestamped direction | ~10s clip via Gemini Omni Flash (experimental) | `generateOmniVideoClip()` |
+| 31 | `omni-video` | Text / 1-5 ref images / input video | ~10s clip via Gemini Omni Flash — 4 tasks (text/image/reference/edit), 10 art-style presets | `generateOmniVideoClip()` |
 
 ### Seedance 2.0 Workflows (Native Audio, Lip-Sync, Multi-Reference)
 
@@ -1093,6 +1190,26 @@ const result = await generateImageVariation({
   aspectRatio: '1:1'
 });
 
+// E-commerce product shot: productShot preset (26 ids — PRODUCT-SHOT-GUIDE.md)
+// supplies scene + lighting + fidelity clause; prompt carries only specifics
+const packshot = await generateImageVariation({
+  referenceImagePath: 'projects/my-project/assets/products/prod-main.png',
+  productShot: 'pure-white-packshot',
+  prompt: 'The ceramic honey jar with the gold lid.',
+  outputPath: 'projects/my-project/output-contents/packshot.png',
+  aspectRatio: '1:1', imageSize: '2K'
+});
+
+// Multi-reference (max 5 total): production sheets, style refs — describe
+// each image's role in the prompt (powers the storyboard step of
+// recipes/story-short-film.md)
+const board = await generateImageVariation({
+  referenceImagePaths: ['assets/characters/char-lila-sheet.png', 'assets/backgrounds/loc-garden-sheet.png'],
+  prompt: '12-panel cinematic storyboard… must match the reference sheets exactly in every panel…',
+  outputPath: 'projects/my-project/output-contents/storyboard.png',
+  aspectRatio: '16:9', imageSize: '2K'
+});
+
 // Output: { success: true, data: { imagePath: '...', cost: {...} } }
 ```
 
@@ -1155,7 +1272,8 @@ const result = await generateSilentVideo({
   outputPath: 'projects/my-project/output-contents/video.mp4',
   duration: 6,
   aspectRatio: '9:16',
-  quality: 'fast' // 'lite', 'fast', 'standard'
+  quality: 'fast', // 'lite', 'fast', 'standard'
+  cameraMove: 'slow-zoom-in' // optional preset — full four-part block prepended (46 ids, VIDEO-PROMPT-GUIDE §2b)
 });
 
 // Output: { success: true, data: { videoPath: '...', cost: {...} } }
@@ -1193,11 +1311,27 @@ const result = await generateSpeakingVideo({
 import { generateVideoFromImage } from '../../workflows/index.js';
 
 const result = await generateVideoFromImage({
-  referenceImagePath: 'projects/my-project/assets/product.png',
+  referenceImagePath: 'projects/my-project/assets/product.png',   // first frame
   prompt: 'The smartwatch rotates slowly, light catches the screen, premium feel',
   outputPath: 'projects/my-project/output-contents/product-video.mp4',
   duration: 6,
-  aspectRatio: '9:16'
+  aspectRatio: '9:16',
+  cameraMove: 'orbit-clockwise' // optional preset (46 ids, VIDEO-PROMPT-GUIDE §2b)
+});
+
+// Multi-reference consistency (Veo 3.1 asset refs, max 3): character sheet +
+// environment sheet + prop in ONE clip. State each ref's role in the prompt.
+// 4-5 refs → generateOmniVideoClip. See recipes/story-short-film.md.
+const scene = await generateVideoFromImage({
+  referenceImagePaths: [
+    'assets/characters/char-lila-sheet.png',
+    'assets/backgrounds/loc-garden-sheet.png',
+    'assets/products/prop-ball-sheet.png',
+  ],
+  prompt: 'The girl from the character sheet chases the ball from the prop reference across the garden from the environment reference. Golden afternoon light.',
+  cameraMove: 'tracking',
+  outputPath: 'projects/my-project/output-contents/scene-02.mp4',
+  duration: 8, aspectRatio: '16:9'
 });
 
 // Output: { success: true, data: { videoPath: '...', cost: {...} } }

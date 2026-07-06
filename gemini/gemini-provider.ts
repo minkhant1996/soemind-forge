@@ -484,6 +484,18 @@ function buildContentParts(
     });
   }
 
+  // ----- ADDITIONAL IMAGE PARTS (multi-reference, optional) -----
+  if (input.imageInputs?.length) {
+    for (const img of input.imageInputs) {
+      parts.push({
+        inlineData: {
+          mimeType: img.mimeType || 'image/jpeg',
+          data: Buffer.isBuffer(img.data) ? img.data.toString('base64') : img.data,
+        },
+      });
+    }
+  }
+
   // ----- AUDIO PART (optional) -----
   if (input.audioInput) {
     /**
@@ -1253,6 +1265,10 @@ export async function generateVideo(
         prompt: string;
         image?: { imageBytes: string; mimeType: string };
         lastFrame?: { imageBytes: string; mimeType: string };
+        referenceImages?: Array<{
+          image: { imageBytes: string; mimeType: string };
+          referenceType: string;
+        }>;
       } = {
         prompt: input.prompt,
       };
@@ -1277,6 +1293,27 @@ export async function generateVideo(
           imageBytes: lastFrameData,
           mimeType: input.lastFrameImageMimeType || 'image/jpeg',
         };
+      }
+
+      // Add asset reference images if provided (Veo 3.1 consistency mode, max 3)
+      if (input.referenceImages?.length) {
+        if (input.referenceImages.length > 3) {
+          return {
+            success: false,
+            error: {
+              code: 'VEO_TOO_MANY_REFS',
+              message: `Veo accepts at most 3 asset reference images (got ${input.referenceImages.length}). For 4-5 refs use Omni Flash reference_to_video.`,
+              details: { model: input.model },
+            },
+          };
+        }
+        source.referenceImages = input.referenceImages.map((r) => ({
+          image: {
+            imageBytes: Buffer.isBuffer(r.data) ? r.data.toString('base64') : r.data,
+            mimeType: r.mimeType || 'image/jpeg',
+          },
+          referenceType: 'asset',
+        }));
       }
 
       // Start video generation operation
@@ -1713,6 +1750,18 @@ export async function generateOmniVideo(input: {
   /** Base64 image for image_to_video / reference_to_video tasks. */
   imageBase64?: string;
   imageMimeType?: string;
+  /**
+   * Multiple reference images (max 5 per Omni Flash spec) for
+   * reference_to_video. Refer to them in the prompt as <IMG_REF_0>,
+   * <IMG_REF_1>, … in the order given here. Takes precedence over
+   * imageBase64 when both are set.
+   */
+  images?: Array<{ base64: string; mimeType?: string }>;
+  /** Base64 input video for edit / extend tasks. */
+  videoBase64?: string;
+  videoMimeType?: string;
+  /** '16:9' (default) or '9:16'. */
+  aspectRatio?: '16:9' | '9:16';
   /** e.g. '8s', '10s' (Omni Flash caps ~10s per turn). Default '8s'. */
   duration?: string;
   thinkingLevel?: string;
@@ -1736,13 +1785,42 @@ export async function generateOmniVideo(input: {
     try {
       const ai = getClientWithKey(currentKey);
 
-      const interactionInput: unknown = input.imageBase64
-        ? [
-            { type: 'image', data: input.imageBase64, mime_type: input.imageMimeType || 'image/png' },
-            { type: 'text', text: input.prompt },
-          ]
+      const images = input.images?.length
+        ? input.images
+        : input.imageBase64
+          ? [{ base64: input.imageBase64, mimeType: input.imageMimeType }]
+          : [];
+      if (images.length > 5) {
+        return {
+          success: false,
+          error: {
+            code: 'OMNI_TOO_MANY_REFS',
+            message: `Omni Flash accepts at most 5 reference images (got ${images.length})`,
+            details: { model },
+          },
+        };
+      }
+
+      const mediaParts: unknown[] = [];
+      if (input.videoBase64) {
+        mediaParts.push({ type: 'video', data: input.videoBase64, mime_type: input.videoMimeType || 'video/mp4' });
+      }
+      for (const img of images) {
+        mediaParts.push({ type: 'image', data: img.base64, mime_type: img.mimeType || 'image/png' });
+      }
+      const interactionInput: unknown = mediaParts.length
+        ? [...mediaParts, { type: 'text', text: input.prompt }]
         : input.prompt;
-      const task = input.task || (input.imageBase64 ? 'image_to_video' : 'text_to_video');
+
+      const task =
+        input.task ||
+        (input.videoBase64
+          ? 'edit'
+          : images.length > 1
+            ? 'reference_to_video'
+            : images.length === 1
+              ? 'image_to_video'
+              : 'text_to_video');
 
       const interaction: any = await (ai as any).interactions.create({
         model: `models/${model}`,
@@ -1753,7 +1831,16 @@ export async function generateOmniVideo(input: {
           video_config: { task },
         },
         response_modalities: ['video'],
-        response_format: { type: 'video', duration: input.duration || '8s' },
+        // Edit task: duration/aspect are inherited from the input video — the API
+        // rejects them in response_format.
+        response_format:
+          task === 'edit'
+            ? { type: 'video' }
+            : {
+                type: 'video',
+                duration: input.duration || '8s',
+                aspect_ratio: input.aspectRatio || '16:9',
+              },
       });
 
       // Collect output parts; keep the LARGEST video payload (a complete mp4 —

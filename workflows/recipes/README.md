@@ -13,6 +13,7 @@ the matching recipe instead of planning from scratch.
 | [testimonial-ad.md](./testimonial-ad.md) | "make an ad from this review" | 1 piece | $2–8 |
 | [podcast-content-week.md](./podcast-content-week.md) | "repurpose my episode" | 1 episode → 1 week | $0.5–3 |
 | [cinematic-story-film.md](./cinematic-story-film.md) | "brand film", "cinematic story with a character" | 1 film (30–45s) | $3.5–8 |
+| [story-short-film.md](./story-short-film.md) | "short film", "animated story", multi-character story with consistent cast/locations/props | 1 short (15–60s) | $4–10 |
 | [video-essay-explainer.md](./video-essay-explainer.md) | "explainer", "video essay", "break down why X" | 1 essay (60–90s) | $0.6–3 |
 | [pov-series.md](./pov-series.md) | "POV video", relatable-pain series | episodes (8s) | ~$0.90/ep |
 | [storytime-confession.md](./storytime-confession.md) | "storytime", "tell the real story of…" | 1 story (60–90s) | $2.5–4 |

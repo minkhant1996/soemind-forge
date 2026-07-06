@@ -92,6 +92,110 @@ Use these exact terms for consistent results:
 
 ---
 
+## 2b. Camera-Move Preset Library (46 ready-to-use blocks)
+
+Each preset is a **four-part block** — `<move>. Movement: … Speed: … Framing: …
+End: …` — that removes the ambiguity AI video models trip on (what moves, how
+fast, what stays readable, where it lands). Works on **Veo AND Omni Flash**.
+
+**Two ways to use them:**
+
+1. **`cameraMove` arg** (preferred) — `generateSilentVideo`,
+   `generateVideoFromImage`, and `generateOmniVideoClip` accept the preset id;
+   the block is prepended to your prompt automatically:
+   ```bash
+   node workflows/cli.cjs generateSilentVideo '{"prompt":"A smartwatch on a marble pedestal, golden hour light","cameraMove":"orbit-clockwise","duration":6,"aspectRatio":"9:16","outputPath":"…/clip.mp4"}'
+   ```
+2. **Paste the block manually** at the HEAD of any scene prompt (voiceover
+   scenes[], speaking videos, Seedance) — the full text lives in the tables
+   below and in `CAMERA_MOVES` (workflows/index.ts).
+
+**One move per clip.** Don't stack two presets — pick the one that serves the
+beat. Combine with subject/lighting description AFTER the block.
+
+### Pick by intent (cheat table)
+
+| Content intent | Best moves |
+|---|---|
+| Product hero / reveal | `slow-zoom-in`, `orbit-clockwise`, `arc-right`, `dolly-in` |
+| Premium B-roll, calm | `static`, `slider-right`, `slider-left`, `slow-zoom-out` |
+| Energy / hype / hook | `crash-zoom-in`, `whip-pan-right`, `fast-zoom-in`, `chase` |
+| UGC / authentic feel | `handheld`, `first-person`, `snorricam` |
+| Walking testimonial | `reverse-tracking`, `side-tracking`, `follow` |
+| Scale / location reveal | `drone-pull-back`, `crane-up`, `helicopter`, `earth-zoom-out` |
+| Arrival / destination | `drone-push-in`, `push-past`, `pass-through` |
+| Architecture / vertical | `tilt-up`, `tilt-down`, `pedestal-up`, `pedestal-down` |
+| Transition between scenes | `whip-pan-right`/`-left`, `pass-through`, `infinite-zoom` |
+| Passage of time | `time-lapse` |
+| Cute / miniature worlds | `tilt-shift` (pairs well with Omni art styles) |
+| Vehicles | `vehicle-tracking`, `low-tracking`, `chase` |
+
+### Pan / Tilt
+
+- **`static`** — locked-off static shot. Movement: hold one fixed camera position for the full clip. Speed: still and steady. Framing: keep the same angle, height, lens distance and composition. End: finish with the same framing and camera position.
+- **`pan-right`** — pan right. Movement: rotate the camera horizontally from left to right from one fixed point. Speed: smooth constant rotation. Framing: keep the horizon level while new space enters from the right side of the frame. End: settle on a clear final composition.
+- **`pan-left`** — mirror of `pan-right`, new space enters from the left.
+- **`whip-pan-right`** — whip pan right. Movement: rotate rapidly from the starting direction toward a new target on the right. Speed: fast snap with brief motion blur during the rotation. Framing: begin on one readable composition and land on a second readable target. End: settle into a sharp final frame.
+- **`whip-pan-left`** — mirror of `whip-pan-right`.
+- **`tilt-up`** — tilt up. Movement: rotate the camera upward from one fixed point. Speed: smooth constant tilt. Framing: keep the vertical subject or architecture centered as the frame travels upward. End: land on the upper target.
+- **`tilt-down`** — mirror of `tilt-up`, lands on the lower target.
+
+### Zoom / Lens
+
+- **`slow-zoom-in`** — slow zoom in. Movement: slowly increase lens focal length toward a tighter frame. Speed: gradual and even. Framing: keep the main visual target readable as it becomes larger in frame. End: finish on a stable tighter composition.
+- **`slow-zoom-out`** — mirror: wider frame, more surrounding space.
+- **`fast-zoom-in`** / **`fast-zoom-out`** — same geometry, "quick decisive zoom".
+- **`crash-zoom-in`** — crash zoom in. Movement: snap the lens rapidly toward the main visual target. Speed: very fast and punchy. Framing: keep the target readable through the sudden scale change. End: land on a bold tighter composition.
+- **`crash-zoom-out`** — mirror of `crash-zoom-in`.
+
+### Dolly / Track
+
+- **`dolly-in`** — dolly in. Movement: move the camera physically forward in a straight line toward the main subject. Speed: smooth controlled push. Framing: keep camera height, lens direction and subject position consistent while distance closes. End: finish in a tighter composition. *(Dolly = physical travel with parallax; zoom = lens only.)*
+- **`dolly-out`** — mirror: backward, more environment enters frame.
+- **`tracking`** — tracking shot. Movement: move through the scene with the main subject. Speed: match the subject's pace. Framing: keep the subject consistently readable while the environment moves around them. End: maintain a clear moving composition.
+- **`follow`** — follow shot from behind at shoulder height; back/shoulder/head as foreground guide, route ahead readable.
+- **`reverse-tracking`** — move backward in front of the walking subject; front-facing face and body stable, background moves behind them (walk-and-talk).
+- **`side-tracking`** — move parallel beside the subject; side or three-quarter profile at stable distance.
+- **`low-tracking`** — ground/below-waist height alongside the path; match footsteps or wheels, ground plane moves through frame.
+- **`vehicle-tracking`** — move with the vehicle along its route; vehicle stable while road/environment moves past.
+- **`chase`** — fast, reactive, physically close follow along the action route; energetic reframing allowed.
+
+### Physical Moves
+
+- **`truck-right`** / **`truck-left`** — move the camera physically sideways on a straight horizontal path; lens keeps facing the same direction while the scene slides across frame.
+- **`pedestal-up`** / **`pedestal-down`** — move the entire camera vertically in a straight line; lens stays level and pointed the same direction.
+- **`slider-right`** / **`slider-left`** — slide a SMALL distance; slow controlled motion; foreground/subject/background parallax shift (premium product feel).
+- **`push-past`** — move forward past a visible foreground object, edge or opening; foreground passes close to lens, space beyond becomes clearer; arrive inside/beyond the foreground layer.
+- **`arc-right`** / **`arc-left`** — shallow curved path around the subject to one side; distance, height and readability constant while the angle changes.
+- **`orbit-clockwise`** / **`orbit-counterclockwise`** — circle the subject at consistent radius; subject centered while the background rotates.
+
+### Human Camera
+
+- **`handheld`** — human operator height, natural body movement; subtle sway and micro-adjustments (UGC/doc realism).
+- **`snorricam`** — camera fixed relative to the subject's torso/face while they move; subject locked in frame, background moves around them.
+
+### Drone / Crane
+
+- **`crane-up`** / **`crane-down`** — travel smoothly vertically through open space; subject or location stays readable; end with the new scale visible.
+- **`drone-push-in`** — fly smoothly forward through open space toward the subject/destination; controlled aerial glide; arrive at a closer aerial composition.
+- **`drone-pull-back`** — mirror: fly backward, more landscape appears.
+- **`helicopter`** — high altitude, broad gradual flight path; landscape or distant moving subject readable at wide scale.
+
+### Specials
+
+- **`first-person`** — first-person view. Movement: move forward at human eye height from the character's perspective. Speed: natural walking or reaching pace. Framing: use visible hands, arms or body edges as the viewer's physical reference. End: arrive at the next point of action from the same point of view.
+- **`tilt-shift`** — high angled view, narrow band of sharp focus with soft blur above/below; miniature-scale look.
+- **`infinite-zoom`** — zoom continuously inward toward the exact center target, accelerating; end when the next visual world fills the frame (great loop/transition).
+- **`earth-zoom-out`** — pull upward from the starting point through street, city, landscape and planet scale; original location stays centered.
+- **`time-lapse`** — locked camera while time moves rapidly forward; same composition and horizon; visible passage of time.
+- **`pass-through`** — move forward toward a visible object/surface/barrier and continue into the space beyond; opening centered as the transition point.
+
+> Mirror variants marked "mirror" use identical wording with direction words
+> swapped — the exact full text for every id is in `CAMERA_MOVES`
+> (workflows/index.ts) and is what `cameraMove` prepends.
+
+---
+
 ## 3. Lens Choices
 
 Lenses control depth and perspective, not just distance. Specify for precise control:
@@ -780,6 +884,75 @@ const video = await generateVideoFromKeyframes({
 
 ---
 
+## 7b. Production-Sheet Story Pipeline (multi-character consistency)
+
+For narrative shorts where the SAME cast/locations/props must hold across many
+shots, single keyframes aren't enough — build **production sheets** and feed
+them as **asset references**. Full recipe: `workflows/recipes/story-short-film.md`.
+The five steps: story bible (.md) → production sheets → storyboard + scene
+prompt mapping → multi-reference clips → ffmpeg assembly.
+
+### Asset references vs first frame (know the difference)
+
+- `referenceImagePath` (first frame) — the clip STARTS from this exact image.
+- `referenceImagePaths` (asset refs, **max 3 on Veo**) — guide what things
+  LOOK like without appearing verbatim: character sheet + environment sheet +
+  prop sheet in one request. For 4-5 refs use Omni Flash `reference_to_video`
+  (max 5, `<IMG_REF_n>` tags).
+
+### Prompt pattern: character sheet (one image = the whole character)
+
+```
+Character production sheet for LINA: full-body FRONT view, 3/4 view, SIDE
+view, BACK view of a 7-year-old girl with dark braided pigtails, pink tee,
+maroon overalls, yellow socks. Expressions grid: warm, curious, surprised,
+thinking, sorry, happy. Personality: curious, fearless, quietly stubborn —
+she investigates before she runs. Props: her felt ball. Color palette
+swatches. White background. Photorealistic. Label all views clearly.
+```
+
+Include the PERSONALITY on the sheet — it drives acting in every clip that
+references it. Same pattern for environments ("FRONT view, SIDE view, TOP
+view, REAR view (behind the tree), corner detail, materials close-up …
+Label all views clearly") and props (multiple angles + in-hand scale shot).
+
+### Prompt pattern: storyboard (approval artifact before paying for clips)
+
+```
+12-panel cinematic storyboard titled "LILA — FLOATING WONDER", 15 seconds,
+16:9. Character design, environment, props, colors and style must match the
+reference sheets exactly in every panel. Avoid shots that are too similar to
+each other. Each panel labeled: shot number, shot type, camera movement,
+duration in seconds, visual description, and dialogue or action line. Not
+every shot needs dialogue.
+```
+
+Pass ALL sheets via `generateImageVariation` `referenceImagePaths` (max 5).
+
+### Prompt pattern: multi-reference scene clip
+
+State each reference's ROLE — refs without roles produce mashups:
+
+```
+The girl from the character sheet — same face, braids, overalls — chases the
+ball from the prop reference toward the ivy-wall corner of the garden from
+the environment reference. Golden afternoon light. (soft ambient birds)
+```
+
+Multi-shot version (Omni Flash or a storyboard-driven clip): "Each shot
+follows the timing, camera movement and composition specified in the
+storyboard. Maintain consistent characters, environment and color palette
+across all cuts. Smooth transitions between shots."
+
+### Assembly transitions (ffmpeg, $0)
+
+`assembleFinal` takes `transition` (`fade`, `dissolve`, `fadeblack`,
+`wipeleft`, `slideleft`, `circleopen`, …) + `transitionDuration` (default
+0.5s). Hard cuts (omit) for pace; dissolves for gentle story flow; each
+overlap shortens total runtime by its duration.
+
+---
+
 ## 8. Detailed Prompt Examples
 
 ### Product Video (UI Animation)
@@ -1059,3 +1232,274 @@ usage mapping fixed 2026-07-05, auto-ledgered from now on. Requires
 character/room stay consistent AND text instructions land. For in-order
 handwriting, spell out the stroke order in the prompt ("first T-A-L-K, then
 T-O, then U-S-E-R-S, exactly as a person writes").
+
+---
+
+# Gemini Omni Flash — Full Prompting Guide (2026-07-06)
+
+> Omni Flash is "Nano Banana for video": one conversational model for
+> generating AND editing. Everything below runs through ONE CLI command —
+> `generateOmniVideoClip` — the task is auto-selected from the inputs you pass.
+
+## Specs (hard limits — plan around them)
+
+| Spec | Value |
+|---|---|
+| Max clip length | **10 seconds** per turn (longer = multi-clip + `assembleFinal`) |
+| Resolution | **720p native only** (need 1080p+? use Veo 3.1) |
+| Aspect ratios | **16:9** (default) and **9:16** |
+| Reference images | Up to **5** per prompt |
+| Audio output | **Native** — VO, dialogue, SFX, ambience generated in the same pass; prompt for it in text |
+| Audio input | **Not supported** (describe the audio you want instead) |
+| Safety | Refuses named real people/likenesses; no voice editing of real footage; SynthID + C2PA on every output |
+
+## The four video tasks — and when to use each
+
+| Task | You provide | Good for | Example prompt |
+|---|---|---|---|
+| **Text to Video** | prompt only | Explainers, sizzle reels, text-sync pieces | "A side view of a person running, with a new cut every 2 seconds, they run past 5 unusual real world things. Label the things as they go by with the same text effect. Same road. Sizzle reel. A voiceover announces the things." |
+| **Image to Video** | 1 image (`referenceImagePath`) | Explainers, cinematic beats, animating a keyframe/scene | *(attach scene image)* "A cat enters the scene and he pets it" |
+| **Reference to Video** | 2-5 images (`referenceImagePaths`), cited as `<IMG_REF_0>`… | Keeping a product/character/environment consistent in a NEW scene | "A violinist is playing this violin `<IMG_REF_0>` on this stage `<IMG_REF_1>`" |
+| **Edit Video** | existing clip (`inputVideoPath`) | SFX, adding/changing text in video, restyling, camera/action changes | "Keep everything the same. Add animated motion effects coming out of the skateboard." |
+
+**`<IMG_REF_n>` tags:** in reference_to_video, images are numbered in array
+order — `referenceImagePaths[0]` = `<IMG_REF_0>`. Cite the tag exactly where
+the object appears in your sentence.
+
+## Prompting philosophy: Omni ≠ Veo
+
+**With Veo you must be prescriptive** (five-part formula, 100-200 words, exact
+film language). **Omni Flash reasons** — it has Gemini's world knowledge of
+history, science, and culture, plus intuitive physics. Tell it WHAT you want,
+not every frame:
+
+- ✅ "Claymation explainer of protein folding" → technically accurate alpha
+  helices + synced narration, no manual spec needed.
+- ✅ "Explain the difference between regular computing and quantum computing"
+  → the model designs the visualization itself.
+
+Detail still = control. Layer in **shot framing, style, lighting, location,
+action** when you have an exact vision; leave them out when you want the
+model's reasoning to fill the gaps.
+
+## Art styles — ASK THE USER FIRST (mandatory)
+
+Omni Flash excels at stylized worlds. The kit ships 10 presets
+(`artStyle` field — fragments live in `OMNI_ART_STYLES`):
+
+| `artStyle` id | Look |
+|---|---|
+| `pixel-art` | Retro 8/16-bit, chunky pixels, limited palette |
+| `claymation` | Stop-motion clay, fingerprints, 12fps charm |
+| `mixed-media` | Photo cutouts + paper textures + hand-drawn scribbles |
+| `3d-papercraft` | Layered cut-paper diorama, folded edges |
+| `whiteboard-doodle` | Marker line art, sketchy line-boil |
+| `2d-illustration` | Flat vector shapes, editorial motion graphics |
+| `low-poly` | Faceted 3D polygons, flat shading |
+| `3d-mix` | Polished 3D subject + flat 2D graphic elements |
+| `isometric-flat-vector` | Isometric miniature world, pastel precision |
+| `fluffy-toy` | Plush fabric textures, macro stitching, cozy |
+
+**Rule: before ANY stylized Omni generation, present these options and ask the
+user to pick one — or photorealistic (omit `artStyle`), or their own custom
+style description.** Style is a brand decision, not an agent guess. Record the
+choice in the project's `brand.md` so future generations reuse it.
+
+Custom styles also work — write them straight into the prompt, e.g. the
+DeepMind sample: *"contemporary flat-media style that blends minimalist vector
+shapes with rich organic textures … high-contrast electric palette of neon
+pinks, cyans, limes on deep navy … stipple shading and grainy gradients,
+risograph-like."*
+
+## Camera direction vocabulary (tested Omni terms)
+
+> Prefer the 46 preset blocks in **§2b** — `generateOmniVideoClip` takes
+> `cameraMove: "<id>"` directly. The loose terms below are for conversational
+> edit-task turns and custom moves.
+
+- Continuous: "one continuous shot", "oner"
+- Locked: "static", "locked off", "fixed"
+- Moves: "push in", "punch in", "dolly zoom"
+- Camera character: "natural smartphone zoom", "film camera", "webcam style"
+- Edit-task camera changes: "Change the camera angle to be over the
+  violinist's shoulder" · "a close-up on his shoes, quickly tilting up to
+  medium shot, then widening"
+
+## Text rendering & sync
+
+Omni renders text accurately AND in sync with visuals — word-by-word reveals,
+lower thirds, labels reacting to on-screen events. Sample that works:
+
+> "word by word, one word on the screen at a time: did, you, know, that, this,
+> model, can, do, pretty, good, text!? each word appears with a different
+> animated style, perfect pacing to a rhythm, sizzle reel."
+
+(This is the ONE model where "text appears…" prompts are allowed — the
+NO-TEXT-IN-PROMPTS rule is a Veo rule.)
+
+## Conversational editing (edit task) — iterate, don't regenerate
+
+Each edit preserves what you didn't mention. Chain small asks:
+
+1. "Change the butterfly to a bee." → 2. "Change the bee into a small swarm of fireflies."
+- Action sync: "The lights of the apartments start turning on in sync with the music."
+- Complex actions land without frame-by-frame spec: "Edit this keeping
+  everything the same. Add animated motion effects coming out of the skateboard."
+- Restyle while keeping motion: "apply a claymation style" / staged
+  progressions (crayon → pencil sketch → glass 3D → risograph).
+
+Feed the previous output as the next `inputVideoPath`, keep each instruction
+to ONE change, and log every turn in prompts.txt with a RESULT note.
+
+## More Omni superpowers
+
+- **Drawing to video:** a rough sketch as reference guides motion/structure
+  without appearing in the output — "photorealistic footage of this flying
+  machine `<IMG_REF_0>` in motion".
+- **Storyboard to video:** pass a storyboard image — "Show me in this story.
+  Follow the story exactly in order starting top left. Entire story in 10
+  seconds. Cinematic."
+- **Native audio:** prompt it explicitly — "A voiceover announces the
+  things", "SFX: marker squeaks", "Ambient noise: rain on a tin roof".
+
+## Model selection cheat sheet (Veo 3.1 vs Omni Flash)
+
+| Need | Use |
+|---|---|
+| Cinematic fidelity, 1080p+, premium brand film | Veo 3.1 |
+| Live writing, text-in-scene, exact choreography | Omni Flash |
+| Stylized explainer (clay/pixel/papercraft…) | Omni Flash + `artStyle` |
+| Multi-asset consistency in one scene (product + set) | Omni Flash reference_to_video |
+| Fix/augment an existing clip (SFX, text, restyle) | Omni Flash edit |
+| Speaking character with lip-sync (UGC) | Seedance |
+| >10s continuous single shot | Veo 3.1 (8s beats) or multi-clip assembly |
+
+---
+
+# Production-Tested Playbook — Consistent Characters, Non-English Dialogue, Surgical Edits
+
+> Distilled from a full 6-scene Burmese-dialogue short-film production
+> (2026-07-06, "Bo Bo & Star"). Every claim below was paid for and verified —
+> receipts in `examples/` and the project's prompts.txt. Read this BEFORE
+> starting any multi-scene character film or non-English speaking video.
+
+## 1. Character consistency — the ladder (worst → best)
+
+| # | Method | Held identity? | Verdict |
+|---|---|---|---|
+| 1 | Text description re-written per scene | ❌ never | Two descriptions = two characters. Don't. |
+| 2 | Veo `referenceImagePaths` (asset refs) | ⚠️ humans drift, objects/mascots REINVENTED | Veo treats refs as inspiration. A fictional robot grew arms/legs/torso in 6/6 attempts. |
+| 3 | Omni `reference_to_video` + `<IMG_REF_n>` cited roles | ✅ humans, ✅ objects mostly | Gemini reasoning follows refs far more literally than Veo. |
+| 4 | **NBP keyframe → `image_to_video`** (Omni, or Veo single-ref) | ✅✅ both | **THE WINNER.** Identity lives in an approvable STILL (image models hold identity far better than video models); the video model only adds motion + speech. ~$0.07 still + ~$0.83 Omni clip. |
+| 5 | Veo 3.1 first+last frame (`generateVideoFromKeyframes`) | ✅ at both ends, ⚠️ may morph mid-clip | Locks composition at both ends. Watch mid-flight frames on fictional objects. |
+
+**Rules that fell out of production:**
+- **Humans:** the multi-view character sheet works — faces transfer well.
+- **Fictional objects/mascots/robots:** a multi-view sheet CONFUSES video
+  models (they blend the views into a segmented toy). Crop ONE clean view
+  (`char-x-hero.png`) and reference that instead. Keep the full sheet for
+  image-model keyframes only.
+- Per-scene pipeline: `generateImageVariation` (sheets as refs, 9:16, ~$0.07)
+  → LOOK at the keyframe (or `reviewOutput`) → animate that exact file.
+- Characters must appear in the FIRST frame of every scene; if a shot design
+  hides them at the start (reveal shots), put them in the LAST frame and use
+  `generateVideoFromKeyframes`.
+
+## 2. Structured i2v prompts — START / ACTION / DIALOGUE / END
+
+Omni image_to_video obeys this four-part structure precisely; freeform prompts
+lose characters out of frame mid-scene:
+
+```
+START FRAME (this image): <who is where, doing what, emotional state>.
+ACTION: <movements in order — subject, then camera>.
+DIALOGUE: <speaker> says in <register> <language>, lips syncing: "<line>"
+END FRAME: <exact final composition — WHO must still be in frame>.
+Audio: <ambience, SFX>. Keep characters/design/location exactly as in the image. (no subtitles)
+```
+
+## 3. Non-English dialogue (tested with Burmese/Myanmar — applies to other scripts)
+
+**Model choice: Gemini Omni Flash is the DEFAULT for non-English speaking
+characters.** Its Gemini language layer both pronounces Burmese better and
+passes Burmese script in prompts without fuss. Veo's safety filter silently
+eats mixed-language prompts ("No video was generated", $0 charged, no reason
+given).
+
+Veo filter scorecard (Burmese, 2026-07-06 — expect similar for Thai/Khmer/etc.):
+
+| Prompt pattern | Veo filter | Notes |
+|---|---|---|
+| English prompt + bare Burmese-script quote | ❌ 0/2 | Silent block |
+| English prompt + Burmese quote + `(meaning: <English gloss>)` | ⚠️ 1/2 | Coin flip |
+| + explicit voice/pronunciation direction | ❌ 0/1 | Meta speech words trigger it |
+| + "not singing / no music" directives | ❌ 0/3 | Words for song/music/voice = instant block |
+| **ENTIRE prompt in Burmese** (dialogue via `…မေးသည်- "…"`) | ✅ 7/8 | Passes, BUT ref-following weakens badly (see §1 ladder) |
+| Omni (any of the above patterns) | ✅ | Just works; keep prompt English + native-script dialogue line |
+
+More traps:
+- Veo delivers non-English lines in a SINGING/melodic register by default.
+  You cannot fix it with "not singing / no music" (filter). Fix by framing:
+  "asks casually in everyday spoken <language>, plain conversational tone
+  like chatting with a friend".
+- Give the robot/mascot a voice too — "cute chirpy synthetic child-like
+  <language> robot voice, display pulsing in sync" — no lip-sync risk on a
+  faceless character.
+- Always end with `(no subtitles)` (Burmese: `(စာတန်းထိုး မထည့်ပါနှင့်)`).
+
+**Decision rule: speaking character in Myanmar/non-Latin-script language →
+`generateOmniVideoClip` image_to_video with an approved keyframe. Use Veo only
+for beats without dialogue (or English).**
+
+## 4. Editing existing clips — Omni edit task, surgically
+
+When a clip is 90% right, DON'T re-roll the generation — edit it:
+
+```bash
+node workflows/cli.cjs generateOmniVideoClip '{
+  "inputVideoPath": "clips/scene-05.mp4",
+  "referenceImagePaths": ["assets/characters/char-bobo-sheet.png",
+                           "assets/characters/char-star-hero.png"],
+  "prompt": "Keep everything the same — same motion, same camera, same timing, same audio and spoken dialogue, same lighting. Only <the ONE fix>. The man must be IDENTICAL to <IMG_REF_0>: <locked description>. The robot must be IDENTICAL to <IMG_REF_1>: <locked description>. (no subtitles)",
+  "outputPath": "clips/scene-05-fixed.mp4"
+}'
+```
+
+- **⚠️ THE RULE THAT COSTS MONEY IF IGNORED: any edit that touches a character
+  MUST attach that character's reference image(s).** A text-only edit fixes
+  the *shape* you describe but silently REDRAWS identity (face, wardrobe) from
+  imagination. Refs pin it. (Paid for that lesson twice.)
+- Open with "Keep everything the same — same motion, same camera, same
+  timing, same audio and spoken dialogue" then state ONE change.
+- Do NOT pass `duration`/`aspectRatio` for edit tasks — inherited from the
+  input video (the API rejects them; the kit strips them automatically).
+- Edit cost ≈ a fresh clip (~$0.90/8s) but converges in 1 try vs regen roulette.
+
+## 5. First+last frame (`generateVideoFromKeyframes`, Veo 3.1)
+
+For reveals, transformations, or guaranteeing characters/composition at both
+ends of a shot:
+
+```bash
+node workflows/cli.cjs generateVideoFromKeyframes '{
+  "firstFramePath": "keyframes/kf-scene-04.png",
+  "lastFramePath":  "keyframes/kf-scene-04-END.png",
+  "prompt": "<transition: how to get from first to last, + dialogue>",
+  "duration": 8, "aspectRatio": "9:16", "quality": "fast",
+  "outputPath": "clips/scene-04.mp4"
+}'
+```
+
+- Free trick: extract a great END frame from a previous take —
+  `ffmpeg -sseof -0.2 -i take.mp4 -frames:v 1 kf-END.png` — and interpolate
+  toward it.
+- Non-English dialogue in the prompt → same Veo filter rules as §3 (pure
+  target-language prompt passes; retries are $0 on failure).
+
+## 6. Filter-block triage (Veo "No video was generated")
+
+$0 is charged on blocks — retry freely, but change ONE variable per attempt:
+1. Same prompt again (filter is probabilistic — 1 retry is often enough).
+2. Strip meta speech/music/voice words (singing, music, voiceover, pronunciation).
+3. Non-English text present? → translate the ENTIRE prompt into that language.
+4. Still blocked twice more? → switch the beat to Omni.

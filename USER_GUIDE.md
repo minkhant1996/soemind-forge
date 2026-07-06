@@ -289,6 +289,21 @@ characters:
 5. **Generate** - Run the skill
 6. **QA review** - Check output quality
 
+### Multilingual Speaking Characters & Consistent Casts
+
+Two production-tested rules (full detail: `workflows/VIDEO-PROMPT-GUIDE.md`
+§ Production-Tested Playbook):
+
+- **Speaking in Myanmar / Thai / other non-Latin scripts → Gemini Omni Flash.**
+  Veo silently blocks mixed-language prompts and sings the lines; Omni
+  pronounces them naturally. Best flow: approve a keyframe still per scene,
+  then Omni image-to-video with the dialogue line in native script.
+- **Same characters across many scenes → keyframe-first.** Character sheets
+  feed the IMAGE model (Nano Banana keyframes, ~$0.07 each, approve before
+  animating); the VIDEO model only animates the approved still. For scenes
+  where characters can't be in the first frame, lock them into the last frame
+  with `generateVideoFromKeyframes` (Veo 3.1 first+last frame).
+
 ### Pipeline-First (How Generation Actually Runs)
 
 Before generating anything, the agent authors a `<content-id>.pipeline.json`
@@ -315,11 +330,47 @@ no garbled typography:
 - `node workflows/cli.cjs renderKineticReel '{...}'` — 9:16 animated typography reels
 - `node workflows/cli.cjs renderSlideStill '{...}'` — pixel-perfect carousel/slide stills
 
-### Omni Video (Single-Call Video + Audio)
+### Omni Video (Single-Call Video + Audio, Editing, Art Styles)
 
 `node workflows/cli.cjs generateOmniVideoClip '{...}'` generates a clip with
-integrated audio in one call (Gemini Omni) — an alternative to generating
-video and voiceover separately, for clips up to 10s.
+integrated audio in one call (Gemini Omni Flash) — clips up to 10s, 720p,
+16:9 or 9:16. Four tasks, auto-selected from what you pass:
+
+- **Text to video** — explainers, sizzle reels, on-screen text that syncs
+- **Image to video** — animate a keyframe or scene image
+- **Reference to video** — 2-5 reference images (cited as `<IMG_REF_0>`…)
+  keep your product/character/set consistent in a new scene
+- **Edit video** — pass an existing clip and ask for changes: add SFX, add
+  text, restyle, change the camera
+
+Pick one of **10 art-style presets** (`artStyle`: claymation, pixel-art,
+whiteboard-doodle, 3d-papercraft, fluffy-toy…) — the agent will always ask
+you which style before generating stylized content.
+
+### Camera Moves (46 presets)
+
+Instead of describing camera work by hand, video commands accept
+`cameraMove` ids — `dolly-in`, `orbit-clockwise`, `whip-pan-right`,
+`drone-pull-back`, `earth-zoom-out`… Each expands to a tested four-part
+block (movement/speed/framing/end). The agent proposes 1-2 that fit your
+content and confirms. Library: `workflows/VIDEO-PROMPT-GUIDE.md` §2b.
+
+### Product Shots (26 e-commerce presets)
+
+Turn ONE real product photo into channel-ready assets — white-background
+marketplace packshots, lifestyle scenes, scale/trust shots (in-hand,
+multi-angle, texture close-up), and seasonal versions (spring → Black
+Friday) — via `productShot` on `generateImageVariation`. Every preset
+preserves exact shape, branding, and label text. Guide:
+`workflows/PRODUCT-SHOT-GUIDE.md`.
+
+### Story Short Films (production-sheet pipeline)
+
+For multi-character stories, the agent follows
+`workflows/recipes/story-short-film.md`: story bible (.md) → character/
+environment/prop production sheets → storyboard → clips generated with up to
+3 reference sheets each (same faces, same places, every shot) → ffmpeg
+assembly with optional crossfade transitions.
 
 ### Video Generation
 
@@ -335,9 +386,12 @@ Agent workflow:
 
 **Features:**
 - Character consistency (same face across clips)
+- Multi-reference clips (character + environment + prop sheets, max 3)
+- 46 camera-move presets (`cameraMove`)
 - Speaking characters (dialogue in video)
 - Voiceover overlay (TTS narration)
 - Music generation (Lyria)
+- Assembly with crossfade transitions (`assembleFinal` + `transition`)
 
 ### Image Generation
 
@@ -355,8 +409,9 @@ Agent workflow:
 - Single images
 - Carousels (multiple slides)
 - Thumbnails
-- Product shots
+- Product shots (26 e-commerce presets — see PRODUCT-SHOT-GUIDE.md)
 - Character keyframes
+- Multi-reference generation (up to 5 images, e.g. storyboards from sheets)
 
 ### Voiceover Generation
 
@@ -516,6 +571,33 @@ node workflows/cli.cjs doctor
 - Register in `config/assets.yaml`
 - Set `locked: true`
 - Use same reference for all generations
+- **Video scenes:** use the keyframe-first pipeline — generate a still
+  (Nano Banana) per scene from the sheets, approve it, then animate THAT file
+  with image-to-video. Reference-based video generation alone drifts.
+- **Fictional mascots/robots:** also crop ONE clean view from the sheet
+  (`char-x-hero.png`) — video models blend multi-view object sheets into
+  the wrong design.
+- Full ladder of what works: `workflows/VIDEO-PROMPT-GUIDE.md`
+  § Production-Tested Playbook.
+
+### "Veo says 'No video was generated'" (silent filter block — $0 charged)
+- Non-English script (e.g. Burmese) mixed into an English prompt is the usual
+  trigger; words like *singing, music, voiceover, pronunciation* also block.
+- Retry once (the filter is probabilistic), then: translate the whole prompt
+  into the target language, or switch the beat to Omni Flash
+  (`generateOmniVideoClip`), which handles non-English dialogue cleanly.
+
+### "Speaking character sounds like singing" (non-English on Veo)
+- Don't write "not singing"/"no music" — those words get the prompt blocked.
+- Frame the delivery instead: "asks casually in everyday spoken <language>,
+  plain conversational tone like chatting with a friend" — or use Omni Flash,
+  which pronounces non-English dialogue more naturally.
+
+### "One scene is 90% right but has a flaw"
+- Don't re-roll — Omni edit task: `generateOmniVideoClip` with
+  `inputVideoPath` + "Keep everything the same… only <fix>".
+- If the fix touches a character, ATTACH the character's reference images —
+  text-only edits redraw faces/wardrobe from imagination.
 
 ### "Wrong aspect ratio"
 - Check `workflows/PLATFORM-SPECS.md`
@@ -546,7 +628,8 @@ node workflows/cli.cjs doctor
 |-------|-------------|
 | `PLATFORM-SPECS.md` | Before any generation |
 | `IMAGE-PROMPT-GUIDE.md` | Image generation |
-| `VIDEO-PROMPT-GUIDE.md` | Veo video |
+| `PRODUCT-SHOT-GUIDE.md` | E-commerce product shots (26 presets) |
+| `VIDEO-PROMPT-GUIDE.md` | Veo + Omni Flash video, camera-move presets |
 | `SEEDANCE-PROMPT-GUIDE.md` | Seedance lip-sync |
 | `THUMBNAIL-GUIDE.md` | Thumbnails |
 | `BRAND-ASSETS-GUIDE.md` | Social media assets |
@@ -579,4 +662,19 @@ Read AGENT-GUIDE.md and templates/README.md, then create a 30-day content calend
 **Script:**
 ```
 Read skills/write-copy/SKILL.md, then write 3 hooks for my product launch.
+```
+
+**Product shots:**
+```
+Read AGENT-GUIDE.md first, then turn this product photo into an Amazon packshot plus 3 seasonal versions.
+```
+
+**Story short film:**
+```
+Read workflows/recipes/story-short-film.md, then make a 15-second animated short about a girl and her floating ball.
+```
+
+**Edit an existing clip (Omni):**
+```
+Read AGENT-GUIDE.md first, then add whoosh SFX and animated motion effects to output-contents/.../skate.mp4.
 ```

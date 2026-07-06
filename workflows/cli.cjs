@@ -54,6 +54,7 @@ const COMMANDS = {
     'generateSilentVideo', 'generateSpeakingVideo', 'generateVideoFromImage',
     'generateSpeakingVideoFromImage', 'generateVideoWithVoiceover',
     'generateVideoFromImageWithVoiceover', 'generateOmniVideoClip',
+    'generateVideoFromKeyframes',
   ],
   'Video (Seedance 2.0 / OpenRouter — lip-sync, native audio)': [
     'seedanceTextToVideo', 'seedanceImageToVideo', 'seedanceSpeakingVideo',
@@ -354,15 +355,19 @@ async function runDoctor(ping) {
   check(fs.existsSync(path.join(root, '.env')), '.env file exists',
     'cp .env.example .env  # then add your API key');
 
-  const gemKey = (process.env.GEMINI_API_KEY || '').trim();
-  const orKey = (process.env.OPENROUTER_API_KEY || '').trim();
-  const gemSet = gemKey && !gemKey.includes('your-') && !gemKey.includes('...');
-  const orSet = orKey && !orKey.includes('your-') && !orKey.includes('...');
+  const realKeys = (v) => (v || '').split(',').map((k) => k.trim())
+    .filter((k) => k && !k.includes('your-') && !k.includes('...'));
+  const gemKeys = realKeys(process.env.GEMINI_API_KEYS).length
+    ? realKeys(process.env.GEMINI_API_KEYS) : realKeys(process.env.GEMINI_API_KEY);
+  const orKeys = realKeys(process.env.OPENROUTER_API_KEYS).length
+    ? realKeys(process.env.OPENROUTER_API_KEYS) : realKeys(process.env.OPENROUTER_API_KEY);
+  const gemSet = gemKeys.length > 0;
+  const orSet = orKeys.length > 0;
   check(Boolean(gemSet || orSet), 'at least one API key set in .env',
     'get a key: https://aistudio.google.com/app/apikey (GEMINI_API_KEY) or https://openrouter.ai/keys (OPENROUTER_API_KEY)');
-  if (gemSet) console.log('     GEMINI_API_KEY: set (Veo video, Imagen images, Lyria music, TTS)');
+  if (gemSet) console.log(`     GEMINI_API_KEY${gemKeys.length > 1 ? `S: ${gemKeys.length} keys (rotation)` : ': set'} (Veo video, Imagen images, Lyria music, TTS)`);
   else warn('GEMINI_API_KEY not set — no Veo/Imagen/Lyria/TTS');
-  if (orSet) console.log('     OPENROUTER_API_KEY: set (Seedance lip-sync, 100+ text models, Whisper)');
+  if (orSet) console.log(`     OPENROUTER_API_KEY${orKeys.length > 1 ? `S: ${orKeys.length} keys (rotation)` : ': set'} (Seedance lip-sync, 100+ text models, Whisper)`);
   else warn('OPENROUTER_API_KEY not set — no Seedance lip-sync/Whisper (optional)');
 
   const remotionReady = fs.existsSync(path.join(root, 'remotion', 'node_modules', 'remotion'));

@@ -34,6 +34,12 @@
    (`workflows/pipelines/README.md`). The folder must let a reviewer map the
    whole piece later: pipeline.json (plan) → pipeline-result.json (execution +
    per-node costs) → prompts.txt (human log) → outputs.
+8. **Use the preset libraries — don't improvise prompt language.** Camera
+   moves (`cameraMove`, 46), Omni art styles (`artStyle`, 10), product shots
+   (`productShot`, 26) are tested presets on the CLI commands. Style is the
+   user's call: ASK before picking an art style; PROPOSE camera moves and
+   product-shot sets (by channel) for confirmation. Product shots always
+   start from a real product photo — never generate the product from text.
 
 Skills live in `skills/*/SKILL.md`; campaign playbooks in `workflows/recipes/`;
 a filled example project in `examples/demo-brand/`.

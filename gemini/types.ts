@@ -442,6 +442,13 @@ export interface GeminiBaseInput {
   /** MIME type of image (default: 'image/jpeg'). */
   imageMimeType?: string;
 
+  /**
+   * Additional input images (multi-reference). Appended after imageInput.
+   * Gemini image models accept several reference images in one request —
+   * describe each image's role in the prompt.
+   */
+  imageInputs?: Array<{ data: Buffer | string; mimeType?: string }>;
+
   /** Audio data as Buffer or base64 string. Optional. */
   audioInput?: Buffer | string;
 
@@ -787,6 +794,14 @@ export interface VeoInput {
 
   /** Last frame image MIME type */
   lastFrameImageMimeType?: string;
+
+  /**
+   * Optional asset reference images (Veo 3.1 only, max 3).
+   * Unlike referenceImage (the exact first frame), these guide WHAT things
+   * look like — character sheets, environment sheets, props — without
+   * appearing verbatim. Describe each asset's role in the prompt.
+   */
+  referenceImages?: Array<{ data: Buffer | string; mimeType?: string }>;
 
   /** Video generation configuration */
   config?: VeoConfig;

@@ -166,6 +166,40 @@ node workflows/cli.cjs registerAsset '["{name}","products",{"id":"prod-main","la
 
 ---
 
+## PRODUCT SHOTS (e-commerce) → use the preset library
+
+For "product photo", "packshot", "listing image", "lifestyle shot", "seasonal
+version", "ad variations from this photo": **read
+`workflows/PRODUCT-SHOT-GUIDE.md` first.** 26 tested presets ship as the
+`productShot` field on `generateImageVariation`.
+
+**The flow:**
+
+1. **Get the real product photo** — resolve `prod-*` from the registry (or
+   ask the user for one). A messy supplier/phone photo is a fine base.
+   Never generate the product itself from text.
+2. **Ask which channel** — marketplace listing / own-site PDP / paid ads /
+   email-banner / Instagram. Propose the preset set from the guide's
+   channel table (e.g. marketplace → `pure-white-packshot` +
+   `multi-angle` + `texture-closeup` + `in-hand-scale`).
+3. **Draft cheap → approve → finalize sharp:** iterate with
+   `"imageModel":"lite"` ($0.0336), then regenerate the approved direction
+   at `"imageSize":"2K"`.
+
+```bash
+node workflows/cli.cjs generateImageVariation '{"referenceImagePath":"<prod-main existing[0]>","productShot":"pure-white-packshot","prompt":"The ceramic honey jar with the gold lid.","outputPath":"…/packshot-white.png","aspectRatio":"1:1","imageSize":"2K"}'
+```
+
+The preset supplies scene + lighting + a fidelity clause (exact
+shape/branding/label preserved — appended automatically); your `prompt`
+carries only the specifics (product name, props, surface/light swaps).
+QA every shot vs the reference with `reviewOutput` — label text and
+proportions must match; marketplaces treat the image as the trust signal.
+Presets involving people (`model-usage`, `hands-*`, `in-hand-scale`) need
+`"personGeneration":"allow"`.
+
+---
+
 ## REQUIRED QUESTIONS
 
 ### Always ask these questions:

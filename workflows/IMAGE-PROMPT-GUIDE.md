@@ -689,6 +689,7 @@ STYLE:
 
 ## See Also
 
+- **PRODUCT-SHOT-GUIDE.md** — E-commerce product shots: 26 `productShot` presets (packshots, scale/trust, lifestyle, seasonal), channel→shot mapping, fidelity rules
 - **STYLE-GUIDE.md** — Visual style reference (animation, artistic, modern, etc.)
 - **VIDEO-PROMPT-GUIDE.md** — Video-specific prompting (camera movement, keyframes)
 - **WORKFLOWS.md** — API usage and workflow functions

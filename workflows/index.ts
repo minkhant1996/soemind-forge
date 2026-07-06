@@ -125,6 +125,9 @@ import type {
   QAInput,
   OmniVideoClipInput,
   OmniVideoClipOutput,
+  OmniArtStyle,
+  CameraMove,
+  ProductShot,
   ReviewVideoInput,
   ReviewVideoOutput,
   QAReport,
@@ -886,6 +889,9 @@ function getMimeType(filePath: string): string {
     '.jpeg': 'image/jpeg',
     '.webp': 'image/webp',
     '.gif': 'image/gif',
+    '.mp4': 'video/mp4',
+    '.mov': 'video/quicktime',
+    '.webm': 'video/webm',
   };
   return mimeTypes[ext] || 'image/jpeg';
 }
@@ -1164,6 +1170,76 @@ export async function generateSingleImage(
  *
  * Use for: Product variations, style transfer, character in different scenes
  */
+/**
+ * E-commerce product-shot presets → scene/lighting prompt templates, applied
+ * on top of a REAL product reference image (never generate a product from
+ * text — RULES 4). The fidelity clause below is appended automatically.
+ * Channel guidance + when-to-use: workflows/PRODUCT-SHOT-GUIDE.md.
+ */
+export const PRODUCT_SHOTS: Record<ProductShot, string> = {
+  // --- Studio / marketplace ---
+  'pure-white-packshot':
+    'Place the product from the reference image centered on a pure white background, soft studio lighting, realistic shadow directly under the product, e-commerce packshot style, no props, no extra objects.',
+  'soft-gray-hero':
+    'Place the product from the reference image in a clean studio setup with a light gray seamless background, soft diffused lighting, subtle natural shadow, product fully visible, sharp edges, realistic reflections if the material is glossy, premium e-commerce photography.',
+  'floating-shadow':
+    'Turn the product from the reference image into a floating studio product image on a clean neutral background, soft shadow below to ground it, all visible details realistic and accurate.',
+  'flat-lay':
+    'Create a top-down flat lay of the product from the reference image on a clean studio surface, shot from directly above, balanced composition, soft even lighting, realistic material texture, minimal shadow, commercial product photography style.',
+  // --- Scale & buying confidence ---
+  'multi-angle':
+    'Create a clean product composition showing the product from the reference image from front, side, and slightly angled views in one frame, consistent lighting, neutral background, catalog-ready.',
+  'open-closed':
+    'Show the product from the reference image in both closed and open state in one clean composition, simple studio background, realistic shadow, e-commerce comparison layout.',
+  'texture-closeup':
+    'Create a close-up detail image of the product from the reference image focused on material texture, stitching, finish, or surface quality, realistic macro-style lighting, sharp detail, premium product photography.',
+  'in-hand-scale':
+    'Show the product from the reference image being held naturally in one hand to communicate scale, realistic proportions, clean background, clear focus on the product, no distortion, e-commerce lifestyle photography.',
+  // --- Lifestyle / context ---
+  'natural-habitat':
+    'Place the product from the reference image in its natural real-life environment, styled realistically, believable lighting and shadows, authentic commercial photography look.',
+  'minimal-interior':
+    'Place the product from the reference image in a modern minimal interior, clean composition, neutral styling, realistic daylight, the product remains the hero, no clutter, editorial e-commerce photography.',
+  'outdoor-lifestyle':
+    'Place the product from the reference image in an outdoor setting that matches its use, natural light, realistic environment, accurate texture and color, product clearly visible, premium lifestyle product photography.',
+  'desk-context':
+    'Place the product from the reference image in a realistic desk setup with complementary objects, clean arrangement, soft window light, the product as the focal point, modern commercial photography.',
+  'hands-usage':
+    'Show the product from the reference image being used by hands only, no full person visible, realistic interaction, clean composition, natural lighting, product details accurate and in focus.',
+  'model-usage':
+    'Show a model naturally using the product from the reference image in a realistic setting, product clearly visible, natural pose, commercial lifestyle photography.',
+  'hands-premium':
+    'Show elegant hands interacting with the product from the reference image, no face visible, clean composition, shallow depth of field, realistic commercial lighting, focus on product and usage.',
+  'in-use-closeup':
+    'Close-up of the product from the reference image being applied or used, with the product visible in the frame in soft focus context, natural daylight, the action in sharp focus.',
+  // --- Mood / style ---
+  'luxury-dark':
+    'Place the product from the reference image on a dark marble surface with gold accents, soft directional lighting, dark blurred background for depth, premium luxury product photography.',
+  'rustic-artisan':
+    'Place the product from the reference image on a weathered wooden crate with a burlap cloth, warm afternoon sunlight from a nearby window, handmade artisan mood.',
+  'colorful-pop':
+    'Place the product from the reference image on a bright coral surface against a bold teal background, with a few tropical leaves and citrus slices, vivid pop-art lighting, color-blocked social-feed style.',
+  'moody-editorial':
+    'Place the product from the reference image on a dark slate surface with dramatic side lighting, wisps of smoke or mist in the background, deep shadows and rich contrast, editorial mood.',
+  // --- Seasonal / merchandising ---
+  'spring-fresh':
+    'Place the product from the reference image in a fresh spring-themed scene, light airy styling, soft natural light, clean composition, subtle seasonal details.',
+  'summer-bright':
+    'Place the product from the reference image in a bright summer setting, warm natural light, fresh energetic atmosphere, clean composition, realistic shadows.',
+  'winter-snow':
+    'Place the product from the reference image in a crisp snowy setting, bright winter light, clean composition, fresh seasonal mood, realistic reflections and shadows.',
+  'cozy-holiday':
+    'Place the product from the reference image on a cozy knitted blanket surrounded by pine cones, cinnamon sticks, and warm fairy lights, winter holiday atmosphere.',
+  'holiday-gift':
+    'Place the product from the reference image in a festive gifting season scene, elegant celebratory styling, clean composition, realistic lighting, premium seasonal atmosphere.',
+  'black-friday':
+    'Place the product from the reference image in a bold Black Friday themed campaign scene, strong commercial composition, high-contrast lighting, modern promotional feel.',
+};
+
+/** Appended to every product-shot preset — fidelity is non-negotiable for e-commerce. */
+const PRODUCT_SHOT_FIDELITY =
+  'Keep the exact shape, proportions, branding, label text, colors, and material finish of the product from the reference image.';
+
 export async function generateImageVariation(
   input: ImageToImageInput
 ): Promise<WorkflowResult<ImageToImageOutput>> {
@@ -1171,9 +1247,28 @@ export async function generateImageVariation(
   if (!input.prompt || input.prompt.trim().length === 0) {
     return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Prompt is required');
   }
+  if (input.productShot && !PRODUCT_SHOTS[input.productShot]) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      `Unknown productShot "${input.productShot}". Valid: ${Object.keys(PRODUCT_SHOTS).join(', ')}`
+    );
+  }
 
-  if (!input.referenceImagePath) {
-    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Reference image path is required');
+  const refPaths = [
+    ...(input.referenceImagePath ? [input.referenceImagePath] : []),
+    ...(input.referenceImagePaths || []),
+  ];
+  if (refPaths.length === 0) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      'Provide referenceImagePath and/or referenceImagePaths (max 5 total)'
+    );
+  }
+  if (refPaths.length > 5) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      `At most 5 reference images per request (got ${refPaths.length})`
+    );
   }
 
   if (!input.outputPath) {
@@ -1181,13 +1276,18 @@ export async function generateImageVariation(
   }
 
   try {
-    // Validate reference image
-    validateImageFile(input.referenceImagePath);
+    // Validate reference images
+    refPaths.forEach((p) => validateImageFile(p));
 
     ensureDir(path.dirname(input.outputPath));
 
-    const referenceImage = fs.readFileSync(input.referenceImagePath);
-    const mimeType = getMimeType(input.referenceImagePath);
+    const [primaryPath, ...extraPaths] = refPaths;
+    const referenceImage = fs.readFileSync(primaryPath);
+    const mimeType = getMimeType(primaryPath);
+    const extraImages = extraPaths.map((p) => ({
+      data: fs.readFileSync(p),
+      mimeType: getMimeType(p),
+    }));
 
     const imageConfig: Record<string, unknown> = {
       aspectRatio: input.aspectRatio || '9:16',
@@ -1199,11 +1299,15 @@ export async function generateImageVariation(
     const variationFn = input.imageModel === 'pro' ? gemini3ProImage
       : input.imageModel === 'lite' ? gemini31FlashLiteImage
       : gemini31FlashImage;
+    const prompt = input.productShot
+      ? `${PRODUCT_SHOTS[input.productShot]} ${PRODUCT_SHOT_FIDELITY} ${input.prompt}`
+      : input.prompt;
     const result = await withRetry(
       () => variationFn({
-        userPrompt: input.prompt,
+        userPrompt: prompt,
         imageInput: referenceImage,
         imageMimeType: mimeType,
+        imageInputs: extraImages.length ? extraImages : undefined,
         config: imageConfig,
       }),
       { maxRetries: 3 },
@@ -1593,6 +1697,136 @@ Do NOT include any text in the image.
 }
 
 // =============================================================================
+// CAMERA-MOVE PRESET LIBRARY (Veo + Omni Flash)
+// =============================================================================
+
+/**
+ * Camera-movement presets — each value is a full four-part prompt block
+ * (Movement / Speed / Framing / End) designed to LEAD the video prompt.
+ * Pass the id as `cameraMove` on generateSilentVideo / generateVideoFromImage /
+ * generateOmniVideoClip, or paste the block manually at the head of any scene
+ * prompt (voiceover scenes, speaking videos, Seedance).
+ * When-to-use table: VIDEO-PROMPT-GUIDE.md §2b.
+ */
+export const CAMERA_MOVES: Record<CameraMove, string> = {
+  // --- Pan / Tilt ---
+  'static':
+    'locked-off static shot. Movement: hold one fixed camera position for the full clip. Speed: still and steady. Framing: keep the same angle, height, lens distance and composition. End: finish with the same framing and camera position.',
+  'pan-right':
+    'pan right. Movement: rotate the camera horizontally from left to right from one fixed point. Speed: smooth constant rotation. Framing: keep the horizon level while new space enters from the right side of the frame. End: settle on a clear final composition.',
+  'pan-left':
+    'pan left. Movement: rotate the camera horizontally from right to left from one fixed point. Speed: smooth constant rotation. Framing: keep the horizon level while new space enters from the left side of the frame. End: settle on a clear final composition.',
+  'whip-pan-right':
+    'whip pan right. Movement: rotate rapidly from the starting direction toward a new target on the right. Speed: fast snap with brief motion blur during the rotation. Framing: begin on one readable composition and land on a second readable target. End: settle into a sharp final frame.',
+  'whip-pan-left':
+    'whip pan left. Movement: rotate rapidly from the starting direction toward a new target on the left. Speed: fast snap with brief motion blur during the rotation. Framing: begin on one readable composition and land on a second readable target. End: settle into a sharp final frame.',
+  'tilt-up':
+    'tilt up. Movement: rotate the camera upward from one fixed point. Speed: smooth constant tilt. Framing: keep the vertical subject or architecture centered as the frame travels upward. End: land on the upper target.',
+  'tilt-down':
+    'tilt down. Movement: rotate the camera downward from one fixed point. Speed: smooth constant tilt. Framing: keep the vertical subject or architecture centered as the frame travels downward. End: land on the lower target.',
+  // --- Zoom / Lens ---
+  'slow-zoom-in':
+    'slow zoom in. Movement: slowly increase lens focal length toward a tighter frame. Speed: gradual and even. Framing: keep the main visual target readable as it becomes larger in frame. End: finish on a stable tighter composition.',
+  'slow-zoom-out':
+    'slow zoom out. Movement: slowly decrease lens focal length toward a wider frame. Speed: gradual and even. Framing: keep the main visual target readable as more surrounding space appears. End: finish on a stable wider composition.',
+  'fast-zoom-in':
+    'fast zoom in. Movement: quickly increase lens focal length toward the main visual target. Speed: quick decisive zoom. Framing: keep the target centered or clearly readable during the scale change. End: finish on a stable tighter composition.',
+  'fast-zoom-out':
+    'fast zoom out. Movement: quickly decrease lens focal length away from the main visual target. Speed: quick decisive zoom. Framing: keep the target readable as the surrounding space appears. End: finish on a stable wider composition.',
+  'crash-zoom-in':
+    'crash zoom in. Movement: snap the lens rapidly toward the main visual target. Speed: very fast and punchy. Framing: keep the target readable through the sudden scale change. End: land on a bold tighter composition.',
+  'crash-zoom-out':
+    'crash zoom out. Movement: snap the lens rapidly away from the main visual target. Speed: very fast and punchy. Framing: keep the target readable as the surrounding space appears. End: land on a bold wider composition.',
+  // --- Dolly / Track ---
+  'dolly-in':
+    'dolly in. Movement: move the camera physically forward in a straight line toward the main subject. Speed: smooth controlled push. Framing: keep camera height, lens direction and subject position consistent while distance closes. End: finish in a tighter composition.',
+  'dolly-out':
+    'dolly out. Movement: move the camera physically backward in a straight line away from the main subject. Speed: smooth controlled retreat. Framing: keep lens direction and camera height consistent while more environment enters frame. End: finish in a wider composition.',
+  'tracking':
+    "tracking shot. Movement: move through the scene with the main subject. Speed: match the subject's pace. Framing: keep the subject consistently readable while the environment moves around them. End: maintain a clear moving composition.",
+  'follow':
+    "follow shot from behind. Movement: move behind the subject along their route at shoulder height. Speed: match the subject's pace. Framing: keep the back, shoulder or head as the foreground guide while the route ahead stays readable. End: continue following with the subject leading the frame.",
+  'reverse-tracking':
+    "reverse tracking shot. Movement: move backward in front of the walking subject. Speed: match the subject's forward pace. Framing: keep front-facing face and body framing stable as the background moves behind them. End: hold a clear front-facing moving composition.",
+  'side-tracking':
+    "side tracking shot. Movement: move parallel beside the subject along their direction of travel. Speed: match the subject's motion. Framing: keep the subject in side profile or three-quarter profile at a stable distance. End: continue the parallel movement with clear horizontal motion.",
+  'low-tracking':
+    "low tracking shot. Movement: move at ground or below-waist height alongside the subject's movement path. Speed: match the subject, footsteps or wheels. Framing: keep the low detail readable while the ground plane moves through frame. End: finish with the low perspective clearly maintained.",
+  'vehicle-tracking':
+    "vehicle tracking shot. Movement: move with the vehicle along its route. Speed: match the vehicle's pace. Framing: keep the vehicle stable in frame while the road or environment moves past. End: maintain a clear moving vehicle composition.",
+  'chase':
+    'chase shot. Movement: follow a moving subject quickly along the action route. Speed: fast, reactive and physically close. Framing: keep the subject visible while allowing energetic reframing. End: stay connected to the subject in motion.',
+  // --- Physical moves ---
+  'truck-right':
+    'truck right. Movement: move the camera physically to the right on a straight horizontal path. Speed: smooth constant lateral travel. Framing: keep the lens facing the same direction while the scene slides across frame. End: finish on a clean lateral composition.',
+  'truck-left':
+    'truck left. Movement: move the camera physically to the left on a straight horizontal path. Speed: smooth constant lateral travel. Framing: keep the lens facing the same direction while the scene slides across frame. End: finish on a clean lateral composition.',
+  'pedestal-up':
+    'pedestal up. Movement: move the entire camera vertically upward in a straight line. Speed: smooth constant lift. Framing: keep the lens level and pointed in the same direction during the vertical move. End: finish with the higher framing clearly readable.',
+  'pedestal-down':
+    'pedestal down. Movement: move the entire camera vertically downward in a straight line. Speed: smooth constant descent. Framing: keep the lens level and pointed in the same direction during the vertical move. End: finish with the lower framing clearly readable.',
+  'slider-right':
+    'slider right. Movement: slide the camera a small distance to the right. Speed: slow controlled constant motion. Framing: keep foreground, subject and background layers readable as parallax shifts. End: finish on a refined composition with the new right-side angle visible.',
+  'slider-left':
+    'slider left. Movement: slide the camera a small distance to the left. Speed: slow controlled constant motion. Framing: keep foreground, subject and background layers readable as parallax shifts. End: finish on a refined composition with the new left-side angle visible.',
+  'push-past':
+    'push past. Movement: move forward past a visible foreground object, edge or opening. Speed: smooth forward glide. Framing: let the foreground pass close to the lens while the space beyond becomes clearer. End: arrive inside or beyond the foreground layer.',
+  'arc-right':
+    'arc right. Movement: move on a shallow curved path around the main subject toward the right side. Speed: smooth measured curve. Framing: keep distance, height and subject readability consistent while the angle changes. End: finish from a new right-side angle.',
+  'arc-left':
+    'arc left. Movement: move on a shallow curved path around the main subject toward the left side. Speed: smooth measured curve. Framing: keep distance, height and subject readability consistent while the angle changes. End: finish from a new left-side angle.',
+  'orbit-clockwise':
+    'clockwise orbit. Movement: circle clockwise around the main subject at a consistent radius. Speed: smooth controlled orbit. Framing: keep the subject centered while the background rotates around them. End: complete the intended arc or full circle with stable framing.',
+  'orbit-counterclockwise':
+    'counterclockwise orbit. Movement: circle counterclockwise around the main subject at a consistent radius. Speed: smooth controlled orbit. Framing: keep the subject centered while the background rotates around them. End: complete the intended arc or full circle with stable framing.',
+  // --- Human camera ---
+  'handheld':
+    'handheld shot. Movement: hold the camera at human operator height with natural body movement. Speed: responsive and organic. Framing: keep the subject readable while the frame has subtle sway and micro-adjustments. End: finish with a natural handheld composition.',
+  'snorricam':
+    "body-mounted Snorricam. Movement: keep the camera fixed relative to the subject's torso or face while the subject moves. Speed: match the subject's body motion. Framing: keep the subject close, centered and facing the camera as the background moves around them. End: finish with the subject still locked in frame.",
+  // --- Drone / Crane ---
+  'crane-up':
+    'crane up. Movement: travel smoothly upward through open space. Speed: slow controlled vertical lift. Framing: keep the subject or location readable as the camera rises. End: finish with the higher scale clearly visible.',
+  'crane-down':
+    'crane down. Movement: travel smoothly downward through open space. Speed: slow controlled vertical descent. Framing: keep the subject or location readable as the camera descends. End: finish with the lower subject or destination clearly visible.',
+  'drone-push-in':
+    'drone push in. Movement: fly smoothly forward through open space toward the subject or destination. Speed: controlled aerial glide. Framing: keep the route and destination readable as the camera approaches. End: arrive at a closer aerial composition.',
+  'drone-pull-back':
+    'drone pull back. Movement: fly smoothly backward away from the subject or destination. Speed: controlled aerial retreat. Framing: keep the subject readable as more landscape appears. End: finish on a wider aerial composition.',
+  'helicopter':
+    'helicopter-style aerial shot. Movement: move from high altitude along a broad gradual flight path. Speed: steady controlled aerial motion. Framing: keep the landscape or distant moving subject readable at wide scale. End: finish on a stable high-altitude composition.',
+  // --- Specials ---
+  'first-person':
+    "first-person view. Movement: move forward at human eye height from the character's perspective. Speed: natural walking or reaching pace. Framing: use visible hands, arms or body edges as the viewer's physical reference. End: arrive at the next point of action from the same point of view.",
+  'tilt-shift':
+    'tilt-shift miniature view. Movement: hold or glide from a high angled view over the scene. Speed: small precise movement. Framing: keep a narrow band of sharp focus across the key subject area with soft blur above and below. End: finish with the miniature-scale view intact.',
+  'infinite-zoom':
+    'infinite zoom. Movement: zoom continuously inward toward the exact center target. Speed: smooth accelerating zoom. Framing: keep the circular target centered as it expands. End: finish when the next visual world fills the frame.',
+  'earth-zoom-out':
+    'earth zoom out. Movement: pull upward from the starting point through street, city, landscape and planet scale. Speed: rapid expanding zoom out. Framing: keep the original location centered as scale grows. End: finish on a planet-scale view with the starting point still implied at center.',
+  'time-lapse':
+    'locked-camera time-lapse. Movement: hold one fixed camera position while time moves rapidly forward. Speed: fast time compression with a stable camera. Framing: keep the same composition and horizon as motion passes through the frame. End: finish from the same camera angle with visible passage of time.',
+  'pass-through':
+    'pass-through movement. Movement: move forward toward a visible object, surface or barrier and continue into the space beyond. Speed: smooth centered glide. Framing: keep the opening or surface centered as the transition point. End: arrive inside the revealed space beyond.',
+};
+
+/** Prepend a camera-move preset block to a prompt (no-op when move is unset). */
+function applyCameraMove(prompt: string, move?: CameraMove): string {
+  return move && CAMERA_MOVES[move] ? `${CAMERA_MOVES[move]} ${prompt}` : prompt;
+}
+
+/** INVALID_INPUT result for an unrecognized cameraMove id, or null when valid. */
+function validateCameraMove(move?: CameraMove): WorkflowResult<never> | null {
+  if (move && !CAMERA_MOVES[move]) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      `Unknown cameraMove "${move}". Valid: ${Object.keys(CAMERA_MOVES).join(', ')}`
+    );
+  }
+  return null;
+}
+
+// =============================================================================
 // WORKFLOW 7: TEXT TO VIDEO SILENT
 // =============================================================================
 
@@ -1617,6 +1851,9 @@ export async function generateSilentVideo(
     return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Duration must be between 1 and 60 seconds');
   }
 
+  const cameraMoveError = validateCameraMove(input.cameraMove);
+  if (cameraMoveError) return cameraMoveError;
+
   try {
     ensureDir(path.dirname(input.outputPath));
 
@@ -1636,7 +1873,7 @@ export async function generateSilentVideo(
     const result = await withRetry(
       () => generateVideo({
         model,
-        prompt: input.prompt,
+        prompt: applyCameraMove(input.prompt, input.cameraMove),
         config: videoConfig,
       }),
       { maxRetries: 2, initialDelayMs: 5000, maxDelayMs: 60000 },
@@ -1801,8 +2038,18 @@ export async function generateVideoFromImage(
     return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Prompt is required');
   }
 
-  if (!input.referenceImagePath) {
-    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Reference image path is required');
+  if (!input.referenceImagePath && !input.referenceImagePaths?.length) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      'Provide referenceImagePath (first frame) and/or referenceImagePaths (up to 3 asset references)'
+    );
+  }
+
+  if (input.referenceImagePaths && input.referenceImagePaths.length > 3) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      `Veo accepts at most 3 asset reference images (got ${input.referenceImagePaths.length}). For 4-5 refs use generateOmniVideoClip (reference_to_video).`
+    );
   }
 
   if (!input.outputPath) {
@@ -1813,24 +2060,39 @@ export async function generateVideoFromImage(
     return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Duration must be between 1 and 60 seconds');
   }
 
+  const cameraMoveError = validateCameraMove(input.cameraMove);
+  if (cameraMoveError) return cameraMoveError;
+
   try {
-    // Validate reference image
-    validateImageFile(input.referenceImagePath);
+    // Validate reference images
+    if (input.referenceImagePath) validateImageFile(input.referenceImagePath);
+    input.referenceImagePaths?.forEach((p) => validateImageFile(p));
 
     ensureDir(path.dirname(input.outputPath));
 
-    const referenceImage = fs.readFileSync(input.referenceImagePath);
-    const mimeType = getMimeType(input.referenceImagePath);
+    const referenceImage = input.referenceImagePath
+      ? fs.readFileSync(input.referenceImagePath)
+      : undefined;
+    const mimeType = input.referenceImagePath
+      ? getMimeType(input.referenceImagePath)
+      : undefined;
+    const referenceImages = input.referenceImagePaths?.map((p) => ({
+      data: fs.readFileSync(p),
+      mimeType: getMimeType(p),
+    }));
     const model = getVeoModel(input.quality || 'fast');
 
-    console.log(`[Workflow] Generating video from image (${input.duration || 5}s)...`);
+    console.log(
+      `[Workflow] Generating video from image (${input.duration || 5}s${referenceImages ? `, ${referenceImages.length} asset refs` : ''})...`
+    );
 
     const result = await withRetry(
       () => generateVideo({
         model,
-        prompt: input.prompt,
+        prompt: applyCameraMove(input.prompt, input.cameraMove),
         referenceImage,
         referenceImageMimeType: mimeType,
+        referenceImages,
         config: {
           aspectRatio: toVideoAspectRatio(input.aspectRatio),
           durationSeconds: input.duration,
@@ -3526,10 +3788,50 @@ export async function assembleFinal(
     const outDir = path.dirname(input.outputPath);
     ensureDir(outDir);
 
-    // 1. Concatenate clips (absolute paths via concat demuxer)
+    // 1. Concatenate clips — hard cuts via concat demuxer (stream copy), or
+    //    crossfades via xfade/acrossfade filter chain (re-encodes)
     let current = path.join(outDir, '_assembled-concat.mp4');
     if (input.clipPaths.length === 1) {
       fs.copyFileSync(input.clipPaths[0], current);
+    } else if (input.transition) {
+      const fadeDur = input.transitionDuration ?? 0.5;
+      const probe = (file: string, args: string) =>
+        execSync(`ffprobe -v error ${args} "${path.resolve(file)}"`, { stdio: 'pipe' }).toString().trim();
+      const durations = input.clipPaths.map((p) =>
+        parseFloat(probe(p, '-show_entries format=duration -of csv=p=0'))
+      );
+      if (durations.some((d) => !Number.isFinite(d) || d <= fadeDur)) {
+        return createErrorResult(
+          WorkflowErrorCodes.INVALID_INPUT,
+          `Every clip must be longer than the transition (${fadeDur}s). Durations: ${durations.map((d) => d.toFixed(1)).join(', ')}`
+        );
+      }
+      const allHaveAudio = input.clipPaths.every(
+        (p) => probe(p, '-select_streams a -show_entries stream=codec_type -of csv=p=0').length > 0
+      );
+      const n = input.clipPaths.length;
+      const filters: string[] = [];
+      let vPrev = '[0:v]';
+      let aPrev = '[0:a]';
+      let offset = 0;
+      for (let i = 1; i < n; i++) {
+        offset += durations[i - 1] - fadeDur;
+        const vOut = i === n - 1 ? '[vout]' : `[v${i}]`;
+        filters.push(
+          `${vPrev}[${i}:v]xfade=transition=${input.transition}:duration=${fadeDur}:offset=${offset.toFixed(3)}${vOut}`
+        );
+        vPrev = vOut;
+        if (allHaveAudio) {
+          const aOut = i === n - 1 ? '[aout]' : `[a${i}]`;
+          filters.push(`${aPrev}[${i}:a]acrossfade=d=${fadeDur}${aOut}`);
+          aPrev = aOut;
+        }
+      }
+      const inputArgs = input.clipPaths.map((p) => `-i "${path.resolve(p)}"`).join(' ');
+      const mapArgs = allHaveAudio ? '-map "[vout]" -map "[aout]" -c:a aac' : '-map "[vout]"';
+      runFfmpeg(
+        `ffmpeg -y ${inputArgs} -filter_complex "${filters.join(';')}" ${mapArgs} -c:v libx264 -pix_fmt yuv420p "${current}"`
+      );
     } else {
       const listPath = path.join(outDir, '_assemble-list.txt');
       fs.writeFileSync(listPath, input.clipPaths.map(p => `file '${path.resolve(p)}'`).join('\n'));
@@ -6128,11 +6430,41 @@ export async function reviewVideoOutput(
 // =============================================================================
 
 /**
+ * Omni Flash art-style presets → prompt fragments. Present these ids to the
+ * user and ASK which one fits (or photorealistic / their own custom style)
+ * before generating stylized Omni content — do not silently pick one.
+ */
+export const OMNI_ART_STYLES: Record<OmniArtStyle, string> = {
+  'pixel-art':
+    'Retro pixel art style, chunky 16-bit pixels, limited color palette, crisp dithered shading',
+  'claymation':
+    'Claymation stop-motion style, hand-molded clay characters with visible fingerprints, slightly jerky 12fps motion, miniature set',
+  'mixed-media':
+    'Mixed-media collage style, photo cutouts layered with paper textures, hand-drawn scribbles and tape marks, stop-motion feel',
+  '3d-papercraft':
+    '3D papercraft style, layered cut-paper diorama, folded edges and soft studio shadows, handcrafted depth',
+  'whiteboard-doodle':
+    'Whiteboard doodle style, hand-drawn black marker line art on white, sketchy line-boil animation, simple stick-figure charm',
+  '2d-illustration':
+    'Flat 2D illustration style, clean vector shapes, bold editorial color blocking, minimal outlines, smooth motion-graphics animation',
+  'low-poly':
+    'Low-poly 3D style, faceted geometric surfaces, flat-shaded polygons, soft gradient lighting',
+  '3d-mix':
+    '3D-mixed style, polished 3D rendered subject blended with flat 2D graphic elements and hand-drawn accents',
+  'isometric-flat-vector':
+    'Isometric flat vector style, precise 30-degree geometry, clean pastel palette, miniature world feel',
+  'fluffy-toy':
+    'Fluffy plush toy style, soft fuzzy fabric textures, macro detail on stitching and felt, cozy toy-world lighting',
+};
+
+/**
  * Video via Gemini Omni Flash (Interactions API) — the multimodal alternative
  * to Veo. Different strengths: instruction-following/context over raw fidelity,
- * ~10s cap. Token-priced ($17.5/M video-output tokens) — cost varies per run,
- * check the returned cost. Use Veo for cinematic quality; try Omni for
- * instruction-heavy beats (writing, UI, precise choreography).
+ * ~10s cap, 720p native. Token-priced ($17.5/M video-output tokens) — cost
+ * varies per run, check the returned cost. Use Veo for cinematic quality; try
+ * Omni for instruction-heavy beats (writing, UI, precise choreography),
+ * stylized explainers (artStyle presets), multi-reference consistency
+ * (reference_to_video), and editing existing clips (edit task).
  */
 export async function generateOmniVideoClip(
   input: OmniVideoClipInput
@@ -6143,26 +6475,69 @@ export async function generateOmniVideoClip(
   if (!input.outputPath) {
     return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Output path is required (.mp4)');
   }
+  if (input.artStyle && !OMNI_ART_STYLES[input.artStyle]) {
+    return createErrorResult(
+      WorkflowErrorCodes.INVALID_INPUT,
+      `Unknown artStyle "${input.artStyle}". Valid: ${Object.keys(OMNI_ART_STYLES).join(', ')} (or omit for photorealistic)`
+    );
+  }
+  const cameraMoveError = validateCameraMove(input.cameraMove);
+  if (cameraMoveError) return cameraMoveError;
 
   try {
     ensureDir(path.dirname(input.outputPath));
-    console.log(`[Workflow] Generating Omni video (${input.duration || '8s'}, experimental)...`);
 
-    let imageBase64: string | undefined;
-    let imageMimeType: string | undefined;
-    if (input.referenceImagePath) {
-      if (!fs.existsSync(input.referenceImagePath)) {
-        return createErrorResult(WorkflowErrorCodes.FILE_NOT_FOUND, `Reference image not found: ${input.referenceImagePath}`);
-      }
-      imageBase64 = fs.readFileSync(input.referenceImagePath).toString('base64');
-      imageMimeType = getMimeType(input.referenceImagePath);
+    const refPaths = input.referenceImagePaths?.length
+      ? input.referenceImagePaths
+      : input.referenceImagePath
+        ? [input.referenceImagePath]
+        : [];
+    if (refPaths.length > 5) {
+      return createErrorResult(
+        WorkflowErrorCodes.INVALID_INPUT,
+        `Omni Flash accepts at most 5 reference images (got ${refPaths.length})`
+      );
     }
+    const images: Array<{ base64: string; mimeType?: string }> = [];
+    for (const refPath of refPaths) {
+      if (!fs.existsSync(refPath)) {
+        return createErrorResult(WorkflowErrorCodes.FILE_NOT_FOUND, `Reference image not found: ${refPath}`);
+      }
+      images.push({ base64: fs.readFileSync(refPath).toString('base64'), mimeType: getMimeType(refPath) });
+    }
+
+    let videoBase64: string | undefined;
+    if (input.inputVideoPath) {
+      if (!fs.existsSync(input.inputVideoPath)) {
+        return createErrorResult(WorkflowErrorCodes.FILE_NOT_FOUND, `Input video not found: ${input.inputVideoPath}`);
+      }
+      videoBase64 = fs.readFileSync(input.inputVideoPath).toString('base64');
+    }
+
+    const task =
+      input.task ||
+      (videoBase64
+        ? 'edit'
+        : images.length > 1
+          ? 'reference_to_video'
+          : images.length === 1
+            ? 'image_to_video'
+            : 'text_to_video');
+    const styledPrompt = input.artStyle
+      ? `Art style: ${OMNI_ART_STYLES[input.artStyle]}. ${input.prompt}`
+      : input.prompt;
+    const prompt = applyCameraMove(styledPrompt, input.cameraMove);
+
+    console.log(`[Workflow] Generating Omni video (task: ${task}, ${input.duration || '8s'}, ${input.aspectRatio || '16:9'}, experimental)...`);
 
     const result = await withRetry(
       () => generateOmniVideo({
-        prompt: input.prompt,
-        imageBase64,
-        imageMimeType,
+        prompt,
+        images: images.length ? images : undefined,
+        videoBase64,
+        videoMimeType: input.inputVideoPath ? getMimeType(input.inputVideoPath) : undefined,
+        task,
+        aspectRatio: input.aspectRatio,
         duration: input.duration,
         thinkingLevel: input.thinkingLevel,
       }),

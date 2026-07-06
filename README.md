@@ -93,15 +93,20 @@ claude   # loads CLAUDE.md context automatically
 | Type | Examples | Skills |
 |------|----------|--------|
 | **Cinematic Story Films** | 30–45s brand films: locked character, Veo 3.1 scenes, adaptive narration | `workflows/recipes/cinematic-story-film.md` |
+| **Story Short Films** | 15–60s multi-character shorts: production sheets → storyboard → multi-reference clips → transitions | `workflows/recipes/story-short-film.md` |
 | **Kinetic Text Reels** | 9:16 typography reels — staggered animated lines, $0 text rendering | `renderKineticReel` |
-| **Video** | TikTok ads, Reels, Shorts, explainers | `/generate-video` |
-| **Omni Video** | Single-call video + audio clips (Gemini Omni) | `generateOmniVideoClip` |
+| **Video** | TikTok ads, Reels, Shorts, explainers — 46 camera-move presets | `/generate-video` |
+| **Omni Video** | Video + native audio in one call: text/image/reference-to-video AND editing existing clips, 10 art styles (claymation, pixel-art…) | `generateOmniVideoClip` |
+| **Product Shots** | 26 e-commerce presets from one real product photo: packshots, lifestyle, scale/trust, seasonal | `productShot` on `/generate-image` |
 | **Images & Slides** | Thumbnails, carousels with pixel-perfect type | `/generate-image` + `renderSlideStill` |
 | **Brand Assets** | Logos, profiles, covers, highlights | `/generate-brand-assets` |
 | **Voiceover** | Narration with per-scene emotional delivery, podcasts | `/generate-voiceover` |
 | **Music** | Background music, jingles, songs | `/generate-music` |
 | **Content Plans** | 30-day calendars, campaign recipes | `/plan-content` |
 | **Copy** | Hooks, scripts, captions | `/write-copy` |
+| **Consistent-Character Films** | Keyframe-first pipeline: NBP still per scene → image-to-video, characters hold across every shot | `VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook |
+| **Non-English Dialogue Video** | Speaking characters in Myanmar/Thai/other scripts — Omni Flash native speech + lip-sync | same playbook, §3 |
+| **First+Last Frame Shots** | Reveals/transformations locked to exact start & end images (Veo 3.1) | `generateVideoFromKeyframes` |
 
 ---
 
@@ -109,7 +114,7 @@ claude   # loads CLAUDE.md context automatically
 
 | Feature | Gemini | OpenRouter |
 |---------|--------|------------|
-| **Video** | Veo 3.1 (high quality) · Omni (single-call video+audio via `generateOmniVideoClip`) | Seedance 2.0 (lip-sync) |
+| **Video** | Veo 3.1 (high quality, multi-reference consistency) · Omni Flash (video+audio, 4 tasks incl. edit-video, art styles) | Seedance 2.0 (lip-sync) |
 | **Image** | Gemini 3 Image (Nano Banana) | DALL-E, SD |
 | **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama |
 | **TTS** | 30 voices | Various |
@@ -119,6 +124,11 @@ claude   # loads CLAUDE.md context automatically
 **When to use which:**
 - **Gemini** - Video quality, music, images, native Google
 - **OpenRouter** - Lip-sync, speaking characters, model variety
+- **Veo 3.1 vs Omni Flash** - Veo for cinematic no-dialogue/English beats and
+  first+last-frame shots; **Omni Flash for non-English speaking characters
+  (e.g. Myanmar — better pronunciation, no silent filter blocks), reference
+  consistency, and editing existing clips**. Details:
+  `workflows/VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook.
 
 ---
 
@@ -171,7 +181,7 @@ See `workflows/PLATFORM-SPECS.md` for complete specs.
 | **[RULES.md](./RULES.md)** | Ground rules every AI tool must follow |
 | **[USER_GUIDE.md](./USER_GUIDE.md)** | Complete setup and usage guide |
 | **[workflows/PROMPT-GUIDES-INDEX.md](./workflows/PROMPT-GUIDES-INDEX.md)** | Master index of all guides |
-| **[workflows/recipes/](./workflows/recipes/README.md)** | Campaign recipes: launch week, 30-day calendar, testimonial ad, podcast week, cinematic story film |
+| **[workflows/recipes/](./workflows/recipes/README.md)** | Campaign recipes: launch week, 30-day calendar, testimonial ad, podcast week, cinematic story film, story short film |
 | **[workflows/PLATFORM-SPECS.md](./workflows/PLATFORM-SPECS.md)** | All platform sizes and ratios |
 | **[templates/ASSETS-GUIDE.md](./templates/ASSETS-GUIDE.md)** | What to store in assets folder |
 
@@ -181,7 +191,9 @@ See `workflows/PLATFORM-SPECS.md` for complete specs.
 |-------|-------------|
 | `PLATFORM-SPECS.md` | Aspect ratios for all platforms |
 | `IMAGE-PROMPT-GUIDE.md` | Image generation |
-| `VIDEO-PROMPT-GUIDE.md` | Veo video generation |
+| `PRODUCT-SHOT-GUIDE.md` | E-commerce product shots (26 presets, channel mapping) |
+| `VIDEO-PROMPT-GUIDE.md` | Veo + Omni Flash video (46 camera-move presets, production-sheet pipeline) |
+| `VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook | Consistent characters (keyframe-first), non-English/Myanmar dialogue, Omni edit-with-refs, Veo filter triage |
 | `SEEDANCE-PROMPT-GUIDE.md` | Seedance lip-sync video |
 | `THUMBNAIL-GUIDE.md` | Viral thumbnails |
 | `BRAND-ASSETS-GUIDE.md` | Social media assets |
@@ -202,6 +214,7 @@ project-root/
 │   ├── PLATFORM-SPECS.md     # All platform sizes
 │   ├── PROMPT-GUIDES-INDEX.md # Master guide index
 │   ├── IMAGE-PROMPT-GUIDE.md
+│   ├── PRODUCT-SHOT-GUIDE.md
 │   ├── VIDEO-PROMPT-GUIDE.md
 │   ├── THUMBNAIL-GUIDE.md
 │   ├── BRAND-ASSETS-GUIDE.md
@@ -299,6 +312,7 @@ See `templates/ASSETS-GUIDE.md` for complete guide.
 |---------|----------|------|
 | Video (fast, with audio) | Veo 3.1 | $0.10/sec (measured Jul 2026) — video-only $0.08/sec |
 | Video (standard) | Veo 3.1 | $0.20/sec |
+| Video + native audio (≤10s, 720p) | Gemini Omni Flash | ~$1.03/clip (token-priced, measured Jul 2026) |
 | Image (1K) | Gemini 3.1 Flash Image (Nano Banana) | $0.067 |
 | Image (2K) | Gemini 3.1 Flash Image / Gemini 3 Pro Image | $0.101 / $0.134 |
 | Image (cheapest) | Nano Banana 2 Lite (`imageModel:"lite"`) | $0.0336 flat |

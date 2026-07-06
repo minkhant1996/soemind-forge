@@ -14,6 +14,7 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 - **Text Generation** - Gemini 3.5 Flash / 3.1 Pro
 - **Image Generation** - Gemini 3 Image (Nano Banana 2 / Pro / Lite)
 - **Video Generation** - Veo 3.1 (lite/fast/standard)
+- **Video Generation & Editing** - Gemini Omni Flash (10s clips, 4 tasks, art styles, conversational editing)
 - **Text-to-Speech** - 30 voices, multi-speaker
 - **Music Generation** - Lyria (clips and full songs)
 
@@ -148,7 +149,10 @@ projects/{name}/output-contents/{date}/
 | **Any generation** | `skills/content-preflight/SKILL.md` | Appropriate skill below |
 | **Platform specs** | `workflows/PLATFORM-SPECS.md` | All sizes & ratios |
 | **Video** | `skills/generate-video/SKILL.md` | `workflows/VIDEO-PROMPT-GUIDE.md` |
+| **Story / short film (multi-character)** | `workflows/recipes/story-short-film.md` | `workflows/VIDEO-PROMPT-GUIDE.md` §7b |
+| **Consistent characters / non-English (Myanmar) dialogue / clip edits** | `workflows/VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook | `skills/generate-video/SKILL.md` § Consistency & language routing |
 | **Image** | `skills/generate-image/SKILL.md` | `workflows/IMAGE-PROMPT-GUIDE.md` |
+| **Product shots (e-commerce)** | `skills/generate-image/SKILL.md` | `workflows/PRODUCT-SHOT-GUIDE.md` |
 | **Brand assets** | `skills/generate-brand-assets/SKILL.md` | `workflows/BRAND-ASSETS-GUIDE.md` |
 | **Thumbnail** | `skills/generate-image/SKILL.md` | `workflows/THUMBNAIL-GUIDE.md` |
 | **Voiceover** | `skills/generate-voiceover/SKILL.md` | - |
@@ -229,10 +233,33 @@ Seedance (lip-sync video), Whisper transcription, and GPT-4/Claude text models.
 | Use Case | Recommended | Reason |
 |----------|-------------|--------|
 | Product video / B-roll | **Veo (Gemini)** | Higher visual quality |
+| Stylized explainer / text-in-scene / edit a clip | **Omni Flash (Gemini)** | Instruction precision, art styles, edit task |
 | Speaking character | **Seedance (OpenRouter)** | Native lip-sync |
+| Speaking character in **Myanmar / non-Latin script** | **Omni Flash (Gemini)** | Natural pronunciation + lip-sync; Veo silently filter-blocks mixed-language prompts |
+| Consistent character across scenes | **NBP keyframe → Omni image_to_video** | Identity locked in an approvable still; video model only animates |
+| Fix ONE flaw in a good clip | **Omni Flash edit task** | "Keep everything the same…" + character ref images attached |
 | UGC testimonial | **Seedance** | Integrated dialogue |
 | Background music | **Gemini** | Lyria music generation |
 | Model variety | **OpenRouter** | GPT-4, Claude, etc. |
+
+---
+
+## Preset Libraries (use these — don't improvise prompt language)
+
+Three tested preset libraries ship in `workflows/index.ts` and are exposed as
+fields on the CLI commands. Rules of engagement:
+
+| Library | Field · Commands | Count | Rule |
+|---|---|---|---|
+| **Art styles** (`OMNI_ART_STYLES`) | `artStyle` · `generateOmniVideoClip` | 10 (pixel-art, claymation, whiteboard-doodle, fluffy-toy…) | **ASK the user** which style before any stylized Omni generation — never pick silently. Record in brand.md. |
+| **Camera moves** (`CAMERA_MOVES`) | `cameraMove` · `generateSilentVideo`, `generateVideoFromImage`, `generateOmniVideoClip` | 46 four-part blocks (Movement/Speed/Framing/End) | **PROPOSE 1-2 by intent** and confirm; one move per clip. Table: VIDEO-PROMPT-GUIDE §2b. |
+| **Product shots** (`PRODUCT_SHOTS`) | `productShot` · `generateImageVariation` | 26 e-commerce scenes (packshot, lifestyle, seasonal…) | Always on a REAL product photo; ask which channel; fidelity clause auto-appended. Guide: PRODUCT-SHOT-GUIDE.md. |
+
+**Multi-reference consistency:** `generateVideoFromImage` takes
+`referenceImagePaths` (max 3 Veo asset refs — character sheet + environment +
+prop); `generateOmniVideoClip` takes up to 5 (`<IMG_REF_n>` tags);
+`generateImageVariation` takes up to 5. State each ref's ROLE in the prompt.
+`assembleFinal` supports `transition` (dissolve/fade/…) between clips.
 
 ---
 
@@ -387,6 +414,7 @@ projects/{name}/
 |---------|-------|------|
 | Video | Veo fast | $0.08/second |
 | Video | Veo standard | $0.20/second |
+| Video | Omni Flash | ~$1.03/10s clip (token-priced) |
 | Image | Gemini 3 image (Nano Banana 2) 1K | $0.067 |
 | Image | Gemini 3 image (Nano Banana 2) 2K | $0.101 |
 | Image (cheapest) | Nano Banana 2 Lite (`imageModel:"lite"`) | $0.0336 flat |
@@ -422,6 +450,8 @@ projects/{name}/
 | `workflows/PROMPT-GUIDES-INDEX.md` | Master index of all guides |
 | `workflows/PLATFORM-SPECS.md` | All platform sizes & ratios |
 | `workflows/WORKFLOWS.md` | All workflow functions |
+| `workflows/PRODUCT-SHOT-GUIDE.md` | 26 e-commerce product-shot presets + channel mapping |
+| `workflows/recipes/README.md` | Campaign recipes index (incl. story-short-film) |
 | `workflows/MANIFEST-GUIDE.md` | Generation audit trail guide |
 | `templates/ASSETS-GUIDE.md` | Asset folder guide |
 | `templates/assets.config.template.yaml` | Asset registry template |

@@ -227,8 +227,35 @@ export interface TextToImageOutput {
   cost: CostInfo;
 }
 
+/**
+ * E-commerce product-shot presets — each id maps to a tested scene/lighting
+ * prompt template in PRODUCT_SHOTS (index.ts), applied on top of a real
+ * product reference image. Library + channel guidance:
+ * workflows/PRODUCT-SHOT-GUIDE.md.
+ */
+export type ProductShot =
+  // Studio / marketplace
+  | 'pure-white-packshot' | 'soft-gray-hero' | 'floating-shadow' | 'flat-lay'
+  // Scale & buying confidence
+  | 'multi-angle' | 'open-closed' | 'texture-closeup' | 'in-hand-scale'
+  // Lifestyle / context
+  | 'natural-habitat' | 'minimal-interior' | 'outdoor-lifestyle' | 'desk-context'
+  | 'hands-usage' | 'model-usage' | 'hands-premium' | 'in-use-closeup'
+  // Mood / style
+  | 'luxury-dark' | 'rustic-artisan' | 'colorful-pop' | 'moody-editorial'
+  // Seasonal / merchandising
+  | 'spring-fresh' | 'summer-bright' | 'winter-snow' | 'cozy-holiday'
+  | 'holiday-gift' | 'black-friday';
+
 export interface ImageToImageInput {
-  referenceImagePath: string;
+  referenceImagePath?: string;
+  /**
+   * Multiple reference images (production sheets, style refs — max 5).
+   * Describe each image's role in the prompt ("the girl from the character
+   * sheet", "the garden from the environment sheet"). Provide this and/or
+   * referenceImagePath.
+   */
+  referenceImagePaths?: string[];
   prompt: string;
   outputPath: string;
   aspectRatio?: AspectRatio;
@@ -236,6 +263,12 @@ export interface ImageToImageInput {
   /** 'flash' (default), 'pro' (Nano Banana Pro — best-in-class text rendering, $0.134), or 'lite' (Nano Banana 2 Lite — cheapest, $0.0336 flat). */
   imageModel?: 'flash' | 'pro' | 'lite';
   personGeneration?: 'allow' | 'block';
+  /**
+   * E-commerce product-shot preset — prepends the tested scene template plus
+   * a product-fidelity clause (exact shape/branding/label preserved). Your
+   * prompt then only carries the specifics: product name, props, colors.
+   */
+  productShot?: ProductShot;
 }
 
 export interface ImageToImageOutput {
@@ -419,6 +452,34 @@ export interface BuildVideoPromptInput {
   includeTechnical?: boolean;
 }
 
+/**
+ * Camera-movement preset ids → full four-part prompt blocks
+ * (Movement / Speed / Framing / End) in CAMERA_MOVES (index.ts).
+ * Works on Veo AND Omni Flash. Full library + when-to-use table:
+ * VIDEO-PROMPT-GUIDE.md §2b.
+ */
+export type CameraMove =
+  // Pan / Tilt
+  | 'static' | 'pan-right' | 'pan-left' | 'whip-pan-right' | 'whip-pan-left'
+  | 'tilt-up' | 'tilt-down'
+  // Zoom / Lens
+  | 'slow-zoom-in' | 'slow-zoom-out' | 'fast-zoom-in' | 'fast-zoom-out'
+  | 'crash-zoom-in' | 'crash-zoom-out'
+  // Dolly / Track
+  | 'dolly-in' | 'dolly-out' | 'tracking' | 'follow' | 'reverse-tracking'
+  | 'side-tracking' | 'low-tracking' | 'vehicle-tracking' | 'chase'
+  // Physical moves
+  | 'truck-right' | 'truck-left' | 'pedestal-up' | 'pedestal-down'
+  | 'slider-right' | 'slider-left' | 'push-past' | 'arc-right' | 'arc-left'
+  | 'orbit-clockwise' | 'orbit-counterclockwise'
+  // Human camera
+  | 'handheld' | 'snorricam'
+  // Drone / Crane
+  | 'crane-up' | 'crane-down' | 'drone-push-in' | 'drone-pull-back' | 'helicopter'
+  // Specials
+  | 'first-person' | 'tilt-shift' | 'infinite-zoom' | 'earth-zoom-out'
+  | 'time-lapse' | 'pass-through';
+
 export interface TextToVideoSilentInput {
   prompt: string;
   outputPath: string;
@@ -430,6 +491,8 @@ export interface TextToVideoSilentInput {
   firstFramePath?: string;
   /** Optional: use a last frame keyframe (transformation mode) */
   lastFramePath?: string;
+  /** Preset camera move — its four-part block is prepended to the prompt. */
+  cameraMove?: CameraMove;
 }
 
 export interface TextToVideoSilentOutput {
@@ -457,7 +520,15 @@ export interface TextToVideoSpeakingOutput {
 
 export interface ImageToVideoSilentInput {
   /** Reference image for visual style/subject consistency */
-  referenceImagePath: string;
+  referenceImagePath?: string;
+  /**
+   * Asset reference images (max 3, Veo 3.1) — character sheet, environment
+   * sheet, prop. They guide what things LOOK like without being the first
+   * frame; describe each asset's role in the prompt ("the girl from the
+   * character sheet", "the garden from the environment sheet"). Provide this
+   * and/or referenceImagePath. For 4-5 refs use generateOmniVideoClip.
+   */
+  referenceImagePaths?: string[];
   /** Motion/action prompt */
   prompt: string;
   outputPath: string;
@@ -468,6 +539,8 @@ export interface ImageToVideoSilentInput {
   useAsFirstFrame?: boolean;
   /** Optional: last frame for transformation mode */
   lastFramePath?: string;
+  /** Preset camera move — its four-part block is prepended to the prompt. */
+  cameraMove?: CameraMove;
 }
 
 export interface ImageToVideoSilentOutput {
@@ -667,6 +740,13 @@ export interface AssembleFinalInput {
   musicVolume?: number;
   /** Optional .srt to burn into the picture. */
   captionsSrtPath?: string;
+  /**
+   * Optional crossfade between clips (ffmpeg xfade, re-encodes video).
+   * Omit for hard cuts (default, stream-copy). Clip audio is crossfaded too.
+   */
+  transition?: 'fade' | 'dissolve' | 'fadeblack' | 'fadewhite' | 'wipeleft' | 'wiperight' | 'slideleft' | 'slideright' | 'circleopen' | 'pixelize';
+  /** Transition length in seconds (default 0.5). Each overlap shortens the total by this much. */
+  transitionDuration?: number;
   outputPath: string;
 }
 
@@ -824,11 +904,56 @@ export type QACheck =
   | 'aspect'           // correct aspect ratio / framing
   | 'quality';         // artifacts, extra fingers, blur, distortion
 
+/** Omni Flash video task — auto-selected from the inputs when omitted. */
+export type OmniVideoTask =
+  | 'text_to_video'      // prompt only — explainers, sizzle reels, text sync
+  | 'image_to_video'     // 1 start-frame image — animate a keyframe (explainer, cinematic)
+  | 'reference_to_video' // 2-5 reference images, cited in the prompt as <IMG_REF_0>…
+  | 'edit'               // input video + instruction — SFX, on-video text, restyle
+  | 'extend';            // input video — continue the scene
+
+/**
+ * Curated Omni Flash art-style presets. ASK the user to pick one (or
+ * photorealistic / custom) before generating stylized content — see
+ * skills/generate-video/SKILL.md. Ids map to prompt fragments in
+ * OMNI_ART_STYLES (index.ts).
+ */
+export type OmniArtStyle =
+  | 'pixel-art'
+  | 'claymation'
+  | 'mixed-media'
+  | '3d-papercraft'
+  | 'whiteboard-doodle'
+  | '2d-illustration'
+  | 'low-poly'
+  | '3d-mix'
+  | 'isometric-flat-vector'
+  | 'fluffy-toy';
+
 export interface OmniVideoClipInput {
   /** Full direction — timestamps, dialogue quotes, SFX lines all supported. */
   prompt: string;
   /** Start-frame image → image_to_video task (character/scene consistency). */
   referenceImagePath?: string;
+  /**
+   * 2-5 reference images → reference_to_video task. Cite them in the prompt
+   * as <IMG_REF_0>, <IMG_REF_1>, … in array order
+   * (e.g. "A violinist is playing this violin <IMG_REF_0>").
+   */
+  referenceImagePaths?: string[];
+  /** Existing video to edit/extend → edit task (SFX, add text, restyle, camera changes). */
+  inputVideoPath?: string;
+  /** Auto-selected from inputs when omitted; set explicitly to override (e.g. 'extend'). */
+  task?: OmniVideoTask;
+  /**
+   * Preset art style — prompt fragment is prepended automatically.
+   * ASK the user which style before generating; omit for photorealistic.
+   */
+  artStyle?: OmniArtStyle;
+  /** '16:9' (default) or '9:16'. Omni Flash outputs 720p native. */
+  aspectRatio?: '16:9' | '9:16';
+  /** Preset camera move — its four-part block is prepended to the prompt. */
+  cameraMove?: CameraMove;
   outputPath: string;              // .mp4
   /** '4s'…'10s' (Omni Flash caps ~10s/turn). Default '8s'. */
   duration?: string;

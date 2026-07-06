@@ -162,6 +162,17 @@ if exist "%SCRIPT_DIR%\workflows" (
 ) else (
     echo    [!] workflows/ folder not found - skipping
 )
+
+REM ffmpeg powers all $0 local steps: clip assembly, crossfade transitions,
+REM audio mixing, caption burn-in, video QA frame sampling (ffprobe).
+where ffmpeg >nul 2>nul
+if %errorlevel% equ 0 (
+    echo    [OK] ffmpeg found (assembly, transitions, captions, video QA)
+) else (
+    echo    [!] ffmpeg not found - video assembly, transitions, caption
+    echo        burn-in, and video QA won't run until installed:
+    echo        winget install ffmpeg   (or: choco install ffmpeg)
+)
 echo.
 
 REM ------------------------------------------------------------------
@@ -283,6 +294,9 @@ echo   - USER_GUIDE.md      - Full documentation
 echo   - AGENT-GUIDE.md     - Agent context (read first!)
 echo   - RULES.md           - Ground rules every AI tool must follow
 echo   - workflows/PROMPT-GUIDES-INDEX.md - All prompt guides
+echo   - workflows/PRODUCT-SHOT-GUIDE.md  - 26 e-commerce product-shot presets
+echo   - workflows/VIDEO-PROMPT-GUIDE.md  - Video playbook: consistent characters, Myanmar dialogue, clip edits
+echo   - workflows/recipes/ - Campaign recipes (launch week, story short film...)
 echo.
 
 REM Final health check - tells the user exactly what still needs fixing (if anything).
