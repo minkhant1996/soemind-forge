@@ -171,6 +171,30 @@ export interface RenderSlideStillOutput {
   cost: CostInfo;
 }
 
+export interface CaptionCueInput {
+  /** Seconds on the video timeline. */
+  start: number;
+  end: number;
+  text: string;
+}
+
+export interface RenderCaptionedVideoInput {
+  /** Real path to the finished video (audio is kept in the render). */
+  videoPath: string;
+  /** Timed cues — e.g. from transcribeAudio output, offset per scene. */
+  cues: CaptionCueInput[];
+  outputPath: string;          // .mp4
+  fontSize?: number;           // px, default 52
+  marginBottom?: number;       // px from bottom, default 280
+  accentColor?: string;        // pill border accent
+}
+
+export interface RenderCaptionedVideoOutput {
+  videoPath: string;
+  durationSeconds: number;
+  cost: CostInfo;              // always $0 — local render
+}
+
 // =============================================================================
 // WORKFLOW: RENDER KINETIC REEL (Remotion, local, $0)
 // =============================================================================
@@ -302,6 +326,84 @@ export async function renderSlideStill(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error(`[Workflow] renderSlideStill failed: ${message}`);
+    return errorResult('GENERATION_FAILED', message);
+  } finally {
+    stager?.cleanup();
+    if (propsFile) fs.rmSync(propsFile, { force: true });
+  }
+}
+
+// =============================================================================
+// WORKFLOW: RENDER CAPTIONED VIDEO (Remotion, local, $0)
+// =============================================================================
+
+/**
+ * Burn timed captions over a finished video — $0, local. Complex scripts
+ * (Burmese/Thai/…) shape correctly because the render runs in Chromium with
+ * OS font fallback ('Myanmar MN', 'Noto Sans Myanmar').
+ *
+ * Cues come from `transcribeAudio` output: offset each scene's timestamps by
+ * the scene's start time on the assembled timeline.
+ */
+export async function renderCaptionedVideo(
+  input: RenderCaptionedVideoInput
+): Promise<WorkflowResult<RenderCaptionedVideoOutput>> {
+  if (!input.videoPath) return errorResult('INVALID_INPUT', 'videoPath is required');
+  if (!input.cues?.length) return errorResult('INVALID_INPUT', 'cues[] is required ({start,end,text} seconds)');
+  if (!input.outputPath) return errorResult('INVALID_INPUT', 'outputPath is required (.mp4)');
+  for (const [i, c] of input.cues.entries()) {
+    if (typeof c.start !== 'number' || typeof c.end !== 'number' || c.end <= c.start || !c.text) {
+      return errorResult('INVALID_INPUT', `cues[${i}] must be {start<end (seconds), text}`);
+    }
+  }
+
+  const remotionDir = findRemotionDir();
+  if (!remotionDir) return errorResult('FILE_NOT_FOUND', 'remotion/ module not found in project');
+
+  let stager: ReturnType<typeof makeStager> | null = null;
+  let propsFile = '';
+  try {
+    assertRemotionReady(remotionDir);
+    if (!fs.existsSync(input.videoPath)) return errorResult('FILE_NOT_FOUND', `Video not found: ${input.videoPath}`);
+    ensureDir(path.dirname(path.resolve(input.outputPath)));
+
+    const durationSeconds = Number(
+      execSync(
+        `ffprobe -v error -show_entries format=duration -of csv=p=0 "${path.resolve(input.videoPath)}"`,
+        { encoding: 'utf8' }
+      ).trim()
+    );
+    if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) {
+      return errorResult('GENERATION_FAILED', 'Could not read video duration via ffprobe');
+    }
+
+    stager = makeStager(remotionDir);
+    const props = {
+      video: stager.stage(input.videoPath, 'videoPath'),
+      cues: input.cues,
+      durationSeconds,
+      fontSize: input.fontSize,
+      marginBottom: input.marginBottom,
+      accentColor: input.accentColor,
+    };
+    propsFile = path.join(remotionDir, `.props-${Date.now()}.json`);
+    fs.writeFileSync(propsFile, JSON.stringify(props));
+
+    const outAbs = path.resolve(input.outputPath);
+    console.error('[Workflow] Rendering captioned video (Remotion, local)...');
+    runRemotion(
+      remotionDir,
+      `npx remotion render src/index.ts CaptionedVideo "${outAbs}" --props="${propsFile}"`
+    );
+
+    if (!fs.existsSync(outAbs)) {
+      return errorResult('FILE_WRITE_ERROR', 'Render completed but output file is missing');
+    }
+    console.error(`[Workflow] Captioned video saved: ${input.outputPath}`);
+    return { success: true, data: { videoPath: input.outputPath, durationSeconds, cost: ZERO_COST } };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[Workflow] renderCaptionedVideo failed: ${message}`);
     return errorResult('GENERATION_FAILED', message);
   } finally {
     stager?.cleanup();

@@ -46,6 +46,29 @@
 
 ---
 
+## Matching an Established Thumbnail Style (multi-ref) + Non-Latin Text
+
+If the user has existing thumbnails, DON'T improvise a look — pass one as a
+STYLE reference alongside the character photo (`generateImageVariation`
+`referenceImagePaths`, state each ref's role):
+
+```
+"...in EXACTLY the graphic style, color palette, and layout language of
+<IMG_REF_1>: [describe its background/badges/typography]. The man is the EXACT
+same person as <IMG_REF_0>..."
+```
+
+**Non-Latin (Burmese/Thai) text CAN be baked in — with limits** (verified
+2026-07-07, NBP pro): SHORT headlines (one phrase per line, exact copy quoted
+in the prompt, style ref attached) rendered Burmese correctly, stacking and
+diacritics included. Long paragraphs remain untested/risky. Keep product names
+Latin. ALWAYS zoom into the text region afterward and verify spelling
+character-by-character before shipping — `reviewOutput` flags garble but
+can't read Burmese reliably (and its aspect check false-positives; trust
+ffprobe/PIL for dimensions, not the QA's eyeball).
+
+---
+
 ## Viral Thumbnail Patterns
 
 ### Pattern 1: The Face + Emotion (WITH Character)

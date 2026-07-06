@@ -54,7 +54,7 @@ const COMMANDS = {
     'generateSilentVideo', 'generateSpeakingVideo', 'generateVideoFromImage',
     'generateSpeakingVideoFromImage', 'generateVideoWithVoiceover',
     'generateVideoFromImageWithVoiceover', 'generateOmniVideoClip',
-    'generateVideoFromKeyframes',
+    'generateVideoFromKeyframes', 'infiniteTalkLipsync',
   ],
   'Video (Seedance 2.0 / OpenRouter — lip-sync, native audio)': [
     'seedanceTextToVideo', 'seedanceImageToVideo', 'seedanceSpeakingVideo',
@@ -62,6 +62,7 @@ const COMMANDS = {
   ],
   'Audio / music': [
     'generateVoiceover', 'generateMultiSpeakerVoiceover', 'generateMusicTrack',
+    'transcribeAudio',
   ],
   'Brand assets': [
     'generateProfileImage', 'generateCoverImage', 'generateHighlightCovers',
@@ -81,7 +82,7 @@ const COMMANDS = {
     'packageContent', 'transcribeVideo', 'extractClip',
   ],
   'Remotion (local text rendering, $0)': [
-    'renderKineticReel', 'renderSlideStill',
+    'renderKineticReel', 'renderSlideStill', 'renderCaptionedVideo',
   ],
   'Manifest (generation audit trail)': [
     'createGenerationManifest', 'addManifestEntry', 'loadManifest',
@@ -352,6 +353,29 @@ async function runDoctor(ping) {
     }
   }
 
+  // A dist that EXISTS but predates its .ts source silently runs old code —
+  // newer args (e.g. Omni edit inputVideoPath/referenceImagePaths) are dropped
+  // without error and generations still cost money (paid for the hard way,
+  // dance-motion-test 2026-07-06). Compare newest source mtime vs dist mtime.
+  const newestTsMtime = (dir) => {
+    try {
+      return fs.readdirSync(dir)
+        .filter((f) => f.endsWith('.ts') && !f.endsWith('.d.ts'))
+        .reduce((t, f) => Math.max(t, fs.statSync(path.join(dir, f)).mtimeMs), 0);
+    } catch { return 0; }
+  };
+  const staleCheck = (label, srcDir, distFile, fixCmd) => {
+    if (!fs.existsSync(distFile)) return; // missing dist already failed above
+    const stale = newestTsMtime(srcDir) > fs.statSync(distFile).mtimeMs;
+    check(!stale, `${label} build is current (dist not older than source)`, fixCmd);
+  };
+  staleCheck('gemini', path.join(root, 'gemini'),
+    path.join(root, 'gemini', 'dist', 'index.js'),
+    'cd gemini && npm run build');
+  staleCheck('workflows', __dirname,
+    path.join(__dirname, 'dist', 'workflows', 'index.js'),
+    'cd workflows && npm run build');
+
   check(fs.existsSync(path.join(root, '.env')), '.env file exists',
     'cp .env.example .env  # then add your API key');
 
@@ -369,6 +393,9 @@ async function runDoctor(ping) {
   else warn('GEMINI_API_KEY not set — no Veo/Imagen/Lyria/TTS');
   if (orSet) console.log(`     OPENROUTER_API_KEY${orKeys.length > 1 ? `S: ${orKeys.length} keys (rotation)` : ': set'} (Seedance lip-sync, 100+ text models, Whisper)`);
   else warn('OPENROUTER_API_KEY not set — no Seedance lip-sync/Whisper (optional)');
+  const rpKeySet = realKeys(process.env.RUNPOD_API_KEY).length > 0;
+  if (rpKeySet) console.log('     RUNPOD_API_KEY: set (InfiniteTalk lip-sync to provided audio — $0.25/480p, $0.50/720p)');
+  else warn('RUNPOD_API_KEY not set — no infiniteTalkLipsync (lip-sync to user-provided audio, optional)');
 
   const remotionReady = fs.existsSync(path.join(root, 'remotion', 'node_modules', 'remotion'));
   if (remotionReady) console.log('  ✅ remotion module installed ($0 text rendering)');

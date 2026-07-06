@@ -202,6 +202,38 @@ export interface ImageToTextOutput {
   cost: CostInfo;
 }
 
+export interface InfiniteTalkInput {
+  /** Still image of the character (keyframe). Local path. */
+  imagePath: string;
+  /** Speech audio to lip-sync to (wav/mp3). Local path. Video length follows the audio. */
+  audioPath: string;
+  /** How the character ACTS (posture, gestures, mood, setting) — do NOT include the spoken text. */
+  prompt: string;
+  /** '480p' ($0.25/request) or '720p' ($0.50/request). Default '480p'. */
+  resolution?: '480p' | '720p';
+  outputPath: string;
+}
+
+export interface InfiniteTalkOutput {
+  videoPath: string;
+  cost: CostInfo;
+}
+
+export interface TranscribeAudioInput {
+  /** Path to the audio file (wav/mp3/flac — see Gemini audio docs). */
+  audioPath: string;
+  /** Optional language hint, e.g. 'Burmese', 'Thai'. Improves accuracy. */
+  language?: string;
+  /** Optional path to also save the transcript as a text file. */
+  outputPath?: string;
+}
+
+export interface TranscribeAudioOutput {
+  /** Timestamped transcript: one `[m:ss.d - m:ss.d] <text>` line per phrase. */
+  transcript: string;
+  cost: CostInfo;
+}
+
 // =============================================================================
 // IMAGE WORKFLOW TYPES
 // =============================================================================

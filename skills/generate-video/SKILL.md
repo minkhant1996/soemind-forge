@@ -446,6 +446,32 @@ Args in WORKFLOWS.md § Remotion. Use Veo only when you need real motion/footage
 | Animate a keyframe / scene image (explainer, cinematic) | `referenceImagePath` | image_to_video |
 | Product/character consistency in a new scene | `referenceImagePaths` (2-5) + cite `<IMG_REF_0>`… in prompt | reference_to_video |
 | Add SFX / on-video text / restyle / camera change on an existing clip | `inputVideoPath` + one-change instruction | edit |
+| **Motion control** — swap the performers in a real video with your characters | `inputVideoPath` + `referenceImagePaths` + minimal replace-prompt | edit |
+
+### Motion control (video-to-video character swap) — tested recipe
+
+Replaces the people in a real video (dance, choreography, any performance)
+with your locked characters; motion, timing, camera, and background carry
+over 1:1. Full recipe with receipts: `workflows/VIDEO-PROMPT-GUIDE.md` §7.
+The rules that change outcomes:
+
+1. **Trim the source to ≤10s** first (ffmpeg); aspect + duration inherit from
+   the input video — never pass them on an edit task.
+2. **Prompt MINIMAL — the reference images carry ALL identity/outfit detail**:
+   "Replace the three dancers with the three characters from `<IMG_REF_0>`,
+   `<IMG_REF_1>`, and `<IMG_REF_2>` (left, center, right respectively),
+   keeping the same choreography, timing, camera, background, and lighting.
+   (no subtitles)". Descriptive breed/outfit prompts get Input-blocked
+   ($0 each) — don't reword adjectives, strip them.
+3. **Cast multiple characters by screen position** (left/center/right →
+   `IMG_REF_n`). Outfit variants of one locked character work well via
+   `generateImageVariation` (~$0.13/still) — clothing must be text/logo-free
+   or it renders garbled.
+4. **Output is ALWAYS silent** (source audio never survives an edit task) —
+   remux the same window's audio with `mixVideoAudio` (musicVolume 1.0, $0,
+   beat-perfect since motion timing is copied 1:1).
+5. QA with `reviewVideoOutput` (`frameCount: 4`) — watch for mid-clip
+   plush/mascot style drift; re-roll only if publishing.
 
 **Before any stylized Omni generation:** ask the art-style question (Required
 Question 6 above). **Prefer Omni Flash over Veo for:** explainers in a preset
@@ -479,6 +505,7 @@ The short version that changes decisions:
 | English | Veo or Omni |
 | **Myanmar / Thai / non-Latin scripts** | **Omni Flash (image_to_video)** — better pronunciation, no filter drama |
 | Any language + lip-sync UGC realism | Seedance (needs OPENROUTER_API_KEY) |
+| **PROVIDED audio file (voice clone/recording)** | **`infiniteTalkLipsync` (RunPod)** — the ONLY working path; audio drives the mouth, no duration cap. Omni is policy-blocked for this (deepfake guard) — do not retry it. Recipe: VIDEO-PROMPT-GUIDE §8 |
 
 Veo + non-English script = silent filter blocks ($0, "No video was generated")
 unless the ENTIRE prompt is in the target language — which then weakens

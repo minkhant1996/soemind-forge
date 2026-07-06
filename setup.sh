@@ -165,7 +165,7 @@ if command -v npm &> /dev/null; then
         cd "$SCRIPT_DIR/workflows"
         npm install --silent
         npm run build 2>/dev/null || echo -e "   ${YELLOW}!${NC} Workflows build had warnings"
-        if [ -f "$SCRIPT_DIR/workflows/dist/index.js" ]; then
+        if [ -f "$SCRIPT_DIR/workflows/dist/workflows/index.js" ]; then
             echo -e "   ${GREEN}✓${NC} Workflows module built"
         else
             echo -e "   ${RED}✗${NC} Workflows build failed (video/image workflows won't run)"
@@ -267,6 +267,7 @@ echo ""
 echo "  1. Add your API key(s) to .env"
 echo -e "     ${BLUE}Gemini: https://aistudio.google.com/app/apikey${NC}"
 echo -e "     ${BLUE}OpenRouter: https://openrouter.ai/keys${NC}"
+echo -e "     ${BLUE}RunPod (lip-sync to provided audio, optional): https://www.runpod.io/console/user/settings${NC}"
 echo ""
 
 case "$TOOL" in

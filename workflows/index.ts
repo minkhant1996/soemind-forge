@@ -17,6 +17,7 @@ import { execSync } from 'child_process';
 
 import {
   gemini25Flash,
+  gemini35Flash,
   gemini31FlashImage,
   gemini31FlashLiteImage,
   gemini3ProImage,
@@ -69,6 +70,10 @@ import type {
   TextToTextOutput,
   ImageToTextInput,
   ImageToTextOutput,
+  TranscribeAudioInput,
+  TranscribeAudioOutput,
+  InfiniteTalkInput,
+  InfiniteTalkOutput,
   TextToImageInput,
   TextToImageOutput,
   ImageToImageInput,
@@ -1010,6 +1015,198 @@ export async function generateText(
     const code = getErrorCode(error);
     const message = error instanceof Error ? error.message : 'Unknown error during text generation';
     console.error(`[Workflow] generateText failed: ${message}`);
+    return createErrorResult(code, message);
+  }
+}
+
+// =============================================================================
+// WORKFLOW: INFINITETALK LIP-SYNC (RunPod — audio-driven talking video)
+// =============================================================================
+
+/**
+ * True lip-sync to a PROVIDED audio file via InfiniteTalk on RunPod serverless.
+ *
+ * Takes a character still + speech audio and returns a talking video whose
+ * mouth follows the audio (video length follows the audio). This is the route
+ * for syncing to user-supplied voice recordings — Omni cannot do it (policy
+ * blocks photoreal-person + provided-speech) and Seedance needs OpenRouter.
+ *
+ * Flat pricing per request: 480p $0.25 · 720p $0.50. Requires RUNPOD_API_KEY.
+ * The prompt describes ACTING only (posture/gesture/mood) — never the words.
+ *
+ * @example
+ * await infiniteTalkLipsync({
+ *   imagePath: 'kf-s1.png', audioPath: 'vo/scene1.wav',
+ *   prompt: 'A man in a suit speaks into a studio microphone, calm and confident',
+ *   resolution: '720p', outputPath: 'out/s1-talking.mp4',
+ * });
+ */
+export async function infiniteTalkLipsync(
+  input: InfiniteTalkInput
+): Promise<WorkflowResult<InfiniteTalkOutput>> {
+  if (!input.imagePath || !input.audioPath || !input.prompt || !input.outputPath) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'imagePath, audioPath, prompt, and outputPath are required');
+  }
+  const apiKey = process.env.RUNPOD_API_KEY;
+  if (!apiKey) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'RUNPOD_API_KEY not set in .env');
+  }
+
+  try {
+    for (const [label, p] of [['Image', input.imagePath], ['Audio', input.audioPath]] as const) {
+      if (!fs.existsSync(p)) {
+        return createErrorResult(WorkflowErrorCodes.FILE_NOT_FOUND, `${label} not found: ${p}`);
+      }
+    }
+    ensureDir(path.dirname(input.outputPath));
+
+    const imgMime = getMimeType(input.imagePath);
+    const audExt = path.extname(input.audioPath).toLowerCase().replace('.', '');
+    const audMime = { wav: 'audio/wav', mp3: 'audio/mpeg', m4a: 'audio/mp4' }[audExt] || 'audio/wav';
+    const resolution = input.resolution || '480p';
+    const flatCost = resolution === '720p' ? 0.5 : 0.25;
+
+    const fetchFn: typeof globalThis.fetch = (globalThis as any).fetch;
+    const submit = await fetchFn('https://api.runpod.ai/v2/infinitetalk/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        input: {
+          prompt: input.prompt,
+          image: `data:${imgMime};base64,${fs.readFileSync(input.imagePath).toString('base64')}`,
+          audio: `data:${audMime};base64,${fs.readFileSync(input.audioPath).toString('base64')}`,
+          resolution,
+          enable_safety_checker: true,
+        },
+      }),
+    });
+    if (!submit.ok) {
+      return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, `RunPod submit failed: ${submit.status} ${await submit.text()}`);
+    }
+    const job: any = await submit.json();
+    if (!job.id) {
+      return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, `RunPod returned no job id: ${JSON.stringify(job).slice(0, 300)}`);
+    }
+    console.log(`[Workflow] InfiniteTalk job ${job.id} submitted (${resolution}, $${flatCost}) — polling...`);
+
+    // Poll status up to ~15 min (cold starts + generation can take several minutes).
+    let output: any = null;
+    for (let i = 0; i < 180; i++) {
+      await new Promise((r) => setTimeout(r, 5000));
+      const st = await fetchFn(`https://api.runpod.ai/v2/infinitetalk/status/${job.id}`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+      });
+      const s: any = await st.json();
+      if (s.status === 'COMPLETED') { output = s.output; break; }
+      if (s.status === 'FAILED' || s.status === 'CANCELLED') {
+        return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, `InfiniteTalk job ${s.status}: ${JSON.stringify(s.error || s).slice(0, 500)}`);
+      }
+      if (i % 6 === 5) console.log(`[Workflow] InfiniteTalk ${s.status}... (${Math.round((i + 1) * 5 / 60)}min)`);
+    }
+    if (!output) {
+      return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, 'InfiniteTalk timed out after 15 minutes — check the job in the RunPod console');
+    }
+
+    // Handle the common serverless output shapes: URL or inline base64.
+    const candidate = output.video_url || output.url || output.video || output.result
+      || (Array.isArray(output) ? output[0] : null);
+    if (!candidate || typeof candidate !== 'string') {
+      return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, `Unrecognized InfiniteTalk output shape: ${JSON.stringify(output).slice(0, 500)}`);
+    }
+    if (candidate.startsWith('http')) {
+      const dl = await fetchFn(candidate);
+      if (!dl.ok) return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, `Result download failed: ${dl.status}`);
+      fs.writeFileSync(input.outputPath, Buffer.from(await dl.arrayBuffer()));
+    } else {
+      fs.writeFileSync(input.outputPath, Buffer.from(candidate.replace(/^data:video\/\w+;base64,/, ''), 'base64'));
+    }
+
+    console.log(`[Workflow] InfiniteTalk video saved: ${input.outputPath}`);
+    return {
+      success: true,
+      data: {
+        videoPath: input.outputPath,
+        cost: { totalCost: flatCost, breakdown: { lipsync: flatCost } },
+      },
+    };
+  } catch (error) {
+    const code = getErrorCode(error);
+    const message = error instanceof Error ? error.message : 'Unknown error during lip-sync';
+    console.error(`[Workflow] infiniteTalkLipsync failed: ${message}`);
+    return createErrorResult(code, message);
+  }
+}
+
+// =============================================================================
+// WORKFLOW: TRANSCRIBE AUDIO (Gemini 3.5 Flash multimodal — no OpenRouter needed)
+// =============================================================================
+
+/**
+ * Transcribe an audio file with detailed timestamps via Gemini 3.5 Flash.
+ *
+ * Complements transcribeVideo (Whisper via OpenRouter): this path only needs
+ * GEMINI_API_KEY and handles non-English speech (tested with Burmese) well.
+ * Output format: one `[m:ss.d - m:ss.d] <spoken text>` line per phrase.
+ *
+ * @example
+ * const r = await transcribeAudio({ audioPath: 'vo/scene1.wav', language: 'Burmese' });
+ * console.log(r.data.transcript);
+ */
+export async function transcribeAudio(
+  input: TranscribeAudioInput
+): Promise<WorkflowResult<TranscribeAudioOutput>> {
+  if (!input.audioPath) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'audioPath is required');
+  }
+
+  try {
+    if (!fs.existsSync(input.audioPath)) {
+      return createErrorResult(WorkflowErrorCodes.FILE_NOT_FOUND, `Audio not found: ${input.audioPath}`);
+    }
+    const ext = path.extname(input.audioPath).toLowerCase().replace('.', '');
+    const mime = { wav: 'audio/wav', mp3: 'audio/mp3', flac: 'audio/flac', m4a: 'audio/mp4', ogg: 'audio/ogg' }[ext] || 'audio/mp3';
+
+    const result = await withRetry(
+      () => gemini35Flash({
+        systemPrompt: 'You are a precise transcription engine. Output only the transcript lines — no commentary, no translation, no markdown.',
+        userPrompt:
+          `Transcribe this audio verbatim${input.language ? ` (spoken language: ${input.language})` : ''} with detailed timestamps. ` +
+          'Format EXACTLY one line per phrase/sentence: [m:ss.d - m:ss.d] <spoken text>. ' +
+          'Timestamps accurate to tenths of a second, covering the full duration.',
+        audioInput: fs.readFileSync(input.audioPath),
+        audioMimeType: mime,
+      }),
+      { maxRetries: 2 },
+      'Audio transcription'
+    );
+
+    if (!result.success) {
+      return createErrorResult(
+        getErrorCode(new Error(result.error?.message)),
+        result.error?.message || 'Audio transcription failed'
+      );
+    }
+
+    const transcript = result.data.text.trim();
+    if (input.outputPath) {
+      ensureDir(path.dirname(input.outputPath));
+      fs.writeFileSync(input.outputPath, transcript);
+    }
+
+    return {
+      success: true,
+      data: {
+        transcript,
+        cost: {
+          totalCost: result.data.cost.totalCost,
+          breakdown: { transcription: result.data.cost.totalCost },
+        },
+      },
+    };
+  } catch (error) {
+    const code = getErrorCode(error);
+    const message = error instanceof Error ? error.message : 'Unknown error during transcription';
+    console.error(`[Workflow] transcribeAudio failed: ${message}`);
     return createErrorResult(code, message);
   }
 }

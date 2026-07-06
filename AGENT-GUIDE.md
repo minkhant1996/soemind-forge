@@ -24,8 +24,9 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 - **Speech-to-Text** - Whisper transcription
 
 **Required**: At least one API key in root .env file:
-- `GEMINI_API_KEY` - For Veo, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria, TTS
+- `GEMINI_API_KEY` - For Veo, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria, TTS, transcription
 - `OPENROUTER_API_KEY` - For Seedance (lip-sync), GPT-4, Claude
+- `RUNPOD_API_KEY` (optional) - For InfiniteTalk: true lip-sync to user-provided audio files
 
 ---
 
@@ -150,6 +151,9 @@ projects/{name}/output-contents/{date}/
 | **Platform specs** | `workflows/PLATFORM-SPECS.md` | All sizes & ratios |
 | **Video** | `skills/generate-video/SKILL.md` | `workflows/VIDEO-PROMPT-GUIDE.md` |
 | **Story / short film (multi-character)** | `workflows/recipes/story-short-film.md` | `workflows/VIDEO-PROMPT-GUIDE.md` §7b |
+| **Motion control (swap dancers/actors in a real video with characters)** | `workflows/VIDEO-PROMPT-GUIDE.md` § Playbook 7 | `skills/generate-video/SKILL.md` § Motion control |
+| **Lip-sync to provided audio / VO film from user WAVs** | `workflows/VIDEO-PROMPT-GUIDE.md` § Playbook 8 | `workflows/WORKFLOWS.md` § InfiniteTalk |
+| **Captions / SRT / transcription** | `workflows/WORKFLOWS.md` § Transcription + § renderCaptionedVideo | - |
 | **Consistent characters / non-English (Myanmar) dialogue / clip edits** | `workflows/VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook | `skills/generate-video/SKILL.md` § Consistency & language routing |
 | **Image** | `skills/generate-image/SKILL.md` | `workflows/IMAGE-PROMPT-GUIDE.md` |
 | **Product shots (e-commerce)** | `skills/generate-image/SKILL.md` | `workflows/PRODUCT-SHOT-GUIDE.md` |
@@ -238,6 +242,10 @@ Seedance (lip-sync video), Whisper transcription, and GPT-4/Claude text models.
 | Speaking character in **Myanmar / non-Latin script** | **Omni Flash (Gemini)** | Natural pronunciation + lip-sync; Veo silently filter-blocks mixed-language prompts |
 | Consistent character across scenes | **NBP keyframe → Omni image_to_video** | Identity locked in an approvable still; video model only animates |
 | Fix ONE flaw in a good clip | **Omni Flash edit task** | "Keep everything the same…" + character ref images attached |
+| Motion control (real video drives your characters' moves) | **Omni Flash edit task** | Input video ≤10s + character refs, MINIMAL replace-prompt; choreography/camera/background preserved; output silent → remux source audio |
+| Lip-sync to a PROVIDED audio file (voice clone/recording) | **InfiniteTalk (RunPod)** `infiniteTalkLipsync` | Audio drives the mouth, no duration cap, $0.25-0.50/request. Omni is policy-blocked for this — don't retry it |
+| Transcription (any language incl. Myanmar) | **Gemini** `transcribeAudio` | Timestamped; proofread product names (ASR mangles them) |
+| Burned captions / SRT (Burmese-safe) | **Remotion** `renderCaptionedVideo` | $0 local; cues from transcribeAudio timestamps |
 | UGC testimonial | **Seedance** | Integrated dialogue |
 | Background music | **Gemini** | Lyria music generation |
 | Model variety | **OpenRouter** | GPT-4, Claude, etc. |

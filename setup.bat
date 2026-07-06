@@ -153,7 +153,7 @@ if exist "%SCRIPT_DIR%\workflows" (
     cd "%SCRIPT_DIR%\workflows"
     call npm install --silent
     call npm run build 2>nul
-    if exist "%SCRIPT_DIR%\workflows\dist\index.js" (
+    if exist "%SCRIPT_DIR%\workflows\dist\workflows\index.js" (
         echo    [OK] Workflows module built
     ) else (
         echo    [ERROR] Workflows build failed
@@ -243,6 +243,7 @@ echo.
 echo   1. Add your API key(s) to .env
 echo      Gemini: https://aistudio.google.com/app/apikey
 echo      OpenRouter: https://openrouter.ai/keys
+echo      RunPod (lip-sync to provided audio, optional): https://www.runpod.io/console/user/settings
 echo.
 
 if "%TOOL%"=="claude" (

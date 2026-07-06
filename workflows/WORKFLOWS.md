@@ -303,11 +303,75 @@ the content folder — it is the machine-readable twin of prompts.txt.
 
 ---
 
+## InfiniteTalk Lip-Sync (RunPod — sync a character image to PROVIDED audio)
+
+The route for true lip-sync to a user-supplied recording (voice clones,
+podcast audio, VO): character still + speech audio → talking video whose
+mouth follows the audio. Video length follows the audio — no 10s cap
+(13s+ verified in one request). Flat pricing: **480p $0.25 · 720p $0.50** per
+request. Requires `RUNPOD_API_KEY`. Output ~704x1280 25fps (720p tier), the
+provided audio embedded.
+
+**Prompt rule: describe ACTING only** (posture, gestures, mood, setting) —
+never the spoken words; the audio drives the mouth.
+
+```bash
+node workflows/cli.cjs infiniteTalkLipsync '{
+  "imagePath": "projects/x/output-contents/y/kf-s1-studio.png",
+  "audioPath": "projects/x/assets/audio/scene1.wav",
+  "prompt": "A man in a suit sits at a recording-studio desk and speaks into a condenser microphone, calm and confident, natural head movements",
+  "resolution": "720p",
+  "outputPath": "projects/x/output-contents/y/s1-talk.mp4"
+}'
+```
+
+Full per-scene pipeline (VO films): transcribe WAVs (`transcribeAudio`) →
+keyframe per scene (photo anchor attached) → `infiniteTalkLipsync` per
+scene/WAV → normalize + `assembleFinal` → `renderCaptionedVideo`.
+
+---
+
+## Transcription (transcribeAudio — Gemini, no OpenRouter needed)
+
+Timestamped transcription via Gemini 3.5 Flash multimodal — handles Burmese
+and other non-English speech well. Pennies per clip. Output: one
+`[m:ss.d - m:ss.d] <text>` line per phrase (also written to `outputPath`).
+
+```bash
+node workflows/cli.cjs transcribeAudio '{"audioPath":"vo/scene1.wav","language":"Burmese","outputPath":"content-plans/transcript-scene1.txt"}'
+```
+
+⚠️ **Proofread product/brand names** — ASR mangles them (VoxCPM2 came back as
+"VoxEP M2", "VITS-2", and "Voxi PM2" in one session). The human script is the
+source of truth; fix names before captioning.
+
+---
+
 ## Remotion Rendering (local pixel-perfect typography, $0)
 
 AI image models garble text; Remotion doesn't. Generate **text-free backgrounds**
 with the image workflows, then render typography locally with real Sora/Inter fonts.
 Requires one-time `npm install` inside `remotion/`. No API cost.
+
+### renderCaptionedVideo — burn timed captions over a finished video (Burmese-safe)
+
+Chromium shaping via OS font fallback (`'Myanmar MN'`, `'Noto Sans Myanmar'`)
+renders complex scripts correctly — unlike ffmpeg drawtext. Cues come from
+`transcribeAudio` timestamps, offset by each scene's start on the assembled
+timeline. $0, audio kept.
+
+```bash
+node workflows/cli.cjs renderCaptionedVideo '{
+  "videoPath": "final.mp4",
+  "cues": [{"start": 0.0, "end": 2.0, "text": "ဒါကတော့ VoxCPM2 နဲ့"}, ...],
+  "fontSize": 52, "marginBottom": 480,
+  "outputPath": "final-cc.mp4"
+}'
+```
+
+Fields: `fontSize` (px, default 52) · `marginBottom` (px from bottom — 480 ≈
+caption at 3/4 frame height, 280 = low-thirds) · `accentColor` (pill border).
+Write a standard `.srt` from the same cues alongside for platform captions.
 
 ### renderSlideStill — background + headline/sub/footer/logo → 1080x1350 slide
 
@@ -370,6 +434,20 @@ pass). Specs: max 10s/turn · 720p only · aspect `16:9` (default) or `9:16` ·
 up to 5 reference images · audio OUT yes, audio IN no · refuses named real
 people · SynthID watermark on every output.
 
+**Audio behavior (production-verified 2026-06/07):** dialogue/SFX the model
+GENERATES arrives embedded (aac) in the same mp4 — including on `edit` tasks
+when the prompt contains dialogue. Audio already IN your input video NEVER
+passes through an `edit` task — the output is silent every time. Plan a
+`mixVideoAudio` remux ($0) after every edit that must keep source audio.
+Avoid the phrase "audio track" in prompts (input-filter trigger);
+"soundtrack" passes.
+
+**Lip-sync to PROVIDED audio is policy-blocked on Omni** (3/3 deterministic:
+"can't create videos with real people's likenesses" when a real voice is
+embedded in the input + a sync instruction — deepfake guard, even for your own
+face/voice). Model-generated dialogue lip-sync is fine. For syncing to a
+user's recording, use `infiniteTalkLipsync` (RunPod) below.
+
 **Video tasks** (auto-selected from your inputs; override with `task`):
 
 | Task | Trigger inputs | Best for |
@@ -377,7 +455,7 @@ people · SynthID watermark on every output.
 | `text_to_video` | prompt only | Explainers, sizzle reels, word-by-word text sync |
 | `image_to_video` | `referenceImagePath` (1 image) | Explainers, cinematic beats, animating a locked NBP keyframe |
 | `reference_to_video` | `referenceImagePaths` (2-5 images) | Consistency: cite each as `<IMG_REF_0>`, `<IMG_REF_1>`… in the prompt |
-| `edit` | `inputVideoPath` | Add SFX, add/change on-video text, restyle, change camera/action on an existing clip |
+| `edit` | `inputVideoPath` | Add SFX, add/change on-video text, restyle, change camera/action — or **motion control**: swap the performers in a real video with your characters (+`referenceImagePaths`, cast by screen position; VIDEO-PROMPT-GUIDE §7) |
 | `extend` | `inputVideoPath` + `task:"extend"` | Continue a scene past its end |
 
 **Art styles** — Omni Flash shines at stylized output. `artStyle` prepends a
@@ -408,6 +486,17 @@ node workflows/cli.cjs generateOmniVideoClip '{
   "prompt": "Keep everything the same. Add animated motion effects coming out of the skateboard, with whoosh SFX.",
   "inputVideoPath": "projects/my-brand/output-contents/x/skate.mp4",
   "outputPath": "projects/my-brand/output-contents/x/skate-fx.mp4"
+}'
+
+# edit as MOTION CONTROL — swap performers in a real video with your characters.
+# Prompt stays MINIMAL (refs carry all identity/outfit detail — descriptive
+# prompts get filter-blocked); trim input to ≤10s first; output is silent →
+# remux source audio with mixVideoAudio. Full recipe: VIDEO-PROMPT-GUIDE §7.
+node workflows/cli.cjs generateOmniVideoClip '{
+  "prompt": "Replace the three dancers with the three characters from <IMG_REF_0>, <IMG_REF_1>, and <IMG_REF_2> (left, center, right respectively), keeping the same choreography, timing, camera, background, and lighting. (no subtitles)",
+  "inputVideoPath": "projects/my-brand/assets/dance-10s.mp4",
+  "referenceImagePaths": ["char-a.png", "char-b.png", "char-c.png"],
+  "outputPath": "projects/my-brand/output-contents/x/dance-swap.mp4"
 }'
 
 # text_to_video — stylized explainer with art style preset

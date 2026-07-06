@@ -3,6 +3,7 @@ import { Composition, getInputProps } from 'remotion';
 import { Slide, SlideProps } from './Slide';
 import { Reel, ReelProps } from './Reel';
 import { KineticReel, KineticReelProps } from './KineticReel';
+import { CaptionedVideo, CaptionedVideoProps } from './CaptionedVideo';
 
 const FPS = 30;
 
@@ -16,12 +17,17 @@ const defaultReel: ReelProps = {
   slides: [{ ...defaultSlide, seconds: 4 }],
 };
 
+const defaultCaptioned: CaptionedVideoProps = {
+  video: '', cues: [], durationSeconds: 1,
+};
+
 const defaultKinetic: KineticReelProps = {
   scenes: [{ bg: '', seconds: 4, lines: [{ text: 'Headline' }] }],
 };
 
 export const Root: React.FC = () => {
-  const input = getInputProps() as Partial<ReelProps> & Partial<KineticReelProps>;
+  const input = getInputProps() as Partial<ReelProps> & Partial<KineticReelProps> & Partial<CaptionedVideoProps>;
+  const captionedSeconds = input.durationSeconds ?? defaultCaptioned.durationSeconds;
   const reelSeconds =
     (input.slides ?? defaultReel.slides).reduce((a, s) => a + (s.seconds ?? 4), 0);
   const kineticSeconds =
@@ -61,6 +67,17 @@ export const Root: React.FC = () => {
         fps={FPS}
         durationInFrames={Math.max(1, Math.round(kineticSeconds * FPS))}
         defaultProps={defaultKinetic}
+      />
+      {/* Burn timed captions over a finished video (Burmese-safe via Chromium shaping):
+          npx remotion render src/index.ts CaptionedVideo out.mp4 --props=props.json */}
+      <Composition
+        id="CaptionedVideo"
+        component={CaptionedVideo}
+        width={1080}
+        height={1920}
+        fps={FPS}
+        durationInFrames={Math.max(1, Math.round(captionedSeconds * FPS))}
+        defaultProps={defaultCaptioned}
       />
     </>
   );

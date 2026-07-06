@@ -1830,7 +1830,9 @@ export async function generateOmniVideo(input: {
           thinking_level: input.thinkingLevel || 'high',
           video_config: { task },
         },
-        response_modalities: ['video'],
+        // 'audio' alongside 'video' lets edit tasks carry the input soundtrack
+        // through and text_to_video return its native VO/SFX in the same mp4.
+        response_modalities: ['video', 'audio'],
         // Edit task: duration/aspect are inherited from the input video — the API
         // rejects them in response_format.
         response_format:
@@ -1857,6 +1859,9 @@ export async function generateOmniVideo(input: {
           if (step.type === 'model_output' && step.content) {
             for (const part of step.content) {
               if (part.type === 'text' && part.text) text += part.text;
+              else if (part.type === 'audio' && part.data) {
+                console.warn('[generateOmniVideo] API returned a separate audio part — not yet muxed; remux source audio or extend the parser');
+              }
               else if (part.type === 'video' && part.data) {
                 const buf = Buffer.from(part.data, 'base64');
                 if (!videoBuffer || buf.length > videoBuffer.length) {

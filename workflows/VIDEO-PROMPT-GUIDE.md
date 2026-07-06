@@ -1503,3 +1503,92 @@ $0 is charged on blocks — retry freely, but change ONE variable per attempt:
 2. Strip meta speech/music/voice words (singing, music, voiceover, pronunciation).
 3. Non-English text present? → translate the ENTIRE prompt into that language.
 4. Still blocked twice more? → switch the beat to Omni.
+
+## 7. Motion control — swap the performers in a real video (Omni edit)
+
+> Validated 2026-07-06 in `projects/dance-motion-test`: a solo dancer, then a
+> 3-dancer synchronized trio each replaced by a different outfit-variant of the
+> same character. Receipts in that project's prompts.txt files.
+
+Take a real video (dance, choreography, any performance) and replace its
+people with your characters — motion, timing, camera moves, framing, and the
+original background all carry over 1:1:
+
+```bash
+# 1. Trim the source to ≤10s (Omni cap). Aspect + duration INHERIT from the
+#    input video — do not pass them.
+ffmpeg -ss 12 -i source.mp4 -t 10 -c:v libx264 -crf 18 -c:a aac window-10s.mp4
+
+# 2. Edit task: input video + one character ref per performer (max 5)
+node workflows/cli.cjs generateOmniVideoClip '{
+  "inputVideoPath": "assets/window-10s.mp4",
+  "referenceImagePaths": ["char-a.png", "char-b.png", "char-c.png"],
+  "prompt": "Replace the three dancers with the three characters from <IMG_REF_0>, <IMG_REF_1>, and <IMG_REF_2> (left, center, right respectively), keeping the same choreography, timing, camera, background, and lighting. (no subtitles)",
+  "outputPath": "out/clip.mp4"
+}'
+
+# 3. Output is ALWAYS silent — remux the SAME window's audio ($0, beat-perfect)
+ffmpeg -i assets/window-10s.mp4 -vn -acodec copy window-audio.m4a
+node workflows/cli.cjs mixVideoAudio '{"videoPath":"out/clip.mp4","musicPath":"window-audio.m4a","musicVolume":1.0,"outputPath":"out/final.mp4"}'
+```
+
+**Rules that fell out of production:**
+
+- **Keep the prompt MINIMAL — the reference images carry ALL identity/outfit
+  detail.** Descriptive prompts (breed, outfit adjectives) were Input-blocked
+  3/3 (`400`, $0); the bare replace-prompt above passed first try. Do not
+  burn attempts rewording adjectives — strip the prompt instead.
+- **Cast multiple characters by screen position** — "the LEFT dancer becomes
+  <IMG_REF_0>…". 3/3 characters landed in the right spots, in-sync.
+- **Wardrobe variants:** generate one locked character, then outfit-change
+  stills via `generateImageVariation` (~$0.13 each). Clothing must be
+  text-free ("PLAIN solid-black t-shirt, no text, no logos, no patches") —
+  band tees / patches come out garbled and fail QA.
+- **Source audio NEVER passes through the edit task** — 4/4 runs silent, even
+  with explicit instructions and `response_modalities: ['video','audio']`.
+  The remux (step 3) is mandatory, free, and perfectly synced because the
+  motion timing is copied 1:1. (Native audio DOES work when Omni *generates*
+  speech itself — see §3 dialogue clips, which return an embedded aac track.)
+- **Filter word traps:** "audio track" blocks the prompt; "soundtrack"
+  passes. §6's meta-word list applies to Omni too.
+- **Symptom of a stale build:** output comes back 16:9/8s with an invented
+  background = your `workflows/dist` predates its source and silently dropped
+  `inputVideoPath`/`referenceImagePaths`. `doctor` now checks for this;
+  rebuild `gemini/` then `workflows/` and re-run.
+- Expect occasional mid-clip style drift (a character going plush/mascot-like
+  for a beat) — QA with `reviewVideoOutput` `frameCount: 4`; re-roll only if
+  publishing. Cost ~$1.12/10s, ~$0.62/6s (token-priced).
+
+## 8. Lip-sync to PROVIDED audio (voice clones, recordings) — InfiniteTalk
+
+> Validated 2026-07-07 in `projects/min-personal-branding` (5-scene Burmese
+> VO film, VoxCPM2 voice clones). Receipts in that project's prompts.txt.
+
+**Route by what drives the mouth:**
+
+| You have | Use | Why |
+|---|---|---|
+| Dialogue TEXT only | Omni image_to_video / edit with the line in the prompt (§3) | Omni generates voice + mouth together — true sync, its own voice |
+| A provided AUDIO file (clone/recording) | **`infiniteTalkLipsync` (RunPod)** | Audio-driven mouth; Omni is policy-blocked here |
+| Provided audio, no talking head needed | VO-over-b-roll (clips + `mixVideoAudio`) | No sync problem at all |
+
+**Omni is a dead end for provided audio — don't retry it:**
+- Omni never hears a separate WAV (audio IN unsupported).
+- Embedding the voice in the input video + "sync the mouth to the narration
+  heard" trips the likeness/deepfake guard 3/3 ("can't create videos with real
+  people's likenesses") — even for the user's OWN face and voice.
+- Generating Omni speech and laying the user's WAV over gives only
+  approximate, visibly-off sync.
+
+**InfiniteTalk recipe (the working path):**
+1. `transcribeAudio` each WAV (timestamps drive captions later). PROOFREAD
+   product names — ASR mangles them.
+2. One keyframe per scene (`generateImageVariation`, photo anchor attached).
+3. `infiniteTalkLipsync` per scene: keyframe + WAV + ACTING-ONLY prompt
+   (posture/gesture/mood — never the words). 720p $0.50/scene; duration
+   follows the audio, no 10s cap (13.3s verified in one request).
+4. Normalize (1080x1920, common fps) → `assembleFinal` → `renderCaptionedVideo`
+   with cues = transcripts offset by scene starts (+ write .srt).
+
+Costs (5-scene ~48s film, measured): keyframes ~$0.81 · lip-sync 5x720p $2.50
+· assembly + captions $0 · total ~$3.4 after transcription pennies.

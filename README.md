@@ -47,6 +47,7 @@ the agent warns before big generations. See [Cost Reference](#cost-reference).
 **Supported Providers:**
 - **Google AI Studio (Gemini)** - Veo video, Gemini 3 image models (Nano Banana), Lyria music, TTS
 - **OpenRouter** - Seedance video (lip-sync), 100+ text models, STT
+- **RunPod** (optional) - InfiniteTalk: true lip-sync to your own audio recordings
 
 > **New here?** Follow [GETTING-STARTED.md](./GETTING-STARTED.md) — from zero to
 > your first generated image in about 10 minutes.
@@ -97,6 +98,10 @@ claude   # loads CLAUDE.md context automatically
 | **Kinetic Text Reels** | 9:16 typography reels — staggered animated lines, $0 text rendering | `renderKineticReel` |
 | **Video** | TikTok ads, Reels, Shorts, explainers — 46 camera-move presets | `/generate-video` |
 | **Omni Video** | Video + native audio in one call: text/image/reference-to-video AND editing existing clips, 10 art styles (claymation, pixel-art…) | `generateOmniVideoClip` |
+| **Motion Control** | Swap the dancers/actors in a real video with your characters — choreography, camera, and background carry over 1:1 | Omni edit task · `VIDEO-PROMPT-GUIDE.md` §7 |
+| **Lip-Sync to Your Audio** | Character image + your voice recording → talking video, mouth follows the audio, no duration cap | `infiniteTalkLipsync` (RunPod, $0.25-0.50/req) |
+| **Transcription** | Timestamped transcripts in any language (incl. Myanmar) via Gemini — no extra provider needed | `transcribeAudio` |
+| **Burned Captions + SRT** | Styled caption pills over any video, Burmese-safe shaping, $0 local render | `renderCaptionedVideo` |
 | **Product Shots** | 26 e-commerce presets from one real product photo: packshots, lifestyle, scale/trust, seasonal | `productShot` on `/generate-image` |
 | **Images & Slides** | Thumbnails, carousels with pixel-perfect type | `/generate-image` + `renderSlideStill` |
 | **Brand Assets** | Logos, profiles, covers, highlights | `/generate-brand-assets` |
