@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Workflow CLI dispatcher
  * =======================
@@ -54,7 +59,7 @@ const COMMANDS = {
     'generateSilentVideo', 'generateSpeakingVideo', 'generateVideoFromImage',
     'generateSpeakingVideoFromImage', 'generateVideoWithVoiceover',
     'generateVideoFromImageWithVoiceover', 'generateOmniVideoClip',
-    'generateVideoFromKeyframes', 'infiniteTalkLipsync',
+    'generateVideoFromKeyframes', 'infiniteTalkLipsync', 'analyzeReferenceVideo',
   ],
   'Video (Seedance 2.0 / OpenRouter — lip-sync, native audio)': [
     'seedanceTextToVideo', 'seedanceImageToVideo', 'seedanceSpeakingVideo',

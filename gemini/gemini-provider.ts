@@ -1,3 +1,8 @@
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Gemini Provider
  * ===============
@@ -405,6 +410,65 @@ const getClientWithKey = (apiKey: string): GoogleGenAI => {
 };
 
 /**
+ * Upload a local media file to the Gemini Files API
+ *
+ * Use for local videos/audio too large for inline base64 (~20 MB request
+ * limit). Returns a fileUri you can pass as `videoFileUri` on text-model
+ * inputs. Files are stored for 48 hours, free of charge.
+ *
+ * Polls until the file finishes server-side processing (state ACTIVE) —
+ * videos are not usable in a generateContent call until then.
+ *
+ * @param filePath - Path to the local media file
+ * @param mimeType - MIME type (e.g. 'video/mp4'); inferred by the API if omitted
+ * @returns fileUri + mimeType on success
+ *
+ * @see https://ai.google.dev/gemini-api/docs/files
+ */
+export async function uploadMediaFile(
+  filePath: string,
+  mimeType?: string
+): Promise<{ success: boolean; fileUri?: string; mimeType?: string; error?: string }> {
+  try {
+    const ai = getClient();
+
+    // Upload the file
+    let file = await ai.files.upload({
+      file: filePath,
+      config: mimeType ? { mimeType } : undefined,
+    });
+
+    // Poll until processing completes (state: PROCESSING → ACTIVE | FAILED)
+    const maxWaitMs = 5 * 60 * 1000; // 5 minutes
+    const pollIntervalMs = 5000;
+    const deadline = Date.now() + maxWaitMs;
+
+    while (file.state === 'PROCESSING') {
+      if (Date.now() > deadline) {
+        return { success: false, error: 'File processing timed out after 5 minutes' };
+      }
+      await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
+      file = await ai.files.get({ name: file.name || '' });
+    }
+
+    if (file.state === 'FAILED') {
+      return { success: false, error: 'File processing failed on the server' };
+    }
+
+    if (!file.uri) {
+      return { success: false, error: 'Upload succeeded but no file URI was returned' };
+    }
+
+    return { success: true, fileUri: file.uri, mimeType: file.mimeType };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown upload error',
+    };
+  }
+}
+
+/**
  * Check if an error is a rate limit error (429)
  */
 const isRateLimitError = (error: unknown): boolean => {
@@ -451,9 +515,17 @@ const isRateLimitError = (error: unknown): boolean => {
  */
 function buildContentParts(
   input: GeminiBaseInput
-): Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> {
+): Array<{
+  text?: string;
+  inlineData?: { mimeType: string; data: string };
+  fileData?: { fileUri: string; mimeType?: string };
+}> {
   // Initialize empty parts array
-  const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
+  const parts: Array<{
+    text?: string;
+    inlineData?: { mimeType: string; data: string };
+    fileData?: { fileUri: string; mimeType?: string };
+  }> = [];
 
   // ----- TEXT PART -----
   // Always add the user's text prompt
@@ -513,6 +585,46 @@ function buildContentParts(
         // Common audio types: 'audio/mp3', 'audio/wav', 'audio/flac'
         mimeType: input.audioMimeType || 'audio/mp3',
         data: audioData,
+      },
+    });
+  }
+
+  // ----- VIDEO PART (optional) -----
+  if (input.videoInput) {
+    /**
+     * Inline video — same Buffer→base64 pattern as image/audio.
+     * Only for small files (~<20 MB request limit); larger local videos
+     * should be uploaded via uploadMediaFile() and passed as videoFileUri.
+     *
+     * @see https://ai.google.dev/gemini-api/docs/video-understanding
+     */
+    const videoData = Buffer.isBuffer(input.videoInput)
+      ? input.videoInput.toString('base64')
+      : input.videoInput;
+
+    parts.push({
+      inlineData: {
+        // Common video types: 'video/mp4', 'video/webm', 'video/quicktime'
+        mimeType: input.videoMimeType || 'video/mp4',
+        data: videoData,
+      },
+    });
+  }
+
+  // ----- VIDEO FILE URI PART (optional) -----
+  if (input.videoFileUri) {
+    /**
+     * Remote video reference — either a public YouTube URL (Gemini fetches
+     * it server-side) or a Files API URI from uploadMediaFile().
+     *
+     * @see https://ai.google.dev/gemini-api/docs/video-understanding#youtube
+     */
+    const isYouTube = /(?:youtube\.com|youtu\.be)\//i.test(input.videoFileUri);
+    parts.push({
+      fileData: {
+        fileUri: input.videoFileUri,
+        // YouTube URLs must NOT carry a mimeType; Files API URIs should.
+        ...(isYouTube ? {} : { mimeType: input.videoMimeType || 'video/mp4' }),
       },
     });
   }

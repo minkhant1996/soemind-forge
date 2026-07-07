@@ -1,3 +1,8 @@
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Gemini Services - Main Export
  * ==============================
@@ -83,6 +88,13 @@
  * - GEMINI_API_KEY: Single key (fallback if GEMINI_API_KEYS not set)
  */
 export { apiKeyManager, ApiKeyManager } from './gemini-provider';
+
+/**
+ * Upload a local media file to the Gemini Files API (48h storage, free).
+ * Use for local videos too large for inline base64; pass the returned
+ * fileUri as `videoFileUri` on any text-model input.
+ */
+export { uploadMediaFile } from './gemini-provider';
 
 /**
  * Pre-configured functions for each model

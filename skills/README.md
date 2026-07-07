@@ -66,6 +66,7 @@ cp -r skills/* .claude/skills/
 |-------|---------|---------|
 | `onboard-brand` | `/onboard-brand` | Interview the user → filled brand/project templates + registry + budget |
 | `generate-video` | `/generate-video` | Generate video with Veo |
+| `analyze-video` | `/analyze-video` | Analyze a reference video (YouTube/local) → scene breakdown + recreation plan |
 | `generate-image` | `/generate-image` | Generate image with Gemini 3 Image (Nano Banana) |
 | `generate-voiceover` | `/generate-voiceover` | Generate TTS audio |
 | `generate-music` | `/generate-music` | Generate music with Lyria |

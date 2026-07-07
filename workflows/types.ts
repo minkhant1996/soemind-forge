@@ -1,3 +1,8 @@
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Workflow Types
  * ==============
@@ -231,6 +236,99 @@ export interface TranscribeAudioInput {
 export interface TranscribeAudioOutput {
   /** Timestamped transcript: one `[m:ss.d - m:ss.d] <text>` line per phrase. */
   transcript: string;
+  cost: CostInfo;
+}
+
+// =============================================================================
+// REFERENCE VIDEO ANALYSIS TYPES ("analyze this video, I want something like it")
+// =============================================================================
+
+export interface AnalyzeReferenceVideoInput {
+  /** Public YouTube URL — Gemini fetches it directly, no download needed. */
+  youtubeUrl?: string;
+  /** OR a local video file (mp4/webm/mov). Large files auto-upload via Files API. */
+  videoPath?: string;
+  /** Folder to write breakdown.json / breakdown.md / recreation-plan.md into. */
+  outputDir: string;
+  /** Optional spoken-language hint, e.g. 'Burmese'. Improves dialogue capture. */
+  language?: string;
+  /** What the user wants out of the recreation (their product, brand, angle…). Shapes the recreation plan. */
+  notes?: string;
+}
+
+/** One scene of the reference-video breakdown (what the original does). */
+export interface ReferenceVideoScene {
+  index: number;
+  /** e.g. '0:00' */
+  startTime: string;
+  /** e.g. '0:03' */
+  endTime: string;
+  /** Narrative role, e.g. 'Opening hook', 'Product reveal', 'CTA'. */
+  purpose: string;
+  /** e.g. 'Medium shot', 'Extreme close-up', 'Drone wide'. */
+  shotType: string;
+  /** Camera movement if any, e.g. 'slow push-in', 'handheld pan'. */
+  cameraMove?: string;
+  /** What is on screen: subject, setting, lighting, color, film grain… */
+  visualDescription: string;
+  /** Overlay text / captions burned into the frame, verbatim. */
+  onScreenText?: string;
+  /** What is spoken (dialogue or voiceover), verbatim. */
+  dialogueOrVO?: string;
+  /** Music/SFX character during this scene. */
+  audioNotes?: string;
+}
+
+/** One scene of the recreation blueprint (how to remake it with this kit). */
+export interface ReferenceVideoRecreationScene {
+  index: number;
+  /** Ready-to-adapt video generation prompt for this scene. */
+  videoPrompt: string;
+  /** Voiceover line for this scene, if any. */
+  voiceoverLine?: string;
+  /** Suggested CLI command, e.g. 'generateSilentVideo', 'generateVideoFromImage'. */
+  suggestedCommand: string;
+  /** Target clip length in seconds. */
+  durationSeconds: number;
+}
+
+/** Full structured analysis of a reference video. */
+export interface ReferenceVideoBreakdown {
+  /** The analyzed source (URL or file path). */
+  source: string;
+  /** Video title if identifiable. */
+  title?: string;
+  /** Total duration, e.g. '6:46'. */
+  duration?: string;
+  /** Aspect/format, e.g. '16:9 horizontal', '9:16 vertical'. */
+  format?: string;
+  /** Overall look & feel: grading, grain, era, energy. */
+  styleSummary: string;
+  /** Editing rhythm: avg scene length, cut style, transitions. */
+  pacing?: string;
+  /** Global audio profile. */
+  audio?: { music?: string; voiceover?: string; sfx?: string };
+  scenes: ReferenceVideoScene[];
+  recreation: {
+    /** Global guidance for the remake (style, consistency, assets needed). */
+    globalNotes?: string;
+    /** Brief for generateMusicTrack, if music matters. */
+    musicBrief?: string;
+    scenes: ReferenceVideoRecreationScene[];
+  };
+}
+
+export interface AnalyzeReferenceVideoOutput {
+  /** Machine-readable breakdown (full ReferenceVideoBreakdown). */
+  breakdownJsonPath: string;
+  /** Human-readable scene-by-scene breakdown. */
+  breakdownMdPath: string;
+  /** Ready-to-adapt recreation blueprint (per-scene prompts + VO script). */
+  recreationPlanPath: string;
+  sceneCount: number;
+  duration?: string;
+  styleSummary: string;
+  breakdown: ReferenceVideoBreakdown;
   cost: CostInfo;
 }
 

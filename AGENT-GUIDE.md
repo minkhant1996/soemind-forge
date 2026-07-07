@@ -1,4 +1,4 @@
-# AI Director Studio - Agent Context
+# SoeMind Forge - Agent Context
 
 > **For AI Agents**: This file provides persistent context. READ THIS FIRST.
 > **Ground rules**: [RULES.md](./RULES.md) — binding rules for every AI tool in this repo. Read it before generating anything.
@@ -150,6 +150,8 @@ projects/{name}/output-contents/{date}/
 | **Any generation** | `skills/content-preflight/SKILL.md` | Appropriate skill below |
 | **Platform specs** | `workflows/PLATFORM-SPECS.md` | All sizes & ratios |
 | **Video** | `skills/generate-video/SKILL.md` | `workflows/VIDEO-PROMPT-GUIDE.md` |
+| **Analyze a reference video ("make something like that" + link)** | `skills/analyze-video/SKILL.md` | `workflows/WORKFLOWS.md` § Reference Video Analysis |
+| **Text overlay / typography (hero titles, kinetic reels, "text behind subject")** | `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` | `skills/generate-video/SKILL.md` § Kinetic-typography |
 | **Story / short film (multi-character)** | `workflows/recipes/story-short-film.md` | `workflows/VIDEO-PROMPT-GUIDE.md` §7b |
 | **Motion control (swap dancers/actors in a real video with characters)** | `workflows/VIDEO-PROMPT-GUIDE.md` § Playbook 7 | `skills/generate-video/SKILL.md` § Motion control |
 | **Lip-sync to provided audio / VO film from user WAVs** | `workflows/VIDEO-PROMPT-GUIDE.md` § Playbook 8 | `workflows/WORKFLOWS.md` § InfiniteTalk |
@@ -175,6 +177,7 @@ projects/{name}/output-contents/{date}/
 | **Onboard Brand** | `/onboard-brand` | "get started", "set up my brand", "new project" |
 | **Content Preflight** | `/content-preflight` | Before any generation |
 | **Generate Video** | `/generate-video` | "create video", "TikTok", "Reels" |
+| **Analyze Video** | `/analyze-video` | "analyze this video", "I want something like that", "recreate this video" |
 | **Generate Image** | `/generate-image` | "create image", "thumbnail", "carousel" |
 | **Generate Brand Assets** | `/generate-brand-assets` | "profile pic", "cover image", "logo" |
 | **Generate Voiceover** | `/generate-voiceover` | "voiceover", "narration", "TTS" |

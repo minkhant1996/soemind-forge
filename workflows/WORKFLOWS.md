@@ -347,6 +347,30 @@ source of truth; fix names before captioning.
 
 ---
 
+## Reference Video Analysis (analyzeReferenceVideo — "make something like that")
+
+Analyze a reference video into a scene-by-scene breakdown + a recreation
+blueprint. Accepts a **YouTube URL** (Gemini fetches it directly — no
+download) or a **local video file** (≤19 MB inline; larger files auto-upload
+via the Gemini Files API). Video input is tokenized at ~300 tokens/second
+(~$0.03/min of video + output tokens).
+
+```bash
+node workflows/cli.cjs analyzeReferenceVideo '{"youtubeUrl":"https://www.youtube.com/watch?v=...","outputDir":"projects/my-brand/output-contents/2026-07-07/ref-01","notes":"Recreate for my coffee brand, 30s vertical","language":"Burmese"}'
+# or: {"videoPath":"refs/competitor-ad.mp4", ...}
+```
+
+Writes into `outputDir`:
+- `breakdown.json` — full structured analysis (metadata, style, pacing, audio, scenes[], recreation{})
+- `breakdown.md` — human shot list: `Scene N · 0:00–0:03 — Opening hook`, shot type, camera move, visual, on-screen text, verbatim spoken line
+- `recreation-plan.md` — per-scene generic video prompts + VO script + suggested command + music brief
+
+The blueprint is a STARTING POINT: run content-preflight, swap generic
+subjects for registered assets, then pipeline the generation as usual.
+Skill: `skills/analyze-video/SKILL.md`.
+
+---
+
 ## Remotion Rendering (local pixel-perfect typography, $0)
 
 AI image models garble text; Remotion doesn't. Generate **text-free backgrounds**
@@ -1147,6 +1171,7 @@ natural excitement, engaging energy
 | 29 | `assemble-story-film` | Scene clips + per-scene VO + logo | Multi-scene cinematic cut | `assembleStoryFilm()` |
 | 30 | `review-video` | Generated video + brand rules | Frame-sampled pass/fail QA | `reviewVideoOutput()` |
 | 31 | `omni-video` | Text / 1-5 ref images / input video | ~10s clip via Gemini Omni Flash — 4 tasks (text/image/reference/edit), 10 art-style presets | `generateOmniVideoClip()` |
+| 32 | `analyze-reference-video` | YouTube URL or local video | Scene-by-scene breakdown + recreation blueprint (json + 2× md) | `analyzeReferenceVideo()` |
 
 ### Seedance 2.0 Workflows (Native Audio, Lip-Sync, Multi-Reference)
 

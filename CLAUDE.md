@@ -1,4 +1,4 @@
-# AI Director Studio
+# SoeMind Forge
 
 @AGENT-GUIDE.md
 

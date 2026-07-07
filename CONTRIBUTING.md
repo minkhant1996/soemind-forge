@@ -1,4 +1,4 @@
-# Contributing to AI Director Studio
+# Contributing to SoeMind Forge
 
 Thanks for your interest in improving the kit! Contributions of all kinds are
 welcome — new workflows, skills, prompt guides, provider integrations, docs
@@ -8,7 +8,7 @@ fixes, and bug reports.
 
 | You want to… | Start here |
 |---|---|
-| Report a bug or request a feature | [Open an issue](https://github.com/minkhant1996/min-ai-content-studio-kit/issues) |
+| Report a bug or request a feature | [Open an issue](https://github.com/minkhant1996/soemind-forge/issues) |
 | Add or improve a **workflow** (generation function) | [`workflows/CREATING_WORKFLOWS.md`](workflows/CREATING_WORKFLOWS.md) |
 | Share a **campaign recipe** (easiest contribution — just markdown) | [`workflows/recipes/README.md`](workflows/recipes/README.md) |
 | Add or improve a **skill** (agent slash command) | [`skills/README.md`](skills/README.md) and existing `skills/*/SKILL.md` |
@@ -19,8 +19,8 @@ fixes, and bug reports.
 ## Dev setup
 
 ```bash
-git clone https://github.com/minkhant1996/min-ai-content-studio-kit.git
-cd min-ai-content-studio-kit
+git clone https://github.com/minkhant1996/soemind-forge.git
+cd soemind-forge
 npm install
 cd gemini && npm install && cd ..
 cd workflows && npm install && npm run build && cd ..

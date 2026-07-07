@@ -1,3 +1,8 @@
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Cost Tracker
  * ============

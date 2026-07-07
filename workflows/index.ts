@@ -1,3 +1,8 @@
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Content Generation Workflows
  * ============================
@@ -26,6 +31,7 @@ import {
   textToSpeech,
   multiSpeakerTTS,
   generateMusic,
+  uploadMediaFile,
 } from '../gemini/dist/index.js';
 
 // Expressive TTS (inline audio tags like [excited] [pause] [whispers]) is the
@@ -72,6 +78,11 @@ import type {
   ImageToTextOutput,
   TranscribeAudioInput,
   TranscribeAudioOutput,
+  AnalyzeReferenceVideoInput,
+  AnalyzeReferenceVideoOutput,
+  ReferenceVideoBreakdown,
+  ReferenceVideoScene,
+  ReferenceVideoRecreationScene,
   InfiniteTalkInput,
   InfiniteTalkOutput,
   TextToImageInput,
@@ -3661,7 +3672,7 @@ export async function generateMusicTrack(
 
     console.log(`[Workflow] Generating music (${model}, ${input.durationSeconds || maxDuration}s)...`);
 
-    const result = await withRetry(
+    let result = await withRetry(
       () => generateMusic({
         model,
         prompt: input.prompt,
@@ -3671,6 +3682,22 @@ export async function generateMusicTrack(
       { maxRetries: 2, initialDelayMs: 3000, maxDelayMs: 30000 },
       'Music generation'
     );
+
+    // Some API keys only serve the preview variant of the pro model — on a
+    // 404 for lyria-3-pro, retry once with lyria-3-pro-preview (same pricing).
+    if (!result.success && isPro && result.error?.message?.includes('is not found')) {
+      console.log('[Workflow] lyria-3-pro not available on this key — falling back to lyria-3-pro-preview...');
+      result = await withRetry(
+        () => generateMusic({
+          model: 'lyria-3-pro-preview',
+          prompt: input.prompt,
+          ...(imageInput && { imageInput, imageMimeType }),
+          config: { durationSeconds: input.durationSeconds },
+        }),
+        { maxRetries: 2, initialDelayMs: 3000, maxDelayMs: 30000 },
+        'Music generation (preview fallback)'
+      );
+    }
 
     if (!result.success) {
       return createErrorResult(
@@ -6777,6 +6804,276 @@ export async function generateOmniVideoClip(
     const code = getErrorCode(error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error(`[Workflow] generateOmniVideoClip failed: ${message}`);
+    return createErrorResult(code, message);
+  }
+}
+
+// =============================================================================
+// WORKFLOW: ANALYZE REFERENCE VIDEO ("I want to create something like that")
+// =============================================================================
+
+/** Render the breakdown as a human-readable scene-by-scene markdown doc. */
+function renderBreakdownMarkdown(b: ReferenceVideoBreakdown): string {
+  const lines: string[] = [
+    `# Reference Video Breakdown`,
+    ``,
+    `**Source:** ${b.source}`,
+    ...(b.title ? [`**Title:** ${b.title}`] : []),
+    ...(b.duration ? [`**Duration:** ${b.duration}`] : []),
+    ...(b.format ? [`**Format:** ${b.format}`] : []),
+    `**Scenes:** ${b.scenes.length}`,
+    ``,
+    `## Style`,
+    ``,
+    b.styleSummary,
+    ...(b.pacing ? [``, `**Pacing:** ${b.pacing}`] : []),
+    ...(b.audio ? [
+      ``,
+      `**Audio:**`,
+      ...(b.audio.music ? [`- Music: ${b.audio.music}`] : []),
+      ...(b.audio.voiceover ? [`- Voiceover: ${b.audio.voiceover}`] : []),
+      ...(b.audio.sfx ? [`- SFX: ${b.audio.sfx}`] : []),
+    ] : []),
+    ``,
+    `## Scenes`,
+    ``,
+  ];
+  for (const s of b.scenes) {
+    lines.push(`### Scene ${s.index} · ${s.startTime}–${s.endTime} — ${s.purpose}`);
+    lines.push(``);
+    lines.push(`- **Shot:** ${s.shotType}${s.cameraMove ? ` · ${s.cameraMove}` : ''}`);
+    lines.push(`- **Visual:** ${s.visualDescription}`);
+    if (s.onScreenText) lines.push(`- **On-screen text:** ${s.onScreenText}`);
+    if (s.dialogueOrVO) lines.push(`- **Spoken:** "${s.dialogueOrVO}"`);
+    if (s.audioNotes) lines.push(`- **Audio:** ${s.audioNotes}`);
+    lines.push(``);
+  }
+  return lines.join('\n');
+}
+
+/** Render the recreation blueprint as a ready-to-adapt markdown plan. */
+function renderRecreationPlan(b: ReferenceVideoBreakdown): string {
+  const r = b.recreation;
+  const lines: string[] = [
+    `# Recreation Blueprint`,
+    ``,
+    `> Adapted from: ${b.source}`,
+    `> This is a STARTING POINT — run content-preflight, swap in YOUR brand/product/`,
+    `> characters from the asset registry, and review prompts before generating.`,
+    ``,
+    ...(r.globalNotes ? [`## Global Notes`, ``, r.globalNotes, ``] : []),
+    ...(r.musicBrief ? [`## Music Brief (generateMusicTrack)`, ``, r.musicBrief, ``] : []),
+    `## Scene Prompts`,
+    ``,
+  ];
+  for (const s of r.scenes) {
+    lines.push(`### Scene ${s.index} (${s.durationSeconds}s) — \`${s.suggestedCommand}\``);
+    lines.push(``);
+    lines.push(`**Video prompt:**`);
+    lines.push(``);
+    lines.push('```');
+    lines.push(s.videoPrompt);
+    lines.push('```');
+    if (s.voiceoverLine) {
+      lines.push(``);
+      lines.push(`**Voiceover:** "${s.voiceoverLine}"`);
+    }
+    lines.push(``);
+  }
+  return lines.join('\n');
+}
+
+/**
+ * Analyze a reference video (YouTube URL or local file) into a scene-by-scene
+ * breakdown + a recreation blueprint with per-scene video prompts and VO script.
+ *
+ * Use for: "analyze this video, I want to create something like that".
+ * The blueprint feeds the normal preflight → pipeline → generate flow — it does
+ * NOT generate anything itself (analysis is a cheap text call; generation is not).
+ *
+ * @example
+ * const r = await analyzeReferenceVideo({
+ *   youtubeUrl: 'https://www.youtube.com/watch?v=ODNzk5x2tR4',
+ *   outputDir: 'projects/my-brand/output-contents/2026-07-07/ref-analysis',
+ *   notes: 'Recreate for my coffee brand, 30s vertical',
+ * });
+ * console.log(r.data.sceneCount, r.data.breakdownMdPath);
+ */
+export async function analyzeReferenceVideo(
+  input: AnalyzeReferenceVideoInput
+): Promise<WorkflowResult<AnalyzeReferenceVideoOutput>> {
+  // 1. VALIDATE — fail before spending tokens
+  if (!input.youtubeUrl && !input.videoPath) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Provide youtubeUrl or videoPath');
+  }
+  if (input.youtubeUrl && input.videoPath) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Provide only ONE of youtubeUrl / videoPath');
+  }
+  if (!input.outputDir) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'outputDir is required');
+  }
+  if (input.youtubeUrl && !/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(input.youtubeUrl)) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, `Not a YouTube URL: ${input.youtubeUrl}`);
+  }
+
+  try {
+    // 2. PREPARE — resolve the video source into provider inputs
+    ensureDir(input.outputDir);
+    const source = input.youtubeUrl || input.videoPath!;
+
+    let videoFileUri: string | undefined;
+    let videoInput: Buffer | undefined;
+    let videoMimeType: string | undefined;
+
+    if (input.youtubeUrl) {
+      videoFileUri = input.youtubeUrl; // Gemini fetches YouTube directly
+    } else {
+      if (!fs.existsSync(input.videoPath!)) {
+        return createErrorResult(WorkflowErrorCodes.FILE_NOT_FOUND, `Video not found: ${input.videoPath}`);
+      }
+      videoMimeType = getMimeType(input.videoPath!);
+      if (!videoMimeType.startsWith('video/')) {
+        return createErrorResult(WorkflowErrorCodes.INVALID_FILE_TYPE, `Not a video file: ${input.videoPath}`);
+      }
+      const sizeBytes = fs.statSync(input.videoPath!).size;
+      const INLINE_LIMIT = 19 * 1024 * 1024; // stay under the ~20 MB request cap
+      if (sizeBytes <= INLINE_LIMIT) {
+        videoInput = fs.readFileSync(input.videoPath!);
+      } else {
+        console.log(`[Workflow] Video is ${(sizeBytes / 1024 / 1024).toFixed(1)} MB — uploading via Files API...`);
+        const upload = await uploadMediaFile(input.videoPath!, videoMimeType);
+        if (!upload.success || !upload.fileUri) {
+          return createErrorResult(WorkflowErrorCodes.API_ERROR, `Files API upload failed: ${upload.error}`);
+        }
+        videoFileUri = upload.fileUri;
+        videoMimeType = upload.mimeType || videoMimeType;
+      }
+    }
+
+    // 3. GENERATE (always inside withRetry)
+    const systemPrompt =
+      'You are a veteran film director and commercial video analyst. You break reference videos ' +
+      'down scene by scene so a production team can recreate the same structure, pacing, and feel ' +
+      'with their own subject matter. You are precise about timecodes, shot types, camera moves, ' +
+      'on-screen text (verbatim), and spoken lines (verbatim). You respond ONLY with valid JSON.';
+
+    const userPrompt =
+      `Analyze this video scene by scene (a "scene" = one continuous shot or clear beat; split on cuts).` +
+      `${input.language ? ` Spoken language: ${input.language}.` : ''}` +
+      `${input.notes ? `\n\nRecreation intent from the user (tailor the recreation blueprint to this): ${input.notes}` : ''}` +
+      `\n\nReturn ONLY a JSON object with EXACTLY this shape (no markdown fences, no commentary):\n` +
+      JSON.stringify({
+        title: 'video title if identifiable, else null',
+        duration: 'total duration m:ss',
+        format: "aspect + orientation, e.g. '16:9 horizontal'",
+        styleSummary: 'overall look & feel: grading, grain, era, energy — 2-3 sentences',
+        pacing: 'editing rhythm: avg scene length, cut style, transitions',
+        audio: { music: 'style/energy or null', voiceover: 'narrator character or null', sfx: 'notable SFX or null' },
+        scenes: [{
+          index: 1,
+          startTime: '0:00',
+          endTime: '0:03',
+          purpose: "narrative role, e.g. 'Opening hook'",
+          shotType: "e.g. 'Medium shot'",
+          cameraMove: 'movement or null',
+          visualDescription: 'subject, setting, lighting, color — 1-2 sentences',
+          onScreenText: 'burned-in text verbatim or null',
+          dialogueOrVO: 'spoken words verbatim or null',
+          audioNotes: 'music/SFX in this scene or null',
+        }],
+        recreation: {
+          globalNotes: 'how to remake this: style keywords, consistency needs (characters/products), aspect ratio',
+          musicBrief: 'one-line music generation brief or null',
+          scenes: [{
+            index: 1,
+            durationSeconds: 3,
+            suggestedCommand: 'generateSilentVideo | generateVideoFromImage | generateOmniVideoClip',
+            videoPrompt: 'ready-to-use video generation prompt capturing this scene\'s shot type, camera move, lighting and mood — subject kept GENERIC so the user can swap in their own product/character',
+            voiceoverLine: 'VO line to record for this scene or null',
+          }],
+        },
+      }, null, 2) +
+      `\n\nCover the FULL duration — every scene, no sampling. Use null (not empty strings) for absent fields.`;
+
+    const result = await withRetry(
+      () => gemini35Flash({
+        systemPrompt,
+        userPrompt,
+        videoInput,
+        videoMimeType,
+        videoFileUri,
+        config: { maxOutputTokens: 32768, temperature: 0.2 },
+      }),
+      { maxRetries: 2 },
+      'Reference video analysis'
+    );
+
+    // 4. CHECK
+    if (!result.success) {
+      return createErrorResult(
+        getErrorCode(new Error(result.error?.message)),
+        result.error?.message || 'Reference video analysis failed'
+      );
+    }
+
+    // Parse the JSON (strip accidental code fences first)
+    const raw = result.data.text.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+    let parsed: Omit<ReferenceVideoBreakdown, 'source'>;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      const rawPath = path.join(input.outputDir, 'breakdown-raw.txt');
+      fs.writeFileSync(rawPath, result.data.text);
+      return createErrorResult(
+        WorkflowErrorCodes.GENERATION_FAILED,
+        `Model did not return valid JSON — raw response saved to ${rawPath}. Retry the command.`
+      );
+    }
+    if (!Array.isArray(parsed.scenes) || parsed.scenes.length === 0) {
+      return createErrorResult(WorkflowErrorCodes.NO_OUTPUT, 'Analysis returned no scenes');
+    }
+    const breakdown: ReferenceVideoBreakdown = { source, ...parsed };
+    breakdown.recreation = breakdown.recreation || { scenes: [] };
+
+    // 5. SAVE (wrap the writes)
+    const breakdownJsonPath = path.join(input.outputDir, 'breakdown.json');
+    const breakdownMdPath = path.join(input.outputDir, 'breakdown.md');
+    const recreationPlanPath = path.join(input.outputDir, 'recreation-plan.md');
+    try {
+      fs.writeFileSync(breakdownJsonPath, JSON.stringify(breakdown, null, 2));
+      fs.writeFileSync(breakdownMdPath, renderBreakdownMarkdown(breakdown));
+      fs.writeFileSync(recreationPlanPath, renderRecreationPlan(breakdown));
+    } catch (writeError) {
+      return createErrorResult(
+        WorkflowErrorCodes.FILE_WRITE_ERROR,
+        `Failed to save: ${writeError instanceof Error ? writeError.message : 'Unknown error'}`
+      );
+    }
+
+    console.log(`[Workflow] Reference video analyzed: ${breakdown.scenes.length} scenes → ${breakdownMdPath}`);
+
+    // 6. RETURN with cost
+    return {
+      success: true,
+      data: {
+        breakdownJsonPath,
+        breakdownMdPath,
+        recreationPlanPath,
+        sceneCount: breakdown.scenes.length,
+        duration: breakdown.duration,
+        styleSummary: breakdown.styleSummary,
+        breakdown,
+        cost: {
+          totalCost: result.data.cost.totalCost,
+          breakdown: { videoAnalysis: result.data.cost.totalCost },
+        },
+      },
+    };
+  } catch (error) {
+    // 7. CATCH-ALL — never throw to the caller
+    const code = getErrorCode(error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[Workflow] analyzeReferenceVideo failed: ${message}`);
     return createErrorResult(code, message);
   }
 }

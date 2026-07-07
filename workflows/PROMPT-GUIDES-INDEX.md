@@ -45,6 +45,10 @@ What are you generating?
 │   ├─► Multi-clip → VIDEO-PROMPT-GUIDE.md (§4c-4d)
 │   └─► With voiceover → generate-voiceover/SKILL.md
 │
+├─► TEXT OVERLAY / TYPOGRAPHY (hero titles, kinetic reels, "text behind subject," meme-style overlays)
+│   └─► Read: TEXT-OVERLAY-DESIGN-GUIDE.md
+│   └─► Placement (behind/front/side), size hierarchy, color, font pairing patterns + what this toolkit can/can't render yet
+│
 ├─► VOICEOVER (narration, TTS, podcast)
 │   └─► Read: generate-voiceover/SKILL.md
 │
@@ -93,6 +97,7 @@ What are you generating?
 | **SEEDANCE-PROMPT-GUIDE.md** | 6-part prompt structure, multimodal refs, integrated audio (dialogue + SFX + music), lip-sync, multi-shot narratives | Seedance 2.0 videos, lip-sync, audio integration |
 | **BRAND-ASSETS-GUIDE.md** | Logo variations, profile images, cover/banner images, Instagram highlights, YouTube watermarks | Setting up brand presence on social platforms |
 | **STYLE-GUIDE.md** | Visual styles (Pixar, anime, vintage, cyberpunk, meme, etc.) | Generating ANY visual content |
+| **TEXT-OVERLAY-DESIGN-GUIDE.md** | Text placement depth (behind/front/side), X/Y position patterns, size hierarchy, color, font-pairing, capability matrix (what's supported now vs roadmap), Myanmar shaping rules | Any hero title, kinetic reel, meme-style overlay, or "text behind subject" request |
 | **WORKFLOWS.md** | API functions, code examples, workflow selection | Writing generation code |
 | **MANIFEST-GUIDE.md** | Generation audit trail — manifest.json format, logging prompts/parameters/costs per generation, review reports | Any generation session (manifest is mandatory) |
 | **CREATING_WORKFLOWS.md** | How to author a new reusable workflow function in index.ts (typed input, WorkflowResult, retry, cost) | Extending the workflow library |
@@ -203,6 +208,7 @@ What are you generating?
 | Explainer | VIDEO §4c-4d(chaining), §4e(if speaking), STYLE |
 | Ad (multi-clip) | VIDEO (all sections), STYLE |
 | Character intro | VIDEO §4e(speaking), §7(keyframe), STYLE |
+| Recreate a reference video ("something like that" + link) | `skills/analyze-video/SKILL.md`, WORKFLOWS § Reference Video Analysis |
 
 ### Speaking Video Tasks
 
@@ -269,6 +275,7 @@ workflows/
 ├── THUMBNAIL-GUIDE.md        ← Viral thumbnails (face+emotion, faceless, etc.)
 ├── BRAND-ASSETS-GUIDE.md     ← Logo, profile, cover, highlights
 ├── STYLE-GUIDE.md            ← Visual styles
+├── TEXT-OVERLAY-DESIGN-GUIDE.md ← Typography placement/size/color patterns + capability matrix
 ├── WORKFLOWS.md              ← API & code
 ├── MANIFEST-GUIDE.md         ← Generation audit trail (manifest.json)
 └── CREATING_WORKFLOWS.md     ← Author a new workflow function
@@ -282,6 +289,7 @@ templates/
 skills/
 ├── generate-image/SKILL.md   ← Image workflow
 ├── generate-video/SKILL.md   ← Video workflow
+├── analyze-video/SKILL.md    ← Reference video → breakdown + recreation plan
 ├── generate-voiceover/SKILL.md
 ├── generate-music/SKILL.md
 ├── generate-brand-assets/SKILL.md ← Social profiles, covers

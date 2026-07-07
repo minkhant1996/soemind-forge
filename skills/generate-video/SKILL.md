@@ -410,6 +410,17 @@ animated typography (per-line size/color emphasis, gold #C8A24A for THE phrase):
 `node workflows/cli.cjs renderKineticReel '{"scenes":[…],"audioPath":"vo.wav","outputPath":"reel.mp4"}'`
 Args in WORKFLOWS.md § Remotion. Use Veo only when you need real motion/footage.
 
+**Before planning ANY hero title / kinetic reel / "text behind subject" /
+meme-style overlay copy**, read `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` —
+placement (behind/front/side), size-hierarchy patterns (hero+support,
+hook→context→CTA, question→answer reveal), color/font pairing, and — 
+important — its capability matrix of what's actually supported by
+`renderKineticReel`/`renderSlideStill` today vs. what's roadmap-only. Don't
+promise a per-word color/size effect or a rotated side badge as if it just
+works; the guide names the current workaround or gap explicitly. Myanmar/
+Burmese text in ANY of these must go through Remotion, never raw `ffmpeg
+drawtext` — same guide, § 7.
+
 ## Story films → follow the recipe (do NOT improvise)
 
 - **"Brand film" / single-character cinematic story** →

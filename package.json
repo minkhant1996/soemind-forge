@@ -1,17 +1,17 @@
 {
-  "name": "min-ai-content-studio-kit",
+  "name": "soemind-forge",
   "version": "1.0.0",
   "description": "AI content generation toolkit for marketers and creators — videos, images, music, voiceovers, and brand assets via Gemini and OpenRouter, driven by AI agents like Claude Code, Codex CLI, and Gemini CLI",
   "type": "module",
   "author": "Min Khant Soe",
   "license": "MIT",
-  "homepage": "https://github.com/minkhant1996/min-ai-content-studio-kit#readme",
+  "homepage": "https://github.com/minkhant1996/soemind-forge#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/minkhant1996/min-ai-content-studio-kit.git"
+    "url": "git+https://github.com/minkhant1996/soemind-forge.git"
   },
   "bugs": {
-    "url": "https://github.com/minkhant1996/min-ai-content-studio-kit/issues"
+    "url": "https://github.com/minkhant1996/soemind-forge/issues"
   },
   "keywords": [
     "ai",

@@ -20,8 +20,8 @@ You need [Node.js 18+](https://nodejs.org) and one AI agent CLI installed —
 or OpenClaw.
 
 ```bash
-git clone https://github.com/minkhant1996/min-ai-content-studio-kit.git
-cd min-ai-content-studio-kit
+git clone https://github.com/minkhant1996/soemind-forge.git
+cd soemind-forge
 ./setup.sh        # Windows: setup.bat
 ```
 

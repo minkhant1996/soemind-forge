@@ -33,7 +33,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/minkhant1996/min-ai-content-studio-kit.git",
+    "url": "git+https://github.com/minkhant1996/soemind-forge.git",
     "directory": "gemini"
   },
   "author": "Min Khant Soe",

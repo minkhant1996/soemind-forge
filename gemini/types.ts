@@ -1,3 +1,8 @@
+/*!
+ * SoeMind Forge — the budget-aware content studio for AI agents
+ * https://github.com/minkhant1996/soemind-forge
+ * Copyright (c) 2026 Min Khant Soe · MIT License
+ */
 /**
  * Gemini Provider Types
  * =====================
@@ -454,6 +459,27 @@ export interface GeminiBaseInput {
 
   /** MIME type of audio (default: 'audio/mp3'). */
   audioMimeType?: string;
+
+  /**
+   * Video data as Buffer or base64 string. Optional.
+   * Inline video counts toward the ~20 MB request limit — for larger local
+   * files upload first with uploadMediaFile() and pass videoFileUri instead.
+   * @see https://ai.google.dev/gemini-api/docs/video-understanding
+   */
+  videoInput?: Buffer | string;
+
+  /** MIME type of video (default: 'video/mp4'). */
+  videoMimeType?: string;
+
+  /**
+   * Remote video reference. Optional. Accepts either:
+   * - A public YouTube URL (https://www.youtube.com/watch?v=... or youtu.be/...)
+   *   — Gemini fetches it directly, no download needed.
+   * - A Files API URI returned by uploadMediaFile() for large local videos.
+   * Sent as a fileData part.
+   * @see https://ai.google.dev/gemini-api/docs/video-understanding#youtube
+   */
+  videoFileUri?: string;
 }
 
 /**
