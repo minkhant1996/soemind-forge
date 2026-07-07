@@ -36,6 +36,17 @@
 1. Go to https://openrouter.ai/keys
 2. Create a new API key (starts with `sk-or-v1-...`)
 
+**Option C: RunPod** (optional) - For InfiniteTalk: true lip-sync of a character
+image to YOUR audio recording (voice clone/recording drives the mouth, no
+duration cap, $0.25–0.50/request)
+1. Create an account: https://runpod.io?ref=z1r0sgie
+   *(referral link — new accounts that load at least $10 get a one-time bonus
+   credit between $5 and $500 — most receive $5–10 — and it supports this
+   project at no cost to you. Plain signup: https://runpod.io)*
+2. Go to **Settings → API Keys**: https://www.runpod.io/console/user/settings
+3. Click **Create API Key** and copy it (starts with `rpa_...`)
+4. Add it to `.env` as `RUNPOD_API_KEY=rpa_...`
+
 ### Step 2: Run Setup
 
 **macOS / Linux:**

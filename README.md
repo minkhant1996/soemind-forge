@@ -47,7 +47,10 @@ the agent warns before big generations. See [Cost Reference](#cost-reference).
 **Supported Providers:**
 - **Google AI Studio (Gemini)** - Veo video, Gemini 3 image models (Nano Banana), Lyria music, TTS
 - **OpenRouter** - Seedance video (lip-sync), 100+ text models, STT
-- **RunPod** (optional) - InfiniteTalk: true lip-sync to your own audio recordings
+- **RunPod** (optional) - InfiniteTalk: true lip-sync to your own audio recordings —
+  [sign up](https://runpod.io?ref=z1r0sgie) *(referral link: load $10+ and get a
+  $5–500 one-time bonus credit — most get $5–10; supports this project)*, then
+  create a key under [Settings → API Keys](https://www.runpod.io/console/user/settings)
 
 > **New here?** Follow [GETTING-STARTED.md](./GETTING-STARTED.md) — from zero to
 > your first generated image in about 10 minutes.
