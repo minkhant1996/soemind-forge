@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Min AI Content Studio Kit - Setup Script
+# AI Director Studio - Setup Script
 # ====================================================
 # Central installer for Claude Code, Hermes, and OpenClaw.
 # Installs the toolkit's skills into the right place for
@@ -22,7 +22,7 @@ SRC_SKILLS="$SCRIPT_DIR/skills"
 
 echo ""
 echo "=========================================="
-echo "  Min AI Content Studio Kit - Setup"
+echo "  AI Director Studio - Setup"
 echo "=========================================="
 echo ""
 

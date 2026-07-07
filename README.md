@@ -1,4 +1,4 @@
-# Min AI Content Studio Kit
+# AI Director Studio
 
 **The budget-aware content studio for AI agents — it asks before it spends,
 previews before it renders, and keeps your brand consistent down to the

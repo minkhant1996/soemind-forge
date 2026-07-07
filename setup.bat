@@ -1,5 +1,5 @@
 @echo off
-REM Min AI Content Studio Kit - Windows Setup Script
+REM AI Director Studio - Windows Setup Script
 REM ====================================================
 REM Central installer for Claude Code, Hermes, and OpenClaw.
 REM Installs the toolkit's skills into the right place for
@@ -9,7 +9,7 @@ setlocal enabledelayedexpansion
 
 echo.
 echo ==========================================
-echo   Min AI Content Studio Kit - Setup
+echo   AI Director Studio - Setup
 echo ==========================================
 echo.
 

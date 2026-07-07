@@ -1,6 +1,6 @@
 # Creating a Custom Workflow
 
-> How to add your own reusable, agent-callable workflow function to **Min AI Content Studio Kit**.
+> How to add your own reusable, agent-callable workflow function to **AI Director Studio**.
 
 A **workflow** is a single async function that takes a typed input object and returns a
 standardized `WorkflowResult<T>`. Agents call it instead of writing generation code from

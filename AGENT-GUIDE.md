@@ -1,4 +1,4 @@
-# Min AI Content Studio Kit - Agent Context
+# AI Director Studio - Agent Context
 
 > **For AI Agents**: This file provides persistent context. READ THIS FIRST.
 > **Ground rules**: [RULES.md](./RULES.md) — binding rules for every AI tool in this repo. Read it before generating anything.

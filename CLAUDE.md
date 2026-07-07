@@ -1,4 +1,4 @@
-# Min AI Content Studio Kit
+# AI Director Studio
 
 @AGENT-GUIDE.md
 

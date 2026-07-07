@@ -329,7 +329,7 @@ async function runDoctor(ping) {
   const warn = (label, fix) =>
     console.log(`  ⚠️  ${label}${fix ? `\n     fix: ${fix}` : ''}`);
 
-  console.log('Min AI Content Studio Kit — doctor\n');
+  console.log('AI Director Studio — doctor\n');
 
   const major = Number(process.versions.node.split('.')[0]);
   check(major >= 18, `Node.js ${process.versions.node} (need >= 18)`,

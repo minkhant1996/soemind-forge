@@ -1,4 +1,4 @@
-# Min AI Content Studio Kit - User Guide
+# AI Director Studio - User Guide
 
 > A complete toolkit for AI agents to generate professional content using Google Gemini AI and OpenRouter.
 > Videos, images, audio, music, brand assets - all with consistent branding and organized output.

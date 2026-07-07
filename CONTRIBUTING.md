@@ -1,4 +1,4 @@
-# Contributing to Min AI Content Studio Kit
+# Contributing to AI Director Studio
 
 Thanks for your interest in improving the kit! Contributions of all kinds are
 welcome — new workflows, skills, prompt guides, provider integrations, docs
