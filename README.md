@@ -1,8 +1,9 @@
-# SoeMind Forge
+# SoeMind Forge — AI Content Studio for Claude Code, Codex, Gemini CLI, Hermes & OpenClaw
 
-**The budget-aware content studio for AI agents — it asks before it spends,
-previews before it renders, and keeps your brand consistent down to the
-character's face.**
+**Generate AI videos (Veo 3.1), images (Nano Banana), voiceovers, music, and
+30-day content calendars from plain English — budget-aware: it asks before it
+spends, previews before it renders, and keeps your brand consistent down to
+the character's face.**
 
 Describe what you want in plain English — *"create a TikTok ad for my coffee
 brand"*, *"make a cinematic story film"* — and your AI coding agent plans,
