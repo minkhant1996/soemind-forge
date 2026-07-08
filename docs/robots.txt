@@ -13,4 +13,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://minkhant1996.github.io/soemind-forge/sitemap.xml
+Sitemap: https://soemind-forge.soemindai.com/sitemap.xml
