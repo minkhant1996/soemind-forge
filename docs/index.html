@@ -134,6 +134,22 @@
   td { color: var(--muted); }
 
   footer { padding: 48px 0 70px; text-align: center; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+  /* How it works: chat mockup */
+  .chat { max-width: 640px; margin: 0 auto; display: grid; gap: 14px; }
+  .bubble { border-radius: 16px; padding: 13px 17px; font-size: 15px; max-width: 82%; }
+  .bubble.you { background: var(--blue); color: #fff; justify-self: end; border-bottom-right-radius: 5px; }
+  .bubble.ai { background: var(--charcoal-2); border: 1px solid var(--line); justify-self: start; border-bottom-left-radius: 5px; }
+  .bubble .who { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-bottom: 4px; }
+  .bubble.ai .tool { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--blue-soft); margin-top: 7px; }
+  .bubble.ai .tool span { color: var(--muted); }
+
+  /* How it works: pipeline flow */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 42px; }
+  .step { background: var(--charcoal-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; position: relative; }
+  .step .n { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 8px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .step h3 { font-size: 15px; margin-bottom: 5px; }
+  .step p { color: var(--muted); font-size: 13.5px; }
 </style>
 </head>
 <body>
@@ -180,6 +196,52 @@
       <div class="card"><h3>Images &amp; Carousels</h3><p>Thumbnails and multi-slide carousels with pixel-perfect type.</p></div>
       <div class="card"><h3>Voiceover &amp; Music</h3><p>Narration with per-scene delivery, plus background music and jingles.</p></div>
       <div class="card"><h3>30-Day Content Calendars</h3><p>Full plans and campaign recipes, produced day by day.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">You describe it in plain English. The agent plans, prices, generates, and assembles — you just approve.</p>
+
+    <div class="chat">
+      <div class="bubble you">
+        <span class="who">You</span>
+        Make a 30-second cinematic story film for my coffee brand ☕
+      </div>
+      <div class="bubble ai">
+        <span class="who">Claude</span>
+        On it — running pre-flight first. What's the brand name, who's it for, and your budget cap?
+      </div>
+      <div class="bubble you">
+        <span class="who">You</span>
+        Brooke's Coffee, for busy founders. Cap it at $5.
+      </div>
+      <div class="bubble ai">
+        <span class="who">Claude</span>
+        Got it. Here's the plan — estimated <b>$3.65</b>, under your cap. Building now:
+        <span class="tool">↳ createProject <span>brookes-coffee/ + brand.md</span></span>
+        <span class="tool">↳ generateImage <span>founder keyframe → locked as char-founder</span></span>
+        <span class="tool">↳ registerAsset <span>char-founder → assets.yaml (reused every scene)</span></span>
+        <span class="tool">↳ writeScript <span>4-scene story + adaptive narration</span></span>
+        <span class="tool">↳ generateVideoFromImage <span>×4 Veo 3.1 clips, same face</span></span>
+        <span class="tool">↳ generateVoiceover <span>per-scene delivery</span></span>
+        <span class="tool">↳ assembleFinal <span>concat clips + VO + music → final.mp4</span></span>
+      </div>
+      <div class="bubble ai">
+        <span class="who">Claude</span>
+        Done. <b>32-second film</b> assembled, cost <b>$3.62</b>, logged to your ledger. Packaged 9:16 + 16:9, captions and hashtags included — ready to upload. ✅
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="step"><span class="n">1</span><h3>You describe it</h3><p>Plain English — "cinematic story film for my coffee brand." No prompts to engineer.</p></div>
+      <div class="step"><span class="n">2</span><h3>Plan &amp; price</h3><p>Pre-flight resolves brand, budget, and assets, then quotes the cost before spending.</p></div>
+      <div class="step"><span class="n">3</span><h3>Character locked</h3><p>The founder is generated once and saved to the asset registry — reused by ID every scene.</p></div>
+      <div class="step"><span class="n">4</span><h3>Scenes generated</h3><p>Veo 3.1 renders each clip from the locked keyframe, so the same face holds across every shot.</p></div>
+      <div class="step"><span class="n">5</span><h3>Voice &amp; music</h3><p>Per-scene narration and a music bed are generated and timed to the cut.</p></div>
+      <div class="step"><span class="n">6</span><h3>Concatenated</h3><p>Clips, voiceover, and music are stitched into one film with transitions — upload-ready per platform.</p></div>
     </div>
   </div>
 </section>
