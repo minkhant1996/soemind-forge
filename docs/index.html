@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Primary SEO -->
+<title>SoeMind Forge — AI Content Studio for Claude Code, Codex &amp; Gemini CLI | AI Video, Image, Voiceover Generation</title>
+<meta name="description" content="SoeMind Forge is an open-source AI content studio for coding agents. Generate AI videos (Veo 3.1), images (Nano Banana), voiceovers, music, and 30-day content calendars from plain English — budget-aware, brand-consistent, upload-ready." />
+<meta name="keywords" content="AI content studio, AI video generator, Veo 3.1, Nano Banana, Claude Code, Codex CLI, Gemini CLI, AI voiceover, AI marketing content, content calendar generator, lip-sync video, cinematic AI film" />
+<meta name="author" content="minkhant1996" />
+<link rel="canonical" href="https://minkhant1996.github.io/agent-content-studio/" />
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="SoeMind Forge — AI Content Studio for Claude Code, Codex &amp; Gemini CLI" />
+<meta property="og:description" content="Generate AI videos, images, voiceovers, music, and 30-day content calendars from plain English. Budget-aware, brand-consistent, upload-ready." />
+<meta property="og:url" content="https://minkhant1996.github.io/agent-content-studio/" />
+<meta property="og:site_name" content="SoeMind Forge" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="SoeMind Forge — AI Content Studio for AI coding agents" />
+<meta name="twitter:description" content="AI videos, images, voiceovers, music &amp; content calendars from plain English. Open source." />
+
+<!-- Structured data: helps Google AI Overviews, ChatGPT, Perplexity cite you -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "SoeMind Forge",
+  "alternateName": "Agent Content Studio",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "macOS, Linux, Windows",
+  "description": "An open-source AI content studio for coding agents (Claude Code, Codex CLI, Gemini CLI). Generates AI videos, images, voiceovers, music, and 30-day content calendars from plain English — budget-aware, brand-consistent, and upload-ready.",
+  "url": "https://minkhant1996.github.io/agent-content-studio/",
+  "codeRepository": "https://github.com/minkhant1996/agent-content-studio",
+  "license": "https://github.com/minkhant1996/agent-content-studio/blob/main/LICENSE",
+  "author": { "@type": "Person", "name": "Min Khant", "url": "https://github.com/minkhant1996" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "AI video generation (Veo 3.1, Seedance lip-sync)",
+    "AI image generation (Gemini 3 Nano Banana)",
+    "AI voiceover and text-to-speech",
+    "AI music generation (Lyria)",
+    "30-day content calendar planning",
+    "Brand-consistent characters via asset registry",
+    "Budget caps and spend ledger"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is SoeMind Forge?",
+      "acceptedAnswer": { "@type": "Answer", "text": "SoeMind Forge is an open-source AI content studio that runs inside AI coding agents like Claude Code, Codex CLI, and Gemini CLI. It generates AI videos, images, voiceovers, music, and 30-day content calendars from plain-English requests, while enforcing a budget cap and keeping brand assets consistent." }
+    },
+    {
+      "@type": "Question",
+      "name": "Which AI models does SoeMind Forge use?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It uses Google Gemini (Veo 3.1 video, Gemini 3 Nano Banana images, Lyria music, TTS) and OpenRouter (Seedance lip-sync video, 100+ text models, Whisper transcription). RunPod InfiniteTalk is an optional add-on for lip-sync to your own audio." }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does SoeMind Forge cost?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The toolkit is free and open source. You pay only the AI providers per generation — roughly $0.07 for a thumbnail, $0.01 for a 30-second voiceover, $0.80 for an 8-second Veo clip, and about $3.65 for a full 32-second cinematic brand film." }
+    }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --charcoal: #1c1e21;
+    --charcoal-2: #26292d;
+    --offwhite: #f5f3ee;
+    --blue: #2f6df6;
+    --blue-soft: #6f9bff;
+    --muted: #a7adb5;
+    --line: #34383d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--charcoal);
+    color: var(--offwhite);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue-soft); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  header { padding: 88px 0 40px; text-align: center; }
+  .badge { display: inline-block; font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+           color: var(--blue-soft); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; margin-bottom: 26px; }
+  h1 { font-size: clamp(34px, 6vw, 56px); line-height: 1.1; letter-spacing: -0.02em; }
+  h1 .accent { color: var(--blue-soft); }
+  .tagline { font-size: clamp(17px, 2.4vw, 21px); color: var(--muted); max-width: 680px; margin: 24px auto 0; }
+  .cta { margin-top: 38px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 13px 26px; border-radius: 10px; font-weight: 600; font-size: 15px; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: #2a5fd8; text-decoration: none; }
+  .btn-ghost { border: 1px solid var(--line); color: var(--offwhite); }
+  .btn-ghost:hover { border-color: var(--blue-soft); text-decoration: none; }
+
+  .strip { text-align: center; color: var(--muted); font-size: 14px; margin-top: 30px; }
+
+  section { padding: 54px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(24px, 3.4vw, 32px); letter-spacing: -0.01em; margin-bottom: 8px; }
+  .sub { color: var(--muted); margin-bottom: 30px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+  .card { background: var(--charcoal-2); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .card h3 { font-size: 17px; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 14.5px; }
+
+  ul.checks { list-style: none; display: grid; gap: 16px; }
+  ul.checks li { padding-left: 30px; position: relative; color: var(--offwhite); }
+  ul.checks li::before { content: "→"; position: absolute; left: 0; color: var(--blue-soft); font-weight: 700; }
+  ul.checks li b { color: var(--offwhite); }
+  ul.checks li span { color: var(--muted); }
+
+  pre { background: #17191c; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px;
+        overflow-x: auto; font-size: 14px; color: #d7dbe0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); }
+  th { color: var(--blue-soft); font-weight: 600; }
+  td { color: var(--muted); }
+
+  footer { padding: 48px 0 70px; text-align: center; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="badge">Open Source · Free Toolkit</span>
+    <h1>SoeMind Forge<br /><span class="accent">AI Content Studio</span> for coding agents</h1>
+    <p class="tagline">Generate AI videos (Veo 3.1), images (Nano Banana), voiceovers, music, and
+      30-day content calendars from plain English — inside Claude Code, Codex CLI, or Gemini CLI.
+      Budget-aware, brand-consistent, upload-ready.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/minkhant1996/agent-content-studio">View on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/minkhant1996/agent-content-studio/blob/main/GETTING-STARTED.md">Get Started in 10 min</a>
+    </div>
+    <p class="strip">Cinematic Films · Kinetic Text Reels · Videos · Carousels · Voiceover · Music · 30-Day Calendars</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Why it beats raw prompting</h2>
+    <p class="sub">The guardrails an AI content workflow actually needs.</p>
+    <ul class="checks">
+      <li><b>Money moves only with consent.</b> <span>Every project has a budget cap and spend ledger; the agent shows estimated cost before generating and previews cheap before rendering expensive.</span></li>
+      <li><b>Consistency is engineered, not hoped for.</b> <span>Characters, products, logos, and voices are generated once, locked in an asset registry, and reused by ID — the same face across a whole campaign.</span></li>
+      <li><b>Text never garbles.</b> <span>Slides and reels get pixel-perfect typography rendered locally with real fonts (Remotion), for $0.</span></li>
+      <li><b>It ships upload-ready.</b> <span>Correctly sized media per platform, captions within char limits, hashtags, and alt text — not a folder of loose renders.</span></li>
+      <li><b>Proof stays real.</b> <span>The agent is hard-blocked from inventing testimonials, stats, or press. Your numbers, verbatim, or nothing.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What you can create</h2>
+    <p class="sub">One toolkit, the full content pipeline.</p>
+    <div class="grid">
+      <div class="card"><h3>Cinematic Story Films</h3><p>30–45s brand films: locked character, Veo 3.1 scenes, adaptive narration.</p></div>
+      <div class="card"><h3>Kinetic Text Reels</h3><p>9:16 typography reels with staggered animated lines and $0 text rendering.</p></div>
+      <div class="card"><h3>Video Ads &amp; Reels</h3><p>TikTok ads, Reels, Shorts, explainers with 46 camera-move presets.</p></div>
+      <div class="card"><h3>Lip-Sync to Your Audio</h3><p>Character image + your voice recording → a talking video, mouth follows the audio.</p></div>
+      <div class="card"><h3>Product Shots</h3><p>26 e-commerce presets from one real product photo — packshots, lifestyle, seasonal.</p></div>
+      <div class="card"><h3>Images &amp; Carousels</h3><p>Thumbnails and multi-slide carousels with pixel-perfect type.</p></div>
+      <div class="card"><h3>Voiceover &amp; Music</h3><p>Narration with per-scene delivery, plus background music and jingles.</p></div>
+      <div class="card"><h3>30-Day Content Calendars</h3><p>Full plans and campaign recipes, produced day by day.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Quick start</h2>
+    <p class="sub">From zero to your first generated image in about 10 minutes.</p>
+<pre><code>git clone https://github.com/minkhant1996/agent-content-studio
+cd agent-content-studio
+./setup.sh          # macOS / Linux  (setup.bat on Windows)
+
+# add your free Google AI Studio key to .env, then:
+claude              # loads project context automatically
+&gt; Create a TikTok ad for my coffee brand</code></pre>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What it costs</h2>
+    <p class="sub">The toolkit is free. You pay only the AI providers, per generation.</p>
+    <table>
+      <thead><tr><th>Output</th><th>Model</th><th>Approx. cost</th></tr></thead>
+      <tbody>
+        <tr><td>Thumbnail / image</td><td>Nano Banana</td><td>~$0.07</td></tr>
+        <tr><td>30-second voiceover</td><td>Gemini TTS</td><td>~$0.01</td></tr>
+        <tr><td>8-second video clip</td><td>Veo 3.1</td><td>~$0.80</td></tr>
+        <tr><td>32-second cinematic brand film</td><td>Full pipeline</td><td>~$3.65</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>SoeMind Forge</b> — open-source AI content studio for Claude Code, Codex CLI &amp; Gemini CLI.</p>
+    <p style="margin-top:8px;"><a href="https://github.com/minkhant1996/agent-content-studio">GitHub</a> · <a href="https://github.com/minkhant1996/agent-content-studio/blob/main/GETTING-STARTED.md">Getting Started</a> · MIT License</p>
+  </div>
+</footer>
+
+</body>
+</html>

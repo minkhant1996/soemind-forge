@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# AI crawlers — explicitly welcomed for AI search visibility (ChatGPT, Perplexity, etc.)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://minkhant1996.github.io/agent-content-studio/sitemap.xml
