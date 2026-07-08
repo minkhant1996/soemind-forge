@@ -3,7 +3,10 @@
 > A complete toolkit for AI agents to generate professional content using Google Gemini AI and OpenRouter.
 > Videos, images, audio, music, brand assets - all with consistent branding and organized output.
 >
-> **Dual Provider Support:** Gemini (Veo, Gemini 3 Image, Lyria) + OpenRouter (Seedance lip-sync, GPT-4, Claude)
+> **Optimized for Gemini** (Veo, Gemini 3 Image, Lyria, TTS, transcription) — the
+> whole kit runs on it. Optional add-ons: OpenRouter (a model gateway — Seedance
+> video, GPT-4, Claude; agent-added on request, not lip-sync) and RunPod
+> (InfiniteTalk — the true talking-avatar / lip-sync path).
 
 ---
 
@@ -32,7 +35,9 @@
 2. Create a new API key
 3. Copy the key
 
-**Option B: OpenRouter** - For Seedance lip-sync, model variety
+**Option B: OpenRouter** (optional) - A gateway to more models (Seedance video,
+GPT-4, Claude, Llama). The agent adds whichever model you ask for; it is **not**
+a lip-sync feature.
 1. Go to https://openrouter.ai/keys
 2. Create a new API key (starts with `sk-or-v1-...`)
 
@@ -88,14 +93,18 @@ Read AGENT-GUIDE.md first, then help me create a TikTok ad.
 
 ### Provider Comparison
 
-| Feature | Gemini | OpenRouter |
-|---------|--------|------------|
-| **Video** | Veo 3.1 (high quality) | Seedance 2.0 (lip-sync) |
-| **Image** | Gemini 3 Image (Nano Banana) | DALL-E, Stable Diffusion |
-| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama |
-| **TTS** | 30 voices | Various |
-| **Music** | Lyria | ✗ |
-| **STT** | ✗ | Whisper |
+**Gemini is the optimized core** (the whole kit runs on it). OpenRouter and
+RunPod are optional add-ons.
+
+| Feature | Gemini (core) | OpenRouter (optional) | RunPod (optional) |
+|---------|--------|------------|--------|
+| **Video** | Veo 3.1 (high quality) · Omni Flash (video+audio) | Seedance 2.0 + other models — agent-added | — |
+| **Talking avatar / lip-sync** | — | — | InfiniteTalk (mouth follows your audio) |
+| **Image** | Gemini 3 Image (Nano Banana) | DALL-E, Stable Diffusion — agent-added | — |
+| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama | — |
+| **TTS** | 30 voices | Various | — |
+| **Music** | Lyria | ✗ | — |
+| **STT / transcription** | Gemini (any language) | Whisper | — |
 
 ### When to Use Which
 
@@ -103,7 +112,8 @@ Read AGENT-GUIDE.md first, then help me create a TikTok ad.
 |----------|-------------|--------|
 | Product video | **Gemini** | Higher visual quality |
 | B-roll / cinematic | **Gemini** | Better ambient footage |
-| Speaking character | **OpenRouter** | Seedance native lip-sync |
+| Speaking character (English, optional) | **OpenRouter (Seedance)** | Integrated dialogue audio — agent-added model |
+| Talking avatar / lip-sync to your own audio | **RunPod (InfiniteTalk)** | The true lip-sync path — your recording drives the mouth |
 | UGC testimonial | **OpenRouter** | Integrated dialogue |
 | Background music | **Gemini** | Lyria music generation |
 | Model variety | **OpenRouter** | GPT-4, Claude, etc. |
@@ -641,7 +651,7 @@ node workflows/cli.cjs doctor
 | `IMAGE-PROMPT-GUIDE.md` | Image generation |
 | `PRODUCT-SHOT-GUIDE.md` | E-commerce product shots (26 presets) |
 | `VIDEO-PROMPT-GUIDE.md` | Veo + Omni Flash video, camera-move presets |
-| `SEEDANCE-PROMPT-GUIDE.md` | Seedance lip-sync |
+| `SEEDANCE-PROMPT-GUIDE.md` | Seedance video (OpenRouter, optional) |
 | `THUMBNAIL-GUIDE.md` | Thumbnails |
 | `BRAND-ASSETS-GUIDE.md` | Social media assets |
 | `STYLE-GUIDE.md` | Visual styles |

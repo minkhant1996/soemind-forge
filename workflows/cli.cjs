@@ -396,8 +396,8 @@ async function runDoctor(ping) {
     'get a key: https://aistudio.google.com/app/apikey (GEMINI_API_KEY) or https://openrouter.ai/keys (OPENROUTER_API_KEY)');
   if (gemSet) console.log(`     GEMINI_API_KEY${gemKeys.length > 1 ? `S: ${gemKeys.length} keys (rotation)` : ': set'} (Veo video, Imagen images, Lyria music, TTS)`);
   else warn('GEMINI_API_KEY not set — no Veo/Imagen/Lyria/TTS');
-  if (orSet) console.log(`     OPENROUTER_API_KEY${orKeys.length > 1 ? `S: ${orKeys.length} keys (rotation)` : ': set'} (Seedance lip-sync, 100+ text models, Whisper)`);
-  else warn('OPENROUTER_API_KEY not set — no Seedance lip-sync/Whisper (optional)');
+  if (orSet) console.log(`     OPENROUTER_API_KEY${orKeys.length > 1 ? `S: ${orKeys.length} keys (rotation)` : ': set'} (optional model gateway: Seedance video, 100+ text models, Whisper — agent-added, not lip-sync)`);
+  else warn('OPENROUTER_API_KEY not set — no OpenRouter models (Seedance/GPT-4/Claude/Whisper, optional)');
   const rpKeySet = realKeys(process.env.RUNPOD_API_KEY).length > 0;
   if (rpKeySet) console.log('     RUNPOD_API_KEY: set (InfiniteTalk lip-sync to provided audio — $0.25/480p, $0.50/720p)');
   else warn('RUNPOD_API_KEY not set — no infiniteTalkLipsync (lip-sync to user-provided audio, optional)');

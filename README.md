@@ -33,8 +33,14 @@ Cinematic Films • Kinetic Text Reels • Videos • Carousels • Voiceover �
 AI content without babysitting the spend — no coding required.
 
 **What you need:**
-1. A free [Google AI Studio](https://aistudio.google.com/app/apikey) API key
-   (and optionally [OpenRouter](https://openrouter.ai/keys) for lip-sync video)
+1. A free [Google AI Studio](https://aistudio.google.com/app/apikey) API key —
+   this kit is **optimized for Gemini models**. The free tier works to start;
+   pay-as-you-go unlocks higher-quality video and images. Everything core
+   (video, images, voiceover, music, transcription) runs on Gemini alone.
+   *Optional add-ons:* [OpenRouter](https://openrouter.ai/keys) to reach more
+   models (GPT-4, Claude, Seedance 2.0 video) — the agent wires those in on
+   request; and [RunPod](https://runpod.io?ref=z1r0sgie) for talking-avatar
+   lip-sync (InfiniteTalk).
 2. Any supported AI agent CLI — **Claude Code**, **Codex CLI**, **Gemini CLI**,
    **Hermes**, or **OpenClaw**
 3. Node.js 18+
@@ -46,12 +52,20 @@ clips, adaptive narration) ≈ $3.65. Every project gets a budget cap + ledger s
 the agent warns before big generations. See [Cost Reference](#cost-reference).
 
 **Supported Providers:**
-- **Google AI Studio (Gemini)** - Veo video, Gemini 3 image models (Nano Banana), Lyria music, TTS
-- **OpenRouter** - Seedance video (lip-sync), 100+ text models, STT
-- **RunPod** (optional) - InfiniteTalk: true lip-sync to your own audio recordings —
-  [sign up](https://runpod.io?ref=z1r0sgie) *(referral link: load $10+ and get a
-  $5–500 one-time bonus credit — most get $5–10; supports this project)*, then
-  create a key under [Settings → API Keys](https://www.runpod.io/console/user/settings)
+- **Google AI Studio (Gemini)** — the optimized core. Veo video, Gemini 3 image
+  models (Nano Banana), Lyria music, TTS, and transcription all run here. A free
+  key gets you started; pay-as-you-go is only for higher-quality video/image
+  generations. **You can run the whole kit on Gemini alone.**
+- **OpenRouter** (optional) — a *gateway to more models*, not a lip-sync engine.
+  It gives the agent access to 100+ text models (GPT-4, Claude, Llama) plus
+  Seedance 2.0 video. The kit isn't tuned around these — the agent adds whichever
+  model you ask for, on request.
+- **RunPod** (optional) — the **talking-avatar / lip-sync** path: InfiniteTalk
+  drives a character's mouth from your own audio recording (no duration cap).
+  This is the only true lip-sync in the kit. [Sign up](https://runpod.io?ref=z1r0sgie)
+  *(referral link: load $10+ and get a $5–500 one-time bonus credit — most get
+  $5–10; supports this project)*, then create a key under
+  [Settings → API Keys](https://www.runpod.io/console/user/settings)
 
 > **New here?** Follow [GETTING-STARTED.md](./GETTING-STARTED.md) — from zero to
 > your first generated image in about 10 minutes.
@@ -121,18 +135,27 @@ claude   # loads CLAUDE.md context automatically
 
 ## Provider Comparison
 
-| Feature | Gemini | OpenRouter |
-|---------|--------|------------|
-| **Video** | Veo 3.1 (high quality, multi-reference consistency) · Omni Flash (video+audio, 4 tasks incl. edit-video, art styles) | Seedance 2.0 (lip-sync) |
-| **Image** | Gemini 3 Image (Nano Banana) | DALL-E, SD |
-| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama |
-| **TTS** | 30 voices | Various |
-| **Music** | Lyria | ✗ |
-| **STT** | ✗ | Whisper |
+**Gemini is the optimized core** — the whole kit runs on it. OpenRouter and
+RunPod are optional add-ons.
+
+| Feature | Gemini (core) | OpenRouter (optional) | RunPod (optional) |
+|---------|--------|------------|--------|
+| **Video** | Veo 3.1 (high quality, multi-reference consistency) · Omni Flash (video+audio, 4 tasks incl. edit-video, art styles) | Seedance 2.0 + other video models — agent-added on request | — |
+| **Talking avatar / lip-sync** | — | — | InfiniteTalk (mouth follows your audio, no duration cap) |
+| **Image** | Gemini 3 Image (Nano Banana) | DALL-E, SD, etc. — agent-added | — |
+| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama, 100+ models | — |
+| **TTS** | 30 voices | Various | — |
+| **Music** | Lyria | ✗ | — |
+| **STT / transcription** | Gemini (timestamped, any language) | Whisper | — |
 
 **When to use which:**
-- **Gemini** - Video quality, music, images, native Google
-- **OpenRouter** - Lip-sync, speaking characters, model variety
+- **Gemini (default)** — video, images, music, TTS, transcription. Start and
+  finish here; it's what everything is tuned for.
+- **OpenRouter (optional)** — only when you want a model Gemini doesn't offer
+  (e.g. GPT-4/Claude text, or Seedance 2.0 video). It's a model gateway, **not**
+  a lip-sync feature — the agent adds the specific model you ask for.
+- **RunPod (optional)** — the true lip-sync / talking-avatar path (InfiniteTalk),
+  driven by your own audio file.
 - **Veo 3.1 vs Omni Flash** - Veo for cinematic no-dialogue/English beats and
   first+last-frame shots; **Omni Flash for non-English speaking characters
   (e.g. Myanmar — better pronunciation, no silent filter blocks), reference
@@ -162,7 +185,7 @@ See `workflows/PLATFORM-SPECS.md` for complete specs.
 |-------|---------|--------------|
 | `/onboard-brand` | "get started", "set up my brand" | Interview → ready-to-generate project |
 | `/content-preflight` | Before any generation | Validates project, resolves assets |
-| `/generate-video` | "create video", "TikTok ad" | Video generation (Veo/Seedance) |
+| `/generate-video` | "create video", "TikTok ad" | Video generation (Veo / Omni Flash; Seedance optional via OpenRouter) |
 | `/generate-image` | "create image", "thumbnail" | Image generation (Gemini 3 Image / Nano Banana) |
 | `/generate-brand-assets` | "profile pic", "cover image" | Social media assets |
 | `/generate-voiceover` | "voiceover", "narration" | TTS audio |
@@ -203,7 +226,7 @@ See `workflows/PLATFORM-SPECS.md` for complete specs.
 | `PRODUCT-SHOT-GUIDE.md` | E-commerce product shots (26 presets, channel mapping) |
 | `VIDEO-PROMPT-GUIDE.md` | Veo + Omni Flash video (46 camera-move presets, production-sheet pipeline) |
 | `VIDEO-PROMPT-GUIDE.md` § Production-Tested Playbook | Consistent characters (keyframe-first), non-English/Myanmar dialogue, Omni edit-with-refs, Veo filter triage |
-| `SEEDANCE-PROMPT-GUIDE.md` | Seedance lip-sync video |
+| `SEEDANCE-PROMPT-GUIDE.md` | Seedance video (OpenRouter, optional) |
 | `THUMBNAIL-GUIDE.md` | Viral thumbnails |
 | `BRAND-ASSETS-GUIDE.md` | Social media assets |
 | `STYLE-GUIDE.md` | Visual styles |

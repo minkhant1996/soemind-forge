@@ -18,14 +18,20 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 - **Text-to-Speech** - 30 voices, multi-speaker
 - **Music Generation** - Lyria (clips and full songs)
 
-**OpenRouter**
-- **Video Generation** - Seedance 2.0 (native lip-sync, integrated audio)
+**OpenRouter** (optional — a model gateway, not a lip-sync engine; the kit is
+optimized for Gemini, so the agent adds these models only on request)
+- **Video Generation** - Seedance 2.0 (integrated audio) + other video models
 - **Text Generation** - GPT-4, Claude, Llama, Mistral, and 100+ models
 - **Speech-to-Text** - Whisper transcription
 
+**RunPod** (optional — the true lip-sync / talking-avatar path)
+- **Talking Avatar / Lip-Sync** - InfiniteTalk: a character's mouth follows your
+  own audio recording, no duration cap
+
 **Required**: At least one API key in root .env file:
 - `GEMINI_API_KEY` - For Veo, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria, TTS, transcription
-- `OPENROUTER_API_KEY` - For Seedance (lip-sync), GPT-4, Claude
+- `OPENROUTER_API_KEY` (optional) - For Seedance video, GPT-4, Claude, and other
+  OpenRouter models (agent-added on request; not lip-sync)
 - `RUNPOD_API_KEY` (optional) - For InfiniteTalk: true lip-sync to user-provided audio files
 
 ---
@@ -231,9 +237,12 @@ projects/{name}/output-contents/{date}/
 **Check which providers are available:**
 
 Run `node workflows/cli.cjs doctor` — it reports which API keys are configured and
-what each enables. `GEMINI_API_KEY` unlocks Veo video, Gemini image models
-(Nano Banana 2 / Pro / Lite), Lyria music, and TTS; `OPENROUTER_API_KEY` unlocks
-Seedance (lip-sync video), Whisper transcription, and GPT-4/Claude text models.
+what each enables. `GEMINI_API_KEY` (the core — everything runs on it) unlocks
+Veo video, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria music, TTS,
+and transcription; `OPENROUTER_API_KEY` (optional) unlocks Seedance video,
+Whisper, and GPT-4/Claude text models (agent-added on request — a model gateway,
+not lip-sync); `RUNPOD_API_KEY` (optional) unlocks InfiniteTalk talking-avatar
+lip-sync.
 
 ### When to Use Each Provider
 
@@ -241,7 +250,7 @@ Seedance (lip-sync video), Whisper transcription, and GPT-4/Claude text models.
 |----------|-------------|--------|
 | Product video / B-roll | **Veo (Gemini)** | Higher visual quality |
 | Stylized explainer / text-in-scene / edit a clip | **Omni Flash (Gemini)** | Instruction precision, art styles, edit task |
-| Speaking character | **Seedance (OpenRouter)** | Native lip-sync |
+| Speaking character (English, optional) | **Seedance (OpenRouter)** | Integrated dialogue audio; agent-added model — for true lip-sync to a provided recording use InfiniteTalk below |
 | Speaking character in **Myanmar / non-Latin script** | **Omni Flash (Gemini)** | Natural pronunciation + lip-sync; Veo silently filter-blocks mixed-language prompts |
 | Consistent character across scenes | **NBP keyframe → Omni image_to_video** | Identity locked in an approvable still; video model only animates |
 | Fix ONE flaw in a good clip | **Omni Flash edit task** | "Keep everything the same…" + character ref images attached |

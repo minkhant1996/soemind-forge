@@ -338,8 +338,8 @@ export function getProviderSummary(): string {
   if (config.defaultProvider) {
     if (config.gemini.available && config.openrouter.available) {
       lines.push('Both providers available. Options:');
-      lines.push('  • Gemini: Best for video (Veo 3.1), music (Lyria), native Google quality');
-      lines.push('  • OpenRouter: Best for Seedance video (lip-sync), model variety (GPT-4, Claude)');
+      lines.push('  • Gemini (core): video (Veo 3.1), images, music (Lyria), TTS, transcription — everything runs here');
+      lines.push('  • OpenRouter (optional): extra models — Seedance video, GPT-4, Claude (agent-added on request; not lip-sync)');
     } else {
       lines.push(`Recommended: ${config.defaultProvider === 'gemini' ? 'Gemini' : 'OpenRouter'} for all content types`);
     }
