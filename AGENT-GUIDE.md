@@ -18,20 +18,29 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 - **Text-to-Speech** - 30 voices, multi-speaker (or **free Microsoft Edge TTS** — `generateEdgeTTSVoiceover`, $0/no-key, incl. Burmese)
 - **Music Generation** - Lyria (clips and full songs)
 
-**OpenRouter** (optional — a model gateway, not a lip-sync engine; the kit is
-optimized for Gemini, so the agent adds these models only on request)
-- **Video Generation** - Seedance 2.0 (integrated audio) + other video models
+**OpenRouter** (optional — a model gateway; the kit is optimized for Gemini, so
+the agent adds these models only on request)
+- **Video Generation** - Seedance 2.0 — talking avatar driven by a **custom voice
+  audio file you supply** (integrated audio, clip-length ~4–15s) + other models
 - **Text Generation** - GPT-4, Claude, Llama, Mistral, and 100+ models
 - **Speech-to-Text** - Whisper transcription
 
-**RunPod** (optional — the true lip-sync / talking-avatar path)
-- **Talking Avatar / Lip-Sync** - InfiniteTalk: a character's mouth follows your
-  own audio recording, no duration cap
+**RunPod** (optional — talking avatar with the longest, freest voice control)
+- **Talking Avatar / Lip-Sync** - InfiniteTalk: a character's mouth follows a
+  **custom/own voice recording**, **no duration cap** (keep clips ≤60s — longer
+  runs risk model-runtime or video errors)
+
+> **Talking avatar — whose voice?** All three do it. **Gemini (Omni Flash)** uses
+> **Gemini's own generated voice only** (can't lip-sync to a provided audio file;
+> best for non-English/Myanmar). **Seedance (OpenRouter)** and **InfiniteTalk
+> (RunPod)** both take a **custom voice you supply** — InfiniteTalk when you need
+> long-form or your own recorded voice.
 
 **Required**: At least one API key in root .env file:
 - `GEMINI_API_KEY` - For Veo, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria, TTS, transcription
-- `OPENROUTER_API_KEY` (optional) - For Seedance video, GPT-4, Claude, and other
-  OpenRouter models (agent-added on request; not lip-sync)
+- `OPENROUTER_API_KEY` (optional) - For Seedance 2.0 (talking avatar from a
+  custom voice audio file), GPT-4, Claude, and other OpenRouter models
+  (agent-added on request)
 - `RUNPOD_API_KEY` (optional) - For InfiniteTalk: true lip-sync to user-provided audio files
 
 ---
@@ -239,10 +248,11 @@ projects/{name}/output-contents/{date}/
 Run `node workflows/cli.cjs doctor` — it reports which API keys are configured and
 what each enables. `GEMINI_API_KEY` (the core — everything runs on it) unlocks
 Veo video, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria music, TTS,
-and transcription; `OPENROUTER_API_KEY` (optional) unlocks Seedance video,
-Whisper, and GPT-4/Claude text models (agent-added on request — a model gateway,
-not lip-sync); `RUNPOD_API_KEY` (optional) unlocks InfiniteTalk talking-avatar
-lip-sync.
+transcription, and Omni Flash speaking characters (talking avatar with Gemini's
+own voice); `OPENROUTER_API_KEY` (optional) unlocks Seedance 2.0 (talking avatar
+from a custom voice audio file), Whisper, and GPT-4/Claude text models
+(agent-added on request); `RUNPOD_API_KEY` (optional) unlocks InfiniteTalk
+talking-avatar lip-sync from a custom/own voice, no duration cap.
 
 ### When to Use Each Provider
 
@@ -250,12 +260,13 @@ lip-sync.
 |----------|-------------|--------|
 | Product video / B-roll | **Veo (Gemini)** | Higher visual quality |
 | Stylized explainer / text-in-scene / edit a clip | **Omni Flash (Gemini)** | Instruction precision, art styles, edit task |
-| Speaking character (English, optional) | **Seedance (OpenRouter)** | Integrated dialogue audio; agent-added model — for true lip-sync to a provided recording use InfiniteTalk below |
+| Speaking character with a **custom voice audio file** (short clip) | **Seedance (OpenRouter)** | Lip-syncs the avatar to the audio you supply; agent-added model, clip-length ~4–15s. For long-form / your own recorded voice use InfiniteTalk below |
+| Speaking character with **Gemini's own voice** (English) | **Omni Flash (Gemini)** | Talking avatar, no custom audio — Gemini generates the voice |
 | Speaking character in **Myanmar / non-Latin script** | **Omni Flash (Gemini)** | Natural pronunciation + lip-sync; Veo silently filter-blocks mixed-language prompts |
 | Consistent character across scenes | **NBP keyframe → Omni image_to_video** | Identity locked in an approvable still; video model only animates |
 | Fix ONE flaw in a good clip | **Omni Flash edit task** | "Keep everything the same…" + character ref images attached |
 | Motion control (real video drives your characters' moves) | **Omni Flash edit task** | Input video ≤10s + character refs, MINIMAL replace-prompt; choreography/camera/background preserved; output silent → remux source audio |
-| Lip-sync to a PROVIDED audio file (voice clone/recording) | **InfiniteTalk (RunPod)** `infiniteTalkLipsync` | Audio drives the mouth, no duration cap, $0.25-0.50/request. Omni is policy-blocked for this — don't retry it |
+| Lip-sync to a PROVIDED audio file (voice clone/recording) | **InfiniteTalk (RunPod)** `infiniteTalkLipsync` (no duration cap; keep ≤60s) *or* **Seedance (OpenRouter)** for a short clip | Both take your audio and drive the mouth. InfiniteTalk = long-form/own voice, $0.25-0.50/req; Seedance = short clip. Omni (Gemini) is policy-blocked for provided-audio — don't retry it |
 | Transcription (any language incl. Myanmar) | **Gemini** `transcribeAudio` | Timestamped; proofread product names (ASR mangles them) |
 | Burned captions / SRT (Burmese-safe) | **Remotion** `renderCaptionedVideo` | $0 local; cues from transcribeAudio timestamps |
 | UGC testimonial | **Seedance** | Integrated dialogue |

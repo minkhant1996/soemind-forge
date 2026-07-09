@@ -862,6 +862,37 @@ export interface CaptionsOutput {
   cost: CostInfo;
 }
 
+/**
+ * Viable clip-to-clip transitions — every ffmpeg `xfade` preset that renders
+ * cleanly. Pass one to `assembleFinal` `transition`. Grouped by look:
+ *  - Fades/dissolves: fade, fadefast, fadeslow, fadeblack, fadewhite, fadegrays, dissolve
+ *  - Slide (push):    slideleft/right/up/down
+ *  - Wipe (hard sweep, incl. corners): wipeleft/right/up/down, wipetl/tr/bl/br
+ *  - Smooth (eased wipe): smoothleft/right/up/down
+ *  - Cover / reveal:  coverleft/right/up/down, revealleft/right/up/down
+ *  - Slice (blinds):  hlslice, hrslice, vuslice, vdslice
+ *  - Open/close:      circleopen/close, vertopen/close, horzopen/close
+ *  - Shape crops:     circlecrop, rectcrop, radial
+ *  - Diagonal:        diagtl, diagtr, diagbl, diagbr
+ *  - Zoom/squeeze:    zoomin, squeezeh, squeezev
+ *  - Stylized:        pixelize, distance, hblur, hlwind, hrwind, vuwind, vdwind
+ * NOT YET (need a Remotion/filter build, don't pass these): glitch, roll, zoomout.
+ */
+export type VideoTransition =
+  | 'fade' | 'fadefast' | 'fadeslow' | 'fadeblack' | 'fadewhite' | 'fadegrays' | 'dissolve'
+  | 'slideleft' | 'slideright' | 'slideup' | 'slidedown'
+  | 'wipeleft' | 'wiperight' | 'wipeup' | 'wipedown'
+  | 'wipetl' | 'wipetr' | 'wipebl' | 'wipebr'
+  | 'smoothleft' | 'smoothright' | 'smoothup' | 'smoothdown'
+  | 'coverleft' | 'coverright' | 'coverup' | 'coverdown'
+  | 'revealleft' | 'revealright' | 'revealup' | 'revealdown'
+  | 'hlslice' | 'hrslice' | 'vuslice' | 'vdslice'
+  | 'circleopen' | 'circleclose' | 'vertopen' | 'vertclose' | 'horzopen' | 'horzclose'
+  | 'circlecrop' | 'rectcrop' | 'radial'
+  | 'diagtl' | 'diagtr' | 'diagbl' | 'diagbr'
+  | 'zoomin' | 'squeezeh' | 'squeezev'
+  | 'pixelize' | 'distance' | 'hblur' | 'hlwind' | 'hrwind' | 'vuwind' | 'vdwind';
+
 export interface AssembleFinalInput {
   /** Video clips to concatenate in order. */
   clipPaths: string[];
@@ -874,7 +905,7 @@ export interface AssembleFinalInput {
    * Optional crossfade between clips (ffmpeg xfade, re-encodes video).
    * Omit for hard cuts (default, stream-copy). Clip audio is crossfaded too.
    */
-  transition?: 'fade' | 'dissolve' | 'fadeblack' | 'fadewhite' | 'wipeleft' | 'wiperight' | 'slideleft' | 'slideright' | 'circleopen' | 'pixelize';
+  transition?: VideoTransition;
   /** Transition length in seconds (default 0.5). Each overlap shortens the total by this much. */
   transitionDuration?: number;
   outputPath: string;

@@ -3,10 +3,11 @@
 > A complete toolkit for AI agents to generate professional content using Google Gemini AI and OpenRouter.
 > Videos, images, audio, music, brand assets - all with consistent branding and organized output.
 >
-> **Optimized for Gemini** (Veo, Gemini 3 Image, Lyria, TTS, transcription) — the
-> whole kit runs on it. Optional add-ons: OpenRouter (a model gateway — Seedance
-> video, GPT-4, Claude; agent-added on request, not lip-sync) and RunPod
-> (InfiniteTalk — the true talking-avatar / lip-sync path).
+> **Optimized for Gemini** (Veo, Gemini 3 Image, Lyria, TTS, transcription, +
+> Omni Flash talking avatar with Gemini's own voice) — the whole kit runs on it.
+> Optional add-ons: OpenRouter (more models — GPT-4, Claude, and Seedance 2.0,
+> which makes a talking avatar from a **custom voice audio file**) and RunPod
+> (InfiniteTalk — talking avatar from a **custom/own voice, no duration cap**).
 
 ---
 
@@ -35,9 +36,9 @@
 2. Create a new API key
 3. Copy the key
 
-**Option B: OpenRouter** (optional) - A gateway to more models (Seedance video,
-GPT-4, Claude, Llama). The agent adds whichever model you ask for; it is **not**
-a lip-sync feature.
+**Option B: OpenRouter** (optional) - A gateway to more models (GPT-4, Claude,
+Llama) plus **Seedance 2.0**, which lip-syncs a talking avatar to a **custom
+voice audio file you provide**. The agent adds whichever model you ask for.
 1. Go to https://openrouter.ai/keys
 2. Create a new API key (starts with `sk-or-v1-...`)
 
@@ -99,7 +100,7 @@ RunPod are optional add-ons.
 | Feature | Gemini (core) | OpenRouter (optional) | RunPod (optional) |
 |---------|--------|------------|--------|
 | **Video** | Veo 3.1 (high quality) · Omni Flash (video+audio) | Seedance 2.0 + other models — agent-added | — |
-| **Talking avatar / lip-sync** | — | — | InfiniteTalk (mouth follows your audio) |
+| **Talking avatar / lip-sync** | Omni Flash — Gemini's own voice only | Seedance 2.0 — your custom voice audio (short clip) | InfiniteTalk — custom/own voice, no duration cap |
 | **Image** | Gemini 3 Image (Nano Banana) | DALL-E, Stable Diffusion — agent-added | — |
 | **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama | — |
 | **TTS** | 30 voices | Various | — |
@@ -112,8 +113,9 @@ RunPod are optional add-ons.
 |----------|-------------|--------|
 | Product video | **Gemini** | Higher visual quality |
 | B-roll / cinematic | **Gemini** | Better ambient footage |
-| Speaking character (English, optional) | **OpenRouter (Seedance)** | Integrated dialogue audio — agent-added model |
-| Talking avatar / lip-sync to your own audio | **RunPod (InfiniteTalk)** | The true lip-sync path — your recording drives the mouth |
+| Talking avatar, **Gemini's own voice** | **Gemini (Omni Flash)** | No custom audio — Gemini generates the voice; best for non-English/Myanmar |
+| Talking avatar from a **custom voice**, short clip | **OpenRouter (Seedance)** | Lip-syncs to the audio you supply; agent-added, ~4–15s |
+| Talking avatar from **custom/own voice**, long-form | **RunPod (InfiniteTalk)** | Your recording drives the mouth, no duration cap (keep ≤60s) |
 | UGC testimonial | **OpenRouter** | Integrated dialogue |
 | Background music | **Gemini** | Lyria music generation |
 | Model variety | **OpenRouter** | GPT-4, Claude, etc. |

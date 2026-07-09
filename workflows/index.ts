@@ -121,6 +121,7 @@ import type {
   CaptionsOutput,
   CaptionCue,
   AssembleFinalInput,
+  VideoTransition,
   AssembleFinalOutput,
   ImageOptionsInput,
   ImageOptionsOutput,
@@ -339,7 +340,7 @@ export function getProviderSummary(): string {
     if (config.gemini.available && config.openrouter.available) {
       lines.push('Both providers available. Options:');
       lines.push('  • Gemini (core): video (Veo 3.1), images, music (Lyria), TTS, transcription — everything runs here');
-      lines.push('  • OpenRouter (optional): extra models — Seedance video, GPT-4, Claude (agent-added on request; not lip-sync)');
+      lines.push('  • OpenRouter (optional): extra models — Seedance 2.0 (talking avatar from custom voice audio), GPT-4, Claude (agent-added on request)');
     } else {
       lines.push(`Recommended: ${config.defaultProvider === 'gemini' ? 'Gemini' : 'OpenRouter'} for all content types`);
     }
@@ -1916,6 +1917,30 @@ Do NOT include any text in the image.
  * prompt (voiceover scenes, speaking videos, Seedance).
  * When-to-use table: VIDEO-PROMPT-GUIDE.md §2b.
  */
+/**
+ * Viable clip-to-clip transitions for `assembleFinal` `transition` — every
+ * ffmpeg `xfade` preset that renders cleanly. The agent may pick ANY of these
+ * from user intent (swipe → wipe/smooth, zoom → zoomin, push → slide…).
+ * NOT YET (reject at runtime, don't offer): glitch, roll, zoomout — those need
+ * a Remotion/filter build. Full look-grouped list: see `VideoTransition` type
+ * and VIDEO-PROMPT-GUIDE.md § Transitions.
+ */
+export const VIDEO_TRANSITIONS: readonly VideoTransition[] = [
+  'fade', 'fadefast', 'fadeslow', 'fadeblack', 'fadewhite', 'fadegrays', 'dissolve',
+  'slideleft', 'slideright', 'slideup', 'slidedown',
+  'wipeleft', 'wiperight', 'wipeup', 'wipedown',
+  'wipetl', 'wipetr', 'wipebl', 'wipebr',
+  'smoothleft', 'smoothright', 'smoothup', 'smoothdown',
+  'coverleft', 'coverright', 'coverup', 'coverdown',
+  'revealleft', 'revealright', 'revealup', 'revealdown',
+  'hlslice', 'hrslice', 'vuslice', 'vdslice',
+  'circleopen', 'circleclose', 'vertopen', 'vertclose', 'horzopen', 'horzclose',
+  'circlecrop', 'rectcrop', 'radial',
+  'diagtl', 'diagtr', 'diagbl', 'diagbr',
+  'zoomin', 'squeezeh', 'squeezev',
+  'pixelize', 'distance', 'hblur', 'hlwind', 'hrwind', 'vuwind', 'vdwind',
+];
+
 export const CAMERA_MOVES: Record<CameraMove, string> = {
   // --- Pan / Tilt ---
   'static':
@@ -4140,6 +4165,14 @@ export async function assembleFinal(
     if (input.clipPaths.length === 1) {
       fs.copyFileSync(input.clipPaths[0], current);
     } else if (input.transition) {
+      if (!VIDEO_TRANSITIONS.includes(input.transition)) {
+        return createErrorResult(
+          WorkflowErrorCodes.INVALID_INPUT,
+          `Unsupported transition "${input.transition}". ` +
+            `glitch, roll, and zoomout are NOT supported yet (need a Remotion/filter build). ` +
+            `Valid transitions: ${VIDEO_TRANSITIONS.join(', ')}.`
+        );
+      }
       const fadeDur = input.transitionDuration ?? 0.5;
       const probe = (file: string, args: string) =>
         execSync(`ffprobe -v error ${args} "${path.resolve(file)}"`, { stdio: 'pipe' }).toString().trim();

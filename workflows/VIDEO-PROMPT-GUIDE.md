@@ -946,10 +946,34 @@ across all cuts. Smooth transitions between shots."
 
 ### Assembly transitions (ffmpeg, $0)
 
-`assembleFinal` takes `transition` (`fade`, `dissolve`, `fadeblack`,
-`wipeleft`, `slideleft`, `circleopen`, …) + `transitionDuration` (default
-0.5s). Hard cuts (omit) for pace; dissolves for gentle story flow; each
-overlap shortens total runtime by its duration.
+`assembleFinal` takes `transition` + `transitionDuration` (default 0.5s). Omit
+`transition` for hard cuts (fastest, stream-copy). Each overlap shortens total
+runtime by its duration, and every clip must be longer than the transition.
+
+**58 viable presets** — pick by intent (the guard rejects anything else):
+
+| Intent | Use |
+|---|---|
+| Gentle story flow | `dissolve`, `fade`, `fadeslow` |
+| Cut to/from black/white | `fadeblack`, `fadewhite`, `fadegrays` |
+| Push (clip B shoves A) | `slideleft` `slideright` `slideup` `slidedown` |
+| Swipe — hard sweep | `wipeleft` `wiperight` `wipeup` `wipedown` (+ corners `wipetl/tr/bl/br`) |
+| Swipe — eased/soft | `smoothleft` `smoothright` `smoothup` `smoothdown` |
+| Cover over / peel away | `coverleft/right/up/down`, `revealleft/right/up/down` |
+| Blinds / slice | `hlslice` `hrslice` `vuslice` `vdslice` |
+| Open/close curtains | `circleopen/close`, `vertopen/close`, `horzopen/close` |
+| Shape crop | `circlecrop`, `rectcrop`, `radial` |
+| Diagonal | `diagtl` `diagtr` `diagbl` `diagbr` |
+| Zoom / squeeze | `zoomin`, `squeezeh`, `squeezev` |
+| Stylized / punchy | `pixelize`, `distance`, `hblur`, `hlwind` `hrwind` `vuwind` `vdwind` |
+
+Full canonical list: the `VideoTransition` type / `VIDEO_TRANSITIONS` in
+`workflows/index.ts`. One transition applies to **all** cuts in a call.
+
+**NOT supported yet** (don't pass — the guard errors): `glitch`, `roll`,
+`zoomout`. These need a Remotion/ffmpeg-filter build (glitch ≈ RGB-split;
+zoomout ≈ `zoompan`; roll ≈ rotation). `pixelize`/`*wind` are the closest
+shipped stand-ins for a glitchy feel; `squeezeh/v` for a zoom-out feel.
 
 ---
 

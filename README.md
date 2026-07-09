@@ -37,10 +37,11 @@ AI content without babysitting the spend — no coding required.
    this kit is **optimized for Gemini models**. The free tier works to start;
    pay-as-you-go unlocks higher-quality video and images. Everything core
    (video, images, voiceover, music, transcription) runs on Gemini alone.
-   *Optional add-ons:* [OpenRouter](https://openrouter.ai/keys) to reach more
-   models (GPT-4, Claude, Seedance 2.0 video) — the agent wires those in on
-   request; and [RunPod](https://runpod.io?ref=z1r0sgie) for talking-avatar
-   lip-sync (InfiniteTalk).
+   *Optional add-ons:* [OpenRouter](https://openrouter.ai/keys) — more models
+   (GPT-4, Claude) plus **Seedance 2.0**, which makes a talking avatar from a
+   **custom voice audio file you supply**; and [RunPod](https://runpod.io?ref=z1r0sgie)
+   — **InfiniteTalk** talking avatar from a **custom/own voice with no duration
+   cap**. The agent wires either in on request.
 2. Any supported AI agent CLI — **Claude Code**, **Codex CLI**, **Gemini CLI**,
    **Hermes**, or **OpenClaw**
 3. Node.js 18+
@@ -53,18 +54,20 @@ the agent warns before big generations. See [Cost Reference](#cost-reference).
 
 **Supported Providers:**
 - **Google AI Studio (Gemini)** — the optimized core. Veo video, Gemini 3 image
-  models (Nano Banana), Lyria music, TTS, and transcription all run here. A free
+  models (Nano Banana), Lyria music, TTS, transcription, and Omni Flash speaking
+  characters (talking avatar using **Gemini's own voice**) all run here. A free
   key gets you started; pay-as-you-go is only for higher-quality video/image
   generations. **You can run the whole kit on Gemini alone.**
-- **OpenRouter** (optional) — a *gateway to more models*, not a lip-sync engine.
-  It gives the agent access to 100+ text models (GPT-4, Claude, Llama) plus
-  Seedance 2.0 video. The kit isn't tuned around these — the agent adds whichever
-  model you ask for, on request.
-- **RunPod** (optional) — the **talking-avatar / lip-sync** path: InfiniteTalk
-  drives a character's mouth from your own audio recording (no duration cap).
-  This is the only true lip-sync in the kit. [Sign up](https://runpod.io?ref=z1r0sgie)
-  *(referral link: load $10+ and get a $5–500 one-time bonus credit — most get
-  $5–10; supports this project)*, then create a key under
+- **OpenRouter** (optional) — a gateway to more models: 100+ text models (GPT-4,
+  Claude, Llama) plus **Seedance 2.0**, which drives a **talking avatar from a
+  custom voice audio file you supply**. The kit is tuned around Gemini, so the
+  agent adds these on request.
+- **RunPod** (optional) — **InfiniteTalk**: a talking avatar from a **custom
+  voice, even your own recording** (same idea as Seedance) with **no duration
+  cap** — though keep clips ≤60s, since longer runs raise the odds of model or
+  video glitches. [Sign up](https://runpod.io?ref=z1r0sgie) *(referral link: load
+  $10+ and get a $5–500 one-time bonus credit — most get $5–10; supports this
+  project)*, then create a key under
   [Settings → API Keys](https://www.runpod.io/console/user/settings)
 
 > **New here?** Follow [GETTING-STARTED.md](./GETTING-STARTED.md) — from zero to
@@ -141,7 +144,7 @@ RunPod are optional add-ons.
 | Feature | Gemini (core) | OpenRouter (optional) | RunPod (optional) |
 |---------|--------|------------|--------|
 | **Video** | Veo 3.1 (high quality, multi-reference consistency) · Omni Flash (video+audio, 4 tasks incl. edit-video, art styles) | Seedance 2.0 + other video models — agent-added on request | — |
-| **Talking avatar / lip-sync** | — | — | InfiniteTalk (mouth follows your audio, no duration cap) |
+| **Talking avatar / lip-sync** | Omni Flash — Gemini's own voice only (no custom audio) | Seedance 2.0 — lip-syncs to a custom voice audio file you provide | InfiniteTalk — custom/own voice, no duration cap (≤60s best) |
 | **Image** | Gemini 3 Image (Nano Banana) | DALL-E, SD, etc. — agent-added | — |
 | **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama, 100+ models | — |
 | **TTS** | 30 styled voices (Gemini) · **Microsoft Edge TTS — free, no key, incl. Burmese** | Various | — |
@@ -151,11 +154,15 @@ RunPod are optional add-ons.
 **When to use which:**
 - **Gemini (default)** — video, images, music, TTS, transcription. Start and
   finish here; it's what everything is tuned for.
-- **OpenRouter (optional)** — only when you want a model Gemini doesn't offer
-  (e.g. GPT-4/Claude text, or Seedance 2.0 video). It's a model gateway, **not**
-  a lip-sync feature — the agent adds the specific model you ask for.
-- **RunPod (optional)** — the true lip-sync / talking-avatar path (InfiniteTalk),
-  driven by your own audio file.
+- **OpenRouter (optional)** — models Gemini doesn't offer (GPT-4/Claude text) and
+  **Seedance 2.0**, which lip-syncs a talking avatar to a **custom voice audio
+  file you provide** (clip-length limited, ~4–15s). Agent-added on request.
+- **RunPod (optional)** — **InfiniteTalk**: talking avatar from a **custom/own
+  voice with no duration cap** (keep ≤60s for reliability). Pick this over
+  Seedance for long-form or your own recorded voice.
+- **Talking avatar — whose voice?** Gemini (Omni Flash) = Gemini's own voice
+  only; Seedance & InfiniteTalk = your custom voice. Non-English/Myanmar
+  pronunciation → Gemini.
 - **Veo 3.1 vs Omni Flash** - Veo for cinematic no-dialogue/English beats and
   first+last-frame shots; **Omni Flash for non-English speaking characters
   (e.g. Myanmar — better pronunciation, no silent filter blocks), reference

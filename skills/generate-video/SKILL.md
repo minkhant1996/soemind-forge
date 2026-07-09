@@ -374,8 +374,11 @@ node workflows/cli.cjs generateCaptions '{"script":"<voiceover/dialogue script>"
 # 2. One call: concat clips → lay voiceover + music (music auto-ducks) → burn captions
 node workflows/cli.cjs assembleFinal '{"clipPaths":["…/clip-01.mp4","…/clip-02.mp4"],"voiceoverPath":"…/voiceover.wav","musicPath":"…/music.wav","musicVolume":0.3,"captionsSrtPath":"…/captions.srt","outputPath":"projects/{name}/output-contents/final.mp4"}'
 # voiceoverPath / musicPath / captionsSrtPath are optional; omit captionsSrtPath to skip burned-in captions; musicPath reuses the registry music bed
-# Optional between-clip transitions: add "transition":"dissolve" (or fade/fadeblack/
-# wipeleft/slideleft/circleopen…) + "transitionDuration":0.5 — hard cuts when omitted.
+# Optional between-clip transitions: add "transition":"dissolve" + "transitionDuration":0.5
+# 58 viable presets (pick by intent): slide=slideleft/right/up/down · swipe=wipe*/smooth* ·
+# cover*/reveal* · zoom=zoomin/squeezeh/squeezev · fades=fade/fadeblack/fadewhite/dissolve ·
+# stylized=pixelize/distance/hblur/*wind · shapes=circleopen/radial/diagtl… Full table: VIDEO-PROMPT-GUIDE.md § Assembly transitions.
+# NOT YET (guard rejects): glitch, roll, zoomout. Hard cuts when transition omitted.
 # Each overlap shortens the total by its duration; every clip must outlast it.
 ```
 
