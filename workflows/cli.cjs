@@ -66,8 +66,8 @@ const COMMANDS = {
     'seedanceMultiShotVideo', 'seedanceMultiRefVideo',
   ],
   'Audio / music': [
-    'generateVoiceover', 'generateMultiSpeakerVoiceover', 'generateMusicTrack',
-    'transcribeAudio',
+    'generateVoiceover', 'generateEdgeTTSVoiceover', 'generateMultiSpeakerVoiceover',
+    'generateMusicTrack', 'transcribeAudio',
   ],
   'Brand assets': [
     'generateProfileImage', 'generateCoverImage', 'generateHighlightCovers',
@@ -127,6 +127,9 @@ const PAID_COMMANDS = new Set([
   'reviewThumbnail', 'reviewContentPlan', 'reviewBatch',
   'transcribeVideo',
 ]);
+// Edge TTS is FREE (no API key, no paid provider) — never budget-gate it, even
+// though it lives in the 'Audio / music' group above.
+PAID_COMMANDS.delete('generateEdgeTTSVoiceover');
 
 const LEDGER_TYPE = [
   [/video/i, 'video'],
@@ -411,6 +414,11 @@ async function runDoctor(ping) {
   if (ffmpeg) console.log('  ✅ ffmpeg available (video/audio assembly)');
   else warn('ffmpeg not found — mixVideoAudio/assembleFinal will fail',
     'macOS: brew install ffmpeg · Ubuntu: sudo apt install ffmpeg · Windows: https://ffmpeg.org/download.html');
+
+  const edgeTts = require('child_process').spawnSync('python3', ['-c', 'import edge_tts']).status === 0;
+  if (edgeTts) console.log('  ✅ edge-tts installed (generateEdgeTTSVoiceover — FREE voiceover, no key)');
+  else warn('edge-tts not installed — no generateEdgeTTSVoiceover (FREE Microsoft TTS, optional)',
+    'python3 -m pip install edge-tts');
 
   // Stale pricing silently breaks cost estimates and the budget guard's trust.
   for (const rel of ['gemini/pricing.json', 'openrouter/pricing.json']) {

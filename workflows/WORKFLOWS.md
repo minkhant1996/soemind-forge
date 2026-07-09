@@ -347,6 +347,41 @@ source of truth; fix names before captioning.
 
 ---
 
+## generateEdgeTTSVoiceover — FREE voiceover (Microsoft Edge TTS, no API key)
+
+A **$0, no-key** alternative to Gemini `generateVoiceover`. Uses Microsoft Edge's
+online neural voices, incl. Burmese (`my-MM-ThihaNeural` male, `my-MM-NilarNeural`
+female). Use when the user wants free narration or a different voice. NOT budget-gated
+(it's free). Needs the `edge-tts` Python package + internet.
+
+**Install once (check first):**
+```bash
+python3 -c "import edge_tts" || python3 -m pip install edge-tts
+# node workflows/cli.cjs doctor  ← reports whether edge-tts is installed
+```
+
+```bash
+# Burmese female → wav (48kHz mono, ready for assembleFinal)
+node workflows/cli.cjs generateEdgeTTSVoiceover '{
+  "script": "မင်္ဂလာပါ။ ဒါက အခမဲ့ voiceover ပါ။",
+  "voice": "my-female",
+  "outputPath": "projects/{name}/output-contents/vo.wav"
+}'
+# → { success:true, data:{ audioPath, voice, cost:{ totalCost:0 } } }
+```
+
+Fields: `script` · `outputPath` (`.wav` → auto-converted to 48kHz mono; `.mp3` → native
+24kHz) · `voice` (a friendly alias — `my-male`/`my-female`/`en-male`/`en-female` — OR any
+full Edge voice id; default `my-MM-ThihaNeural`) · `rate` (`"+0%"`,`"-10%"`) · `volume`
+(`"+0%"`) · `pitch` (`"+0Hz"`). Full voice catalogue: `python3 -m edge_tts --list-voices`.
+
+**Gemini vs Edge:** Gemini `generateVoiceover` = 30 styled voices, emotion/pace/accent
+control, audio tags, ~$0.001/req (paid, budget-gated). Edge = free, fixed neural voices,
+rate/volume/pitch only. For the user's OWN cloned voice, neither — use their provided
+WAVs + `infiniteTalkLipsync`.
+
+---
+
 ## Reference Video Analysis (analyzeReferenceVideo — "make something like that")
 
 Analyze a reference video into a scene-by-scene breakdown + a recreation
@@ -393,9 +428,33 @@ node workflows/cli.cjs renderCaptionedVideo '{
 }'
 ```
 
-Fields: `fontSize` (px, default 52) · `marginBottom` (px from bottom — 480 ≈
-caption at 3/4 frame height, 280 = low-thirds) · `accentColor` (pill border).
-Write a standard `.srt` from the same cues alongside for platform captions.
+Top-level fields: `fontSize` (px, default 52) · `marginBottom` (px from bottom —
+480 ≈ 3/4 frame height, 280 = low-thirds) · `accentColor` (pill border + `**word**`
+emphasis color). Write a standard `.srt` from the same cues alongside for platform
+captions.
+
+**Per-cue creative fields** (this is more than a plain transcript — decide the method
+by video type first: TEXT-OVERLAY-DESIGN-GUIDE.md § 0):
+- `style`: `"pill"` (default lower-third pill) or `"hero"` (big open text, stroke +
+  shadow, no pill — for hook/punch-in words).
+- `pos`: `"lower"` (default) · `"mid"` (~62% down) · `"upper"` (top quarter — good for
+  location/label stamps). `align`: `"center"` (default) or `"left"`.
+- `size` (px, per-cue override) · `color` (base text color, default white).
+- `**word**` inside `text` → renders that word in `accentColor` at heavier weight
+  (per-word emphasis — highlight the 1–2 words that matter, e.g. a product name).
+- `\n` inside `text` → stacked lines with a staggered spring entrance (use for
+  bilingual native+translation).
+
+**Only ONE cue is active at a time** (composition uses `cues.find`). To STACK layers —
+e.g. a bottom transcript AND an upper location stamp, or transcript + a behind-subject
+word — render in **separate passes**: pass 1 burns layer A onto the video, pass 2 runs
+`renderCaptionedVideo` again on pass-1's output with layer B's cues.
+
+For a big word BEHIND the speaker (occlusion), that's a different technique — the
+`rembg` text-behind-subject recipe in TEXT-OVERLAY-DESIGN-GUIDE.md § 6 (bake into each
+clip before assembly, then add the transcript pass here). That recipe needs the `rembg`
+Python lib — check/install first: `python3 -c "import rembg" || python3 -m pip install
+"rembg[cpu]" pillow` (§ 6 has the full requirements + model-download note).
 
 ### renderSlideStill — background + headline/sub/footer/logo → 1080x1350 slide
 
@@ -1549,6 +1608,10 @@ const result = await generateVideoFromImageWithVoiceover({
 **Deep voices:** Helios, Titan
 **Soft voices:** Narcissus, Selene, Vesper
 
+(All above = Gemini `generateVoiceover`.) **Free (Edge TTS `generateEdgeTTSVoiceover`):**
+`my-male` (my-MM-ThihaNeural), `my-female` (my-MM-NilarNeural), `en-male`, `en-female`,
+or any `--list-voices` id — no styles, but `rate`/`volume`/`pitch` + $0.
+
 ---
 
 ## Cost Reference
@@ -1563,6 +1626,7 @@ const result = await generateVideoFromImageWithVoiceover({
 | Video (fast) | veo-3.1-fast | $0.08/sec |
 | Video (standard) | veo-3.1 | $0.20/sec |
 | TTS | gemini-2.5-flash-tts | ~$0.001/request |
+| TTS (free) | Microsoft Edge TTS (`generateEdgeTTSVoiceover`) | $0 (no key) |
 
 ---
 

@@ -32,6 +32,12 @@ api-keys.txt
 *.pem
 *.p12
 *.pfx
+*.crt
+*.cer
+*.der
+*.keystore
+*.jks
+*.ppk
 secrets.*
 *.secret
 .secrets/
@@ -42,6 +48,33 @@ service-account*.json
 gcp-key*.json
 *.apikey
 apikey.txt
+auth.json
+token.json
+*.token
+
+# SSH / auth files
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+id_dsa
+id_ecdsa
+.ssh/
+.netrc
+_netrc
+
+# Package-manager / cloud auth (often hold tokens)
+.npmrc
+.pypirc
+.aws/
+.dockercfg
+.docker/config.json
+
+# Network captures & cookies (can embed tokens/sessions)
+*.har
+*.pcap
+cookies.txt
+*.cookies
 
 # ===========================================
 # User Projects (contains real business data)
@@ -83,17 +116,60 @@ tests/results/
 test-output/
 gemini/output/
 
-# Generated media files
+# Generated media files (audio/video/image — often personal: faces, voices, footage)
 *.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
 *.wav
 *.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
 *.png
 *.jpg
 *.jpeg
 *.webp
+*.heic
+*.edge.mp3
+
+# Caption / transcript sidecars (hold spoken script text — treat as personal)
+*.srt
+*.vtt
 
 # Keep example images if needed (uncomment)
 # !examples/*.png
+
+# ===========================================
+# Python / ML tooling (rembg text-behind-subject, edge-tts, ad-hoc scripts)
+# ===========================================
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+# edge-tts temp text (auto-cleaned, ignored as a backstop)
+.edge-tts-*.txt
+
+# Model weights / caches (large; auto-downloaded, never commit)
+*.onnx
+*.pt
+*.ckpt
+*.safetensors
+# rembg model cache (usually in $HOME, but never commit if local)
+.u2net/
+
+# ===========================================
+# Personal media drop folders (faces, recordings, screenshots — NEVER commit)
+# ===========================================
+/Images/
+/images/
+/Video/
+/recordings/
+/screenshots/
 
 # ===========================================
 # Claude Code Local Data

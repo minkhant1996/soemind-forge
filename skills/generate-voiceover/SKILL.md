@@ -19,6 +19,17 @@ For dialogue between voices use `generateMultiSpeakerVoiceover`. For long script
 args in a file and pass `@args.json`. The CLI loads `.env` and prints the JSON result
 (path + cost). Argument shapes are in `workflows/WORKFLOWS.md`.
 
+**Free option — Microsoft Edge TTS (`generateEdgeTTSVoiceover`, $0, no API key):** use
+when the user wants free narration or a different voice. Same output shape, not
+budget-gated. Burmese voices `my-male`/`my-female`; `rate`/`volume`/`pitch` control but no
+styles/emotion. Needs the `edge-tts` lib once: `python3 -c "import edge_tts" || python3 -m
+pip install edge-tts` (`doctor` reports it). Full args: WORKFLOWS.md § generateEdgeTTSVoiceover.
+```bash
+node workflows/cli.cjs generateEdgeTTSVoiceover '{"script":"...","voice":"my-female","outputPath":"projects/{name}/output-contents/vo.wav"}'
+```
+Trade-off: Gemini `generateVoiceover` = styled/emotive voices (paid ~$0.001/req); Edge =
+free but plain. For the user's OWN cloned voice, use their WAVs + `infiniteTalkLipsync`, not TTS.
+
 **Output Location:** `projects/{name}/output-contents/`
 
 ---

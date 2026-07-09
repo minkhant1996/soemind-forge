@@ -15,7 +15,7 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 - **Image Generation** - Gemini 3 Image (Nano Banana 2 / Pro / Lite)
 - **Video Generation** - Veo 3.1 (lite/fast/standard)
 - **Video Generation & Editing** - Gemini Omni Flash (10s clips, 4 tasks, art styles, conversational editing)
-- **Text-to-Speech** - 30 voices, multi-speaker
+- **Text-to-Speech** - 30 voices, multi-speaker (or **free Microsoft Edge TTS** — `generateEdgeTTSVoiceover`, $0/no-key, incl. Burmese)
 - **Music Generation** - Lyria (clips and full songs)
 
 **OpenRouter** (optional — a model gateway, not a lip-sync engine; the kit is
@@ -260,6 +260,7 @@ lip-sync.
 | Burned captions / SRT (Burmese-safe) | **Remotion** `renderCaptionedVideo` | $0 local; cues from transcribeAudio timestamps |
 | UGC testimonial | **Seedance** | Integrated dialogue |
 | Background music | **Gemini** | Lyria music generation |
+| Free voiceover (any language incl. Myanmar) | **Edge TTS** `generateEdgeTTSVoiceover` | $0, no API key, not budget-gated — needs `pip install edge-tts` |
 | Model variety | **OpenRouter** | GPT-4, Claude, etc. |
 
 ---

@@ -3624,6 +3624,128 @@ export async function generateMultiSpeakerVoiceover(
 }
 
 // =============================================================================
+// WORKFLOW 14b: EDGE TTS VOICEOVER (Microsoft Edge — FREE, no API key)
+// =============================================================================
+
+/**
+ * Curated Burmese-first Edge TTS voices (friendly aliases). Pass any of these
+ * keys as `voice`, or a full Edge voice id. Full catalogue:
+ *   python3 -m edge_tts --list-voices
+ */
+export const EDGE_TTS_VOICES: Record<string, string> = {
+  'my-male': 'my-MM-ThihaNeural', // Burmese, male, friendly
+  'my-female': 'my-MM-NilarNeural', // Burmese, female, friendly
+  'en-male': 'en-US-GuyNeural',
+  'en-female': 'en-US-AriaNeural',
+};
+
+export interface EdgeTTSVoiceoverInput {
+  /** The text to speak (plain text — Burmese and other scripts supported). */
+  script: string;
+  /** Output file. `.mp3` = native; `.wav` = auto-converted (48kHz mono) for the VO pipeline. */
+  outputPath: string;
+  /** A key of EDGE_TTS_VOICES (e.g. "my-female") OR a full Edge voice id. Default my-MM-ThihaNeural. */
+  voice?: string;
+  /** Speaking rate, e.g. "+0%", "-10%", "+15%". */
+  rate?: string;
+  /** Volume, e.g. "+0%", "-20%". */
+  volume?: string;
+  /** Pitch, e.g. "+0Hz", "-10Hz". */
+  pitch?: string;
+}
+
+export interface EdgeTTSVoiceoverOutput {
+  audioPath: string;
+  voice: string;
+  cost: { totalCost: number; breakdown: Record<string, number> };
+}
+
+/**
+ * Generate a voiceover with Microsoft Edge TTS — FREE, no API key, online
+ * neural voices (incl. Burmese my-MM-ThihaNeural / my-MM-NilarNeural).
+ *
+ * A zero-cost alternative to Gemini `generateVoiceover` — use when the user
+ * wants free narration or a different voice. Requires the `edge-tts` Python
+ * package (one-time: `python3 -m pip install edge-tts`) and internet.
+ */
+export async function generateEdgeTTSVoiceover(
+  input: EdgeTTSVoiceoverInput
+): Promise<WorkflowResult<EdgeTTSVoiceoverOutput>> {
+  if (!input.script || input.script.trim().length === 0) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Script is required');
+  }
+  if (!input.outputPath) {
+    return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Output path is required (.mp3 or .wav)');
+  }
+
+  // Resolve a friendly alias or accept a full Edge voice id.
+  const voice = EDGE_TTS_VOICES[input.voice ?? ''] ?? input.voice ?? EDGE_TTS_VOICES['my-male'];
+
+  // edge-tts must be installed — fail with the exact fix, don't half-run.
+  try {
+    execSync('python3 -c "import edge_tts"', { stdio: 'pipe' });
+  } catch {
+    return createErrorResult(
+      WorkflowErrorCodes.GENERATION_FAILED,
+      'edge-tts is not installed. Install it once:  python3 -m pip install edge-tts'
+    );
+  }
+
+  const outDir = path.dirname(path.resolve(input.outputPath));
+  const isWav = /\.wav$/i.test(input.outputPath);
+  const mediaPath = isWav ? input.outputPath.replace(/\.wav$/i, '.edge.mp3') : input.outputPath;
+  // Pass text via a temp file so Burmese / quotes never hit shell escaping.
+  const tmpTxt = path.join(outDir, `.edge-tts-${Date.now()}.txt`);
+
+  try {
+    ensureDir(outDir);
+    fs.writeFileSync(tmpTxt, input.script, 'utf8');
+
+    const args = [
+      `--voice ${voice}`,
+      `--file "${tmpTxt}"`,
+      `--write-media "${path.resolve(mediaPath)}"`,
+    ];
+    // Use --flag=VALUE so argparse doesn't treat negative values ("-5%") as a flag.
+    if (input.rate) args.push(`--rate="${input.rate}"`);
+    if (input.volume) args.push(`--volume="${input.volume}"`);
+    if (input.pitch) args.push(`--pitch="${input.pitch}"`);
+
+    console.log(`[Workflow] Generating Edge TTS voiceover (${voice}, free)...`);
+    execSync(`python3 -m edge_tts ${args.join(' ')}`, { stdio: 'pipe' });
+
+    if (!fs.existsSync(mediaPath)) {
+      return createErrorResult(WorkflowErrorCodes.NO_OUTPUT, 'Edge TTS produced no audio');
+    }
+
+    // Convert to WAV (48kHz mono) if the caller asked for .wav — matches the VO pipeline.
+    if (isWav) {
+      execSync(
+        `ffmpeg -y -i "${path.resolve(mediaPath)}" -ar 48000 -ac 1 "${path.resolve(input.outputPath)}"`,
+        { stdio: 'pipe' }
+      );
+      fs.rmSync(mediaPath, { force: true });
+    }
+
+    console.log(`[Workflow] Edge TTS voiceover saved: ${input.outputPath}`);
+    return {
+      success: true,
+      data: {
+        audioPath: input.outputPath,
+        voice,
+        cost: { totalCost: 0, breakdown: { voiceover: 0 } },
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[Workflow] generateEdgeTTSVoiceover failed: ${message}`);
+    return createErrorResult(getErrorCode(error), message);
+  } finally {
+    fs.rmSync(tmpTxt, { force: true });
+  }
+}
+
+// =============================================================================
 // WORKFLOW 15: MUSIC (LYRIA)
 // =============================================================================
 

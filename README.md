@@ -119,11 +119,11 @@ claude   # loads CLAUDE.md context automatically
 | **Motion Control** | Swap the dancers/actors in a real video with your characters — choreography, camera, and background carry over 1:1 | Omni edit task · `VIDEO-PROMPT-GUIDE.md` §7 |
 | **Lip-Sync to Your Audio** | Character image + your voice recording → talking video, mouth follows the audio, no duration cap | `infiniteTalkLipsync` (RunPod, $0.25-0.50/req) |
 | **Transcription** | Timestamped transcripts in any language (incl. Myanmar) via Gemini — no extra provider needed | `transcribeAudio` |
-| **Burned Captions + SRT** | Styled caption pills over any video, Burmese-safe shaping, $0 local render | `renderCaptionedVideo` |
+| **Creative Captions + SRT** | Method picked by video type — pill transcript, `**keyword**` accent, hero punch-ins, upper location stamps, **text-behind-subject** (rembg); Burmese-safe, $0 local render | `renderCaptionedVideo` · `TEXT-OVERLAY-DESIGN-GUIDE.md` §0/§6 |
 | **Product Shots** | 26 e-commerce presets from one real product photo: packshots, lifestyle, scale/trust, seasonal | `productShot` on `/generate-image` |
 | **Images & Slides** | Thumbnails, carousels with pixel-perfect type | `/generate-image` + `renderSlideStill` |
 | **Brand Assets** | Logos, profiles, covers, highlights | `/generate-brand-assets` |
-| **Voiceover** | Narration with per-scene emotional delivery, podcasts | `/generate-voiceover` |
+| **Voiceover** | Narration with per-scene emotional delivery, podcasts — 30 Gemini voices, or **free Microsoft Edge TTS** ($0, no key, incl. Burmese) | `/generate-voiceover` · `generateEdgeTTSVoiceover` |
 | **Music** | Background music, jingles, songs | `/generate-music` |
 | **Content Plans** | 30-day calendars, campaign recipes | `/plan-content` |
 | **Copy** | Hooks, scripts, captions | `/write-copy` |
@@ -144,7 +144,7 @@ RunPod are optional add-ons.
 | **Talking avatar / lip-sync** | — | — | InfiniteTalk (mouth follows your audio, no duration cap) |
 | **Image** | Gemini 3 Image (Nano Banana) | DALL-E, SD, etc. — agent-added | — |
 | **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama, 100+ models | — |
-| **TTS** | 30 voices | Various | — |
+| **TTS** | 30 styled voices (Gemini) · **Microsoft Edge TTS — free, no key, incl. Burmese** | Various | — |
 | **Music** | Lyria | ✗ | — |
 | **STT / transcription** | Gemini (timestamped, any language) | Whisper | — |
 

@@ -381,6 +381,27 @@ node workflows/cli.cjs assembleFinal '{"clipPaths":["…/clip-01.mp4","…/clip-
 
 For audio-only mixing (single clip + VO/music, no concat/captions) use `mixVideoAudio()`.
 
+### Creative captions — pick the method by the video, don't default blindly
+
+`assembleFinal`'s `captionsSrtPath` burns a plain SRT. For anything more expressive, run
+**`renderCaptionedVideo`** on the finished video — and **decide the method from the video
+type** (a talking-head, a hook reel, and a multi-scene travel piece want different
+caption treatments):
+
+- **DECISION TABLE + rules:** `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` § 0 (caption
+  method selector). E.g. talking-head → bottom pill transcript + `**keyword**` accent;
+  hook/sizzle → `style:"hero"` word punch-ins; multi-scene → upper location stamp +
+  transcript; signature "wow" moment → text-behind-subject.
+- **Cue fields** (`style` pill/hero · `pos` upper/mid/lower · `size` · `color` ·
+  `**word**` accent · `\n` stacked lines): WORKFLOWS.md § renderCaptionedVideo. Timing
+  from `transcribeAudio`, offset by each clip's start on the assembled timeline. **Only
+  one cue is active at a time → stack layers (transcript + stamp) with separate passes.**
+- **Text-behind-subject** (a big word behind the speaker, `rembg` per-frame matte):
+  recipe in TEXT-OVERLAY-DESIGN-GUIDE.md § 6 — bake into each clip BEFORE assembly, then
+  add the transcript pass. Needs the `rembg` lib — check/install first:
+  `python3 -c "import rembg" || python3 -m pip install "rembg[cpu]" pillow` (first run
+  auto-downloads a ~176 MB model to `~/.u2net/`).
+
 ---
 
 ## OUTPUT

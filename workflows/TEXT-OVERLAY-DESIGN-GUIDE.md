@@ -14,11 +14,41 @@ capability that isn't wired up; tell the user it's a manual/roadmap item.
 
 ---
 
+## 0. Caption method selector — DECIDE by the video, don't default blindly (READ FIRST)
+
+Captions are not one-size-fits-all. **Pick the method from the video's shape and
+goal**, then build it with `renderCaptionedVideo` cue fields (§ below + WORKFLOWS.md
+§ renderCaptionedVideo) or the text-behind-subject recipe (§6). When unsure, use the
+first row. Confirm the pick with the user for anything beyond a plain transcript.
+
+| Video / goal | Best caption method | How |
+|---|---|---|
+| **Talking-head / spokesperson explainer** (person speaks to camera) | Bottom **pill transcript + gold keyword accent**; optionally ONE **behind-subject** topic word | pill cues `pos:"lower"` + `**keyword**`; behind = §6 |
+| **Fast-cut hook / hype / product sizzle** | **Hero word punch-ins** — one big word/short phrase per beat | `style:"hero"`, big `size`, short cue windows |
+| **B-roll / cinematic** with negative space | **Quadrant caption** in the empty region (not center) | `pos:"upper"/"mid"` + `align`; `analyzeImage` finds the empty third |
+| **Tutorial / step-by-step** | **Numbered lower-third pills**, one per step, keyword-accented | pill cues + `**Step 1**` |
+| **Multi-scene / travel / location changes** | **Location/label stamp** (upper) + bottom transcript | two-pass: transcript (lower) → stamps (upper) |
+| **Signature "wow" hero moment** (once/clip) | **Text-behind-subject** big word | rembg recipe §6 |
+| **Non-English / Myanmar dialogue** | any row above, but **Remotion path only** (never ffmpeg drawtext) | `renderCaptionedVideo` is already Remotion — §7 |
+| **Bilingual audience** | **Stacked two-line** caption (native + translation) | one cue `text:"line1\nline2"` |
+
+**Rules of engagement:**
+- Transcript timing comes from `transcribeAudio` (Burmese-safe), offset onto the
+  assembled timeline (add each clip's start time).
+- **Only ONE cue is active at a time** (the composition uses `cues.find`). To stack
+  layers (e.g. transcript + location stamp, or transcript + behind-word), render in
+  **separate passes** — pass 1 burns layer A, pass 2 runs on pass-1's output.
+- ONE hero/behind moment per clip MAX — overuse kills the impact.
+- Emphasize only the 1–2 words that matter with `**word**` (→ accent color), not whole
+  lines. Keep pills in the safe zone (`marginBottom` clear of the platform UI).
+
+---
+
 ## 1. The Z-axis: where does the text sit relative to the subject?
 
 | Placement | Effect | How to build it here |
 |---|---|---|
-| **Behind** | Subject occludes the text as they move — text reads as part of the scene, not a sticker on top. Big, bold, bleeds off-frame edges for scale drama. | **Prototype only, not yet a CLI command.** Recipe: matte the subject per-frame (MediaPipe `selfie_segmenter_landscape` via headless Chromium — see `dev-doc/` R&D, gitignored), then `ffmpeg` layer order: background video → text → subject cutout on top. See § 6 for the render recipe. |
+| **Behind** | Subject occludes the text as they move — text reads as part of the scene, not a sticker on top. Big, bold, bleeds off-frame edges for scale drama. | ✅ **Repeatable recipe (not yet a one-shot CLI command).** Matte the subject per-frame with **`rembg`** (installed; `u2net`, ~1s/frame CPU), then `ffmpeg` layer order: background video → text → subject cutout on top. Full recipe + validated params in § 6. |
 | **Front (always-on-top)** | Classic caption/lower-third — never occluded, always legible. Lower-third pill/box is the safest default for dense backgrounds. | ✅ Today: `renderSlideStill` (static) or `renderKineticReel` per-scene lines (animated). For a lower-third *pill* look, use `renderCaptionedVideo`'s caption-pill style. |
 | **Side (margin badge/watermark)** | Small persistent tag — brand mark, series label, "swipe/1 of 3" indicator. Usually rotated 90° or tucked in a corner, low visual weight, present for the whole clip. | ⚠️ Partial: `renderSlideStill`/`renderKineticReel` have no native rotate/margin-badge prop. Workaround used in R&D: render the label to a small transparent PNG via `drawtext`, rotate with ffmpeg `transpose=1`, overlay at `x=W-w-margin`. Roadmap: add a `sideBadge` prop to KineticReel. |
 
@@ -74,35 +104,62 @@ capability that isn't wired up; tell the user it's a manual/roadmap item.
 
 ---
 
-## 6. Recipe: "text behind subject" (current state — prototype, not a CLI command)
+## 6. Recipe: "text behind subject" (validated — rembg matte)
 
-Validated in R&D (`dev-doc/matte-test/`, gitignored — ask if you want it re-run):
+A big word sitting BEHIND the speaker, occluded as they move — the signature
+"wow" caption for a talking-head. **Validated 2026-07-09** on a Myanmar
+talking-avatar (giant city name behind the presenter, read cleanly on both
+bright and dark backgrounds). Repeatable recipe — not a one-shot CLI command
+yet, so run it as an ad-hoc script per clip:
 
-1. Extract frames (`ffmpeg -i clip.mp4 frames/frame-%04d.png`).
-2. Batch-matte each frame in real headless Chromium using
-   `@mediapipe/tasks-vision` `ImageSegmenter` (`selfie_segmenter_landscape`
-   model, Apache-2.0 — NOT the plain `selfie_segmenter`, which clips flared
-   clothing/limbs on full-body shots). Save each as an RGBA cutout PNG (alpha
-   = person confidence).
-3. Render the text layer SEPARATELY as its own transparent PNG or via
-   `drawtext` — must force `format=rgba` (or build the canvas via PIL) BEFORE
-   drawing; the `ffmpeg lavfi color` source silently drops to `yuv420p`
-   (opaque, no alpha) otherwise, a real bug hit during testing.
-4. Composite in this exact layer order: background video → text →
-   subject-cutout sequence on top (`ffmpeg -filter_complex
-   "[0:v][text]overlay[a];[a][cutout]overlay"`).
+**Requirements (install once — check first, don't assume):**
+```bash
+# Are the libs already present? (prints versions, or errors if missing)
+python3 -c "import rembg, PIL, onnxruntime; print(rembg.__version__)"
+# If missing, install (rembg pulls onnxruntime + numpy; pillow = PIL):
+python3 -m pip install "rembg[cpu]" pillow
+```
+- `ffmpeg` — already a kit dependency (`node workflows/cli.cjs doctor` verifies it).
+- First `rembg.new_session("u2net")` **auto-downloads the ~176 MB `u2net.onnx`
+  model to `~/.u2net/`** — needs internet ONCE, then it's cached (≈1s/frame after).
+- Verified working set (2026-07-09): Python 3.13, rembg 2.0.72, Pillow 12.1,
+  onnxruntime 1.24, numpy 2.4. If `pip install rembg` alone fails to import
+  onnxruntime, use the `rembg[cpu]` extra (or `rembg[gpu]` on CUDA machines).
 
-**Known quality caveats from testing:** no temporal smoothing between frames
-(each frame matted independently — fine for continuous motion, can flicker on
-harder clips); occasional small stray false-positive blobs near bright
-lights; soft/blocky mask edges on fast motion. Good enough for real use, not
-pixel-perfect.
+1. **Extract frames** at the clip's native fps: `ffmpeg -i clip.mp4 -r 24 fr/%04d.png`.
+2. **Matte each frame with `rembg`** (installed as a Python module; the `rembg`
+   CLI is usually NOT on PATH — call it in Python):
+   ```python
+   import rembg
+   from PIL import Image
+   sess = rembg.new_session("u2net")            # general person model
+   cut = rembg.remove(Image.open(frame), session=sess)   # RGBA, person on transparent bg
+   cut.save(out)                                # ~1s/frame CPU; model caches after first run
+   ```
+   Cutout edges (hair, glasses, shoulders) come out clean. Preferred over the
+   older MediaPipe `selfie_segmenter_landscape` path — fewer setup steps.
+3. **Build the text layer** as one transparent RGBA PNG (PIL, a bold display
+   font like Impact; letter-space UPPERCASE; baseline ~0.16·H so the head
+   occludes the lower half of the letters; white ~235α + a soft dark shadow for
+   legibility on any bg). Size by letter count so it bleeds a little off-frame:
+   ~195px for 5 letters, 165 for 6, 140 for 7, 120 for 8 (720-wide 9:16).
+   Do NOT draw Myanmar text via `drawtext` (§7) — for Latin words PIL/Impact is fine.
+4. **Composite in this exact layer order** — background clip → text → cutout
+   sequence on top, keeping the clip's audio:
+   ```bash
+   ffmpeg -y -i clip.mp4 -loop 1 -i text.png -framerate 24 -i cut/%04d.png \
+     -filter_complex "[0:v][1:v]overlay[bt];[bt][2:v]overlay=shortest=1[v]" \
+     -map "[v]" -map 0:a? -c:a copy -c:v libx264 -pix_fmt yuv420p -r 24 out.mp4
+   ```
 
-**This is not yet promoted to `workflows/`.** If a project needs this
-repeatedly, the next step is a real `renderTextBehindSubject` workflow
-(frame extraction + matte batch + Remotion composite, following
-`CREATING_WORKFLOWS.md`'s contract) instead of re-running the ad-hoc R&D
-scripts each time.
+Bake this into each clip BEFORE assembly, then add the bottom transcript with
+`renderCaptionedVideo` on the assembled video (that layer stays a real command).
+
+**Known caveats:** per-frame matte has no temporal smoothing — fine for talking
+heads, can flicker on fast motion; occasional stray blobs near bright lights.
+Good for real use, not pixel-perfect. **This is not yet a `workflows/` command;**
+if a project needs it often, promote a `renderTextBehindSubject` workflow
+(frame extract → rembg batch → composite) per `CREATING_WORKFLOWS.md`.
 
 ---
 
@@ -139,11 +196,14 @@ including hero titles and side badges, not just burned captions.
 | Centered/top/bottom static slide + sub + footer | ✅ | `renderSlideStill` |
 | Frosted scrim panel behind text on busy bg | ✅ | `scrim: true` on either |
 | Burmese-safe captions burned onto video | ✅ | `renderCaptionedVideo` |
-| Per-WORD size/color/weight within one line | ❌ roadmap | split into adjacent lines as a workaround |
-| Text stroke/outline | ❌ roadmap | use `scrim` instead for now |
+| Caption **style: pill / hero** (big, stroke+shadow), **pos: upper/mid/lower**, **align** | ✅ | `renderCaptionedVideo` cue fields — § 0 |
+| Per-WORD **accent color** in a caption cue (`**word**` → accent) | ✅ | `renderCaptionedVideo` (KineticReel is still per-line only) |
+| Stacked multi-line caption w/ staggered entrance | ✅ | `renderCaptionedVideo` cue `text:"a\nb"` |
+| Text stroke/outline | ✅ in captions (hero `style`) · ❌ roadmap in KineticReel | `renderCaptionedVideo` hero; else `scrim` |
+| Per-WORD size/weight within one KineticReel line | ❌ roadmap | split into adjacent lines as a workaround |
 | Gradient/metallic text color | ❌ roadmap | — |
 | Rotated side badge / margin watermark | ❌ roadmap | manual ffmpeg `transpose` workaround, § 1 |
-| Text-behind-subject (occlusion by a moving person) | ⚠️ prototype only | manual R&D recipe, § 6 — not a CLI command yet |
+| Text-behind-subject (occlusion by a moving person) | ✅ recipe (rembg) | § 6 recipe — repeatable, not a one-shot command yet |
 | Skew/3D-perspective per letter | ❌ out of scope for now | — |
 
 Don't tell a user any ❌/⚠️ row "just works" — name the gap and offer the
