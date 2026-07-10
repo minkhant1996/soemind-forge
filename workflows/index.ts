@@ -181,6 +181,12 @@ export * from './publish.js';
 // Re-export Remotion rendering (local pixel-perfect typography: slides + kinetic reels)
 export * from './remotion.js';
 
+// Frame-aware text helpers (intelligent placement/design + transcript → elements)
+export * from './text-tools.js';
+
+// Subject matte (rembg) for text-behind-subject
+export * from './subject-matte.js';
+
 // =============================================================================
 // PROVIDER DETECTION & CONFIGURATION
 // =============================================================================
@@ -3706,13 +3712,22 @@ export async function generateEdgeTTSVoiceover(
   // Resolve a friendly alias or accept a full Edge voice id.
   const voice = EDGE_TTS_VOICES[input.voice ?? ''] ?? input.voice ?? EDGE_TTS_VOICES['my-male'];
 
-  // edge-tts must be installed — fail with the exact fix, don't half-run.
-  try {
-    execSync('python3 -c "import edge_tts"', { stdio: 'pipe' });
-  } catch {
+  // Windows exposes `python`, not `python3` — probe both, then require edge-tts.
+  // Fail with the exact fix, don't half-run.
+  let python: string | null = null;
+  for (const cmd of ['python3', 'python']) {
+    try {
+      execSync(`${cmd} -c "import edge_tts"`, { stdio: 'pipe' });
+      python = cmd;
+      break;
+    } catch {
+      // try next interpreter
+    }
+  }
+  if (!python) {
     return createErrorResult(
       WorkflowErrorCodes.GENERATION_FAILED,
-      'edge-tts is not installed. Install it once:  python3 -m pip install edge-tts'
+      'edge-tts is not installed (or Python is missing). Install it once:  python3 -m pip install edge-tts  (Windows: python -m pip install edge-tts)'
     );
   }
 
@@ -3737,7 +3752,7 @@ export async function generateEdgeTTSVoiceover(
     if (input.pitch) args.push(`--pitch="${input.pitch}"`);
 
     console.log(`[Workflow] Generating Edge TTS voiceover (${voice}, free)...`);
-    execSync(`python3 -m edge_tts ${args.join(' ')}`, { stdio: 'pipe' });
+    execSync(`${python} -m edge_tts ${args.join(' ')}`, { stdio: 'pipe' });
 
     if (!fs.existsSync(mediaPath)) {
       return createErrorResult(WorkflowErrorCodes.NO_OUTPUT, 'Edge TTS produced no audio');
@@ -3928,8 +3943,15 @@ function secondsToSrt(total: number): string {
 // =============================================================================
 
 /**
- * Generate a multi-angle character sheet (front / three-quarter / profile) from
- * one locked description — the core asset for character consistency.
+ * Generate a character sheet from one locked description — the core asset for
+ * character consistency.
+ *
+ * Default layout 'sheet' produces ONE model-sheet image (like a studio
+ * turnaround): full-body front / three-quarter / side / back, a face close-up,
+ * a waist-up half-body shot, and costume detail crops — all labeled. One file
+ * occupies one reference slot (Veo max 3, Omni max 5), so the whole character
+ * travels as a single ref. Layout 'per-angle' keeps the legacy one-image-per-
+ * angle behavior.
  *
  * Use for: locking a generated character before producing many clips/images.
  * Register the result with `registerAsset(..., { locked: true })` so every later
@@ -3943,6 +3965,58 @@ export async function generateCharacterSheet(
   }
   if (!input.outputDir) {
     return createErrorResult(WorkflowErrorCodes.INVALID_INPUT, 'Output directory is required');
+  }
+
+  const layout = input.layout || 'sheet';
+  if (layout === 'sheet') {
+    const stem = input.idStem || 'character';
+    const name = (input.characterName || stem.replace(/^char-/, '')).toUpperCase();
+    const personality = input.personality
+      ? ` Personality (print on the sheet): ${input.personality}.`
+      : '';
+    const prompt =
+      `Character production model sheet for ${name}: ${input.description}. ` +
+      `ONE single sheet laid out like a professional character turnaround: a row of ` +
+      `full-body views — FRONT view, THREE-QUARTER view, SIDE view, BACK view — plus a ` +
+      `large FACE CLOSE-UP portrait, a waist-up HALF-BODY shot, and small detail ` +
+      `close-up panels of signature costume elements and props. The SAME identical ` +
+      `character in every view — same face, hair, outfit, colors, proportions.` +
+      personality +
+      ` Color palette swatches. Plain light-neutral seamless background, soft even ` +
+      `studio lighting. Label all views clearly with small clean captions.`;
+    const outPath = path.join(input.outputDir, `${stem}-sheet.png`);
+
+    try {
+      ensureDir(input.outputDir);
+      const imageConfig: Record<string, unknown> = {
+        aspectRatio: input.aspectRatio || '16:9',
+        imageSize: input.imageSize || '2K',
+      };
+      const personGen = toImagePersonGeneration(input.personGeneration);
+      if (personGen) imageConfig.personGeneration = personGen;
+
+      const result = await withRetry(
+        () => gemini31FlashImage({ userPrompt: prompt, config: imageConfig }),
+        { maxRetries: 2, initialDelayMs: 2000 },
+        'Character model sheet'
+      );
+      if (!result.success || result.data.images.length === 0) {
+        return createErrorResult(WorkflowErrorCodes.GENERATION_FAILED, 'Failed to generate character model sheet');
+      }
+      fs.writeFileSync(outPath, result.data.images[0].data);
+      return {
+        success: true,
+        data: {
+          files: { sheet: outPath },
+          cost: { totalCost: result.data.cost.totalCost, breakdown: { images: result.data.cost.totalCost } },
+        },
+      };
+    } catch (error) {
+      const code = getErrorCode(error);
+      const message = error instanceof Error ? error.message : 'Unknown error during character sheet generation';
+      console.error(`[Workflow] generateCharacterSheet failed: ${message}`);
+      return createErrorResult(code, message);
+    }
   }
 
   const angles = input.angles && input.angles.length ? input.angles : ['front', 'three_quarter', 'profile'];

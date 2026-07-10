@@ -531,6 +531,31 @@ await assembleFinal({
 
 ## 4e. Character Speaking & Dialogue
 
+> ### 🔴 MANDATORY: if a character speaks, WRITE THE WORDS
+>
+> Applies to **every** Omni task mode — `text_to_video`, `image_to_video`,
+> `reference_to_video` — and to Veo/Seedance speaking clips.
+>
+> **The model always generates speech audio. If you don't supply the lines, it
+> invents its own** — well-acted, plausible, and often the OPPOSITE of your story.
+>
+> | ❌ Never write | ✅ Always write |
+> |---|---|
+> | "speaks a short calm reassurance" | `says: Then let's go get him back.` |
+> | "mouth moving in natural speech" | `pleads: These are your people, Corin.` |
+> | "she says one last quiet line" | `says coldly: Then do it without me.` |
+>
+> **Production incident (Emberfell II, 2026-07-10):** scene prompts said "speaks
+> a short calm reassurance." Omni improvised *"No, I must find another way"* for
+> the prince — reversing his decision — and *"I will find a way to stop this, my
+> prince"* for the character who was supposed to abandon him. Both scenes had to
+> be salvaged in the mix. Cost of the lesson: two clips + a rescue remix.
+>
+> **Corollary — do NOT add a TTS voiceover to a speaking-character clip.** The
+> clip already has its own dialogue audio; layering TTS on top double-stacks two
+> performances. TTS/voiceover is for **narration only** (a narrator over
+> visuals, no on-screen speaker). See §4e-vo below.
+
 ### Dialogue Prompt Structure
 
 **Formula:** `[CHARACTER] + [EMOTION/STATE] + [ACTION] + says in [TONE]: [DIALOGUE]`
@@ -612,6 +637,24 @@ forms as she finishes, nodding subtly.
 | **Nervous** | fidgeting, touching face, shifting weight, small gestures |
 | **Engaged** | nodding, mirroring, leaning in, active eye contact |
 | **Dismissive** | eye roll, looking away, wave of hand, turning body away |
+
+---
+
+### 4e-vo. Voiceover vs native clip audio — pick ONE per scene
+
+| Scene type | Audio source | Never do |
+|---|---|---|
+| **Character speaks on screen** | The clip's **own** audio — dialogue quoted in the prompt | Don't add TTS on top |
+| **Narrator over visuals** (no on-screen speaker) | `generateVoiceover` / `generateEdgeTTSVoiceover` | Don't expect the clip to narrate |
+| **Silent / ambient scene** (Veo lite, b-roll) | Music bed + clip ambience | — |
+
+Voiceover is **narration only**. A scene with a speaking character needs no VO —
+the words belong in the video prompt, where they drive the lip-sync.
+
+In `assembleStoryFilm`, `ambientVolume` sets the clips' own audio level. If a
+scene relies on its native dialogue, keep `ambientVolume` at **1.0**; the 0.32
+default is a duck meant for narration sitting on top. Only pass `voPath` for
+narration scenes.
 
 ---
 

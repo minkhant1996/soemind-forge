@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>SoeMind Forge ဖန်တီးပေးသည့်အရာများ — AI ဗီဒီယို၊ စာတန်းထိုး၊ အသံသွင်း နှင့် လုပ်ဆောင်ပုံ</title>
+<meta name="description" content="SoeMind Forge ထုတ်လုပ်ပေးသည့်အရာများကို ရိုးရှင်းစွာ လှည့်လည်ကြည့်ရှုခြင်း — Omni AI ဗီဒီယို၊ မြန်မာအက္ခရာ ဘေးကင်းသော စာတန်းထိုး (ပုံမှန် နှင့် ဖန်တီးမှုမုဒ်)၊ အခမဲ့ နှင့် ခံစားမှုပါသော အသံသွင်း၊ စကားပြောသည့် avatar များ၊ ရုပ်ပုံ နှင့် ဂီတ — အားလုံးအတွက် ကျွမ်းကျင်ပြီး budget ဘေးကင်းသော လုပ်ငန်းစဉ်များနှင့်။" />
+<meta name="author" content="minkhant1996" />
+<link rel="canonical" href="https://soemind-forge.soemindai.com/showcase.my.html" />
+<meta name="robots" content="index, follow" />
+<link rel="alternate" hreflang="en" href="https://soemind-forge.soemindai.com/showcase.html" />
+<link rel="alternate" hreflang="my" href="https://soemind-forge.soemindai.com/showcase.my.html" />
+<link rel="alternate" hreflang="th" href="https://soemind-forge.soemindai.com/showcase.th.html" />
+<link rel="alternate" hreflang="x-default" href="https://soemind-forge.soemindai.com/showcase.html" />
+<meta property="og:locale" content="my_MM" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="SoeMind Forge ဖန်တီးပေးသည့်အရာများ — နှင့် လုပ်ဆောင်ပုံ" />
+<meta property="og:description" content="Omni AI ဗီဒီယို၊ စာတန်းထိုး၊ အသံသွင်း၊ စကားပြော avatar များ၊ ရုပ်ပုံ နှင့် ဂီတ — ရိုးရှင်းသော ဘာသာစကားမှ တကယ့် parameter များနှင့် ရိုးသားသော ကုန်ကျစရိတ်များဖြင့်။" />
+<meta property="og:url" content="https://soemind-forge.soemindai.com/showcase.my.html" />
+<meta property="og:site_name" content="SoeMind Forge" />
+<meta property="og:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta property="og:image:alt" content="Prince Corin at the gates — a frame from Emberfell II, a papercraft short film made with SoeMind Forge" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta name="twitter:title" content="SoeMind Forge ဖန်တီးပေးသည့်အရာများ — နှင့် လုပ်ဆောင်ပုံ" />
+<meta name="twitter:description" content="AI content studio ကို ရိုးရှင်းစွာ လှည့်လည်ကြည့်ရှုခြင်း — ဗီဒီယို၊ စာတန်းထိုး၊ အသံသွင်း၊ စကားပြော avatar များ နှင့် ကုန်ကျစရိတ်များ။" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --white: #ffffff;
+    --ground: #f6f3ec;         /* off-white page ground */
+    --paper: #efebe2;          /* deeper off-white for alt sections */
+    --ink: #1a1c1f;            /* charcoal */
+    --ink-soft: #50555d;
+    --ink-faint: #7c818a;
+    --blue: #1b4fd8;           /* single accent */
+    --blue-deep: #153fb0;
+    --blue-tint: #e9effe;
+    --blue-grad: linear-gradient(135deg, #3b6bff 0%, #1b4fd8 55%, #153fb0 100%);
+    --free: #0e875a;
+    --free-tint: #e2f2ea;
+    --line: #e4e0d6;
+    --line-strong: #d6d1c4;
+    --code-bg: #1b1e22; --code-ink: #e6e4de; --code-dim: #8b929c; --code-blue: #8fb2ff; --code-free: #5fd3a0;
+    --shadow: 0 10px 30px rgba(26, 28, 31, 0.07);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans Myanmar", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body { font-family: var(--sans); background: var(--ground); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased; font-size: 17px; }
+  body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: 4px; background: var(--blue-grad); z-index: 100; }
+  h1, h2, h3, h4 { line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+  h1, h2, h3, p, li { overflow-wrap: break-word; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--blue); }
+
+  /* top nav */
+  header.bar { position: sticky; top: 0; z-index: 20; background: rgba(246,243,236,.86);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; align-items: center; gap: 20px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .brand .mark { width: 26px; height: 26px; border-radius: 8px; background: var(--blue-grad);
+    display: grid; place-items: center; color: #fff; font-size: 14px; }
+  nav.top { margin-left: auto; display: flex; gap: 20px; font-size: 14px; font-weight: 500; }
+  nav.top a { color: var(--ink-soft); }
+  nav.top a:hover { color: var(--ink); text-decoration: none; }
+  nav.top .lang { display: inline-flex; gap: 2px; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+  nav.top .lang a { padding: 5px 9px; font-size: 12.5px; color: var(--ink-faint); font-weight: 600; }
+  nav.top .lang a:hover { color: var(--ink); text-decoration: none; background: var(--paper); }
+  nav.top .lang a.on { background: var(--blue); color: #fff; }
+  @media (max-width: 760px) { nav.top a.hide-sm { display: none; } }
+
+  /* hero */
+  .hero { padding: 70px 0 12px; }
+  .hero h1 { font-size: clamp(34px, 5.6vw, 56px); font-weight: 800; max-width: 17ch; }
+  .hero .lead { margin-top: 20px; font-size: clamp(17px, 2.3vw, 21px); color: var(--ink-soft); max-width: 62ch; }
+  .say { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .say .chip { background: var(--white); border: 1px solid var(--line-strong); border-radius: 999px;
+    padding: 8px 15px; font-size: 14.5px; color: var(--ink-soft); box-shadow: var(--shadow); }
+  .say .chip b { color: var(--ink); font-weight: 600; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .sec-head { max-width: 72ch; margin-bottom: 32px; }
+  .sec-head h2 { font-size: clamp(25px, 3.5vw, 34px); font-weight: 800; margin-top: 10px; padding-bottom: 12px; position: relative; }
+  .sec-head h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 46px; height: 3px; border-radius: 3px; background: var(--blue-grad); }
+  .sec-head p { margin-top: 16px; color: var(--ink-soft); font-size: 18px; }
+
+  /* four-step spine */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--white); border: 1px solid var(--line); border-radius: 15px; padding: 21px; box-shadow: var(--shadow); }
+  .step .n { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--blue); }
+  .step h3 { font-size: 17px; font-weight: 700; margin-top: 9px; }
+  .step p { margin-top: 8px; font-size: 14px; color: var(--ink-soft); }
+
+  /* capability cards */
+  .cap { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .cap + .cap { margin-top: 20px; }
+  .cap-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .cap-top h3 { font-size: 22px; font-weight: 800; }
+  .cap-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 30px; margin-top: 20px; }
+  @media (max-width: 780px) { .cap-grid { grid-template-columns: 1fr; gap: 22px; } }
+  .outcome { font-size: 16.5px; color: var(--ink-soft); margin-top: 12px; }
+  .outcome b { color: var(--ink); font-weight: 600; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin: 20px 0 12px; }
+
+  ol.flow { list-style: none; counter-reset: s; }
+  ol.flow li { position: relative; padding: 0 0 13px 34px; counter-increment: s; font-size: 15px; color: var(--ink-soft); }
+  ol.flow li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 23px; height: 23px; border-radius: 50%;
+    background: var(--blue-tint); color: var(--blue-deep); font-size: 12.5px; font-weight: 700; display: grid; place-items: center; font-family: var(--mono); }
+  ol.flow li:last-child { padding-bottom: 0; }
+  ol.flow li b { color: var(--ink); font-weight: 600; }
+
+  .knobs { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .knobs .row { display: grid; grid-template-columns: 122px 1fr; gap: 14px; padding: 11px 15px; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .knobs .row:last-child { border-bottom: 0; }
+  .knobs .row:nth-child(even) { background: var(--paper); }
+  .knobs .k { color: var(--ink-faint); font-weight: 600; font-family: var(--mono); font-size: 12.5px; padding-top: 2px; }
+  .knobs .v { color: var(--ink-soft); }
+  .knobs .v b { color: var(--ink); font-weight: 600; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill { font-size: 12.5px; font-family: var(--mono); background: var(--paper); border: 1px solid var(--line-strong); color: var(--ink-soft); border-radius: 7px; padding: 4px 9px; }
+  .pill.on { background: var(--blue-tint); border-color: transparent; color: var(--blue-deep); }
+
+  table.voices { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.voices th, table.voices td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  table.voices th { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; }
+  table.voices td:first-child { font-weight: 600; color: var(--ink); }
+  table.voices td:nth-child(2) { color: var(--ink-faint); }
+  .scroller { overflow-x: auto; }
+
+  .cmd { background: var(--code-bg); border-radius: 12px; padding: 15px 17px; margin-top: 14px; font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--code-ink); overflow-x: auto; }
+  .cmd .c-note { color: var(--code-dim); }
+  .cmd .c-cmd { color: var(--code-blue); }
+  .cmd .c-free { color: var(--code-free); }
+  .cmd-cap { font-size: 12.5px; color: var(--ink-faint); margin-top: 9px; }
+
+  /* the plain-English instruction you give the agent */
+  .ask { display: flex; gap: 13px; align-items: flex-start; background: var(--blue-tint);
+    border: 1px solid #ccd9fb; border-radius: 13px; padding: 14px 17px; margin-top: 18px; }
+  .ask .who { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue-deep); white-space: nowrap; padding-top: 3px; flex: none; }
+  .ask .q { font-size: 16.5px; color: var(--ink); }
+  .ask .q b { font-weight: 600; }
+
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .badge.free { background: var(--free-tint); color: var(--free); }
+  .badge.core { background: var(--blue-tint); color: var(--blue-deep); }
+  .badge.opt { background: var(--paper); color: var(--ink-faint); border: 1px solid var(--line-strong); }
+  .cost { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--ink-faint); font-weight: 600; white-space: nowrap; }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .modes { grid-template-columns: 1fr; } }
+  .mode { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--paper); }
+  .mode.creative { border-color: #b9caf7; }
+  .mode h4 { font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+  .mode .sub { font-size: 13px; color: var(--ink-faint); margin-bottom: 12px; }
+  .mode ul { padding-left: 18px; font-size: 14px; color: var(--ink-soft); }
+  .mode ul li { margin: 5px 0; }
+
+  /* case studies */
+  .case { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .case + .case { margin-top: 20px; }
+  /* click-to-open project cards */
+  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 820px) { .case-grid { grid-template-columns: 1fr; } }
+  details.case { padding: 0; overflow: hidden; }
+  details.case + details.case { margin-top: 0; }
+  details.case[open] { grid-column: 1 / -1; }
+  details.case > summary { list-style: none; cursor: pointer; display: block; }
+  details.case > summary::-webkit-details-marker { display: none; }
+  .cover { position: relative; aspect-ratio: 16 / 9; background: #0d0f12; overflow: hidden; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+  details.case:not([open]) > summary:hover .cover img { transform: scale(1.035); }
+  .cover .veil { position: absolute; inset: auto 0 0 0; height: 55%;
+    background: linear-gradient(to top, rgba(10,12,15,.86), rgba(10,12,15,0)); }
+  .cover .on-cover { position: absolute; left: 20px; right: 20px; bottom: 15px; color: #fff; }
+  .cover .on-cover h3 { font-size: 21px; font-weight: 800; }
+  .card-body { padding: 20px 22px 22px; }
+  .usecase { display: flex; gap: 11px; align-items: flex-start; font-size: 14.5px; color: var(--ink-soft); }
+  .usecase .uk { flex: none; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue); background: var(--blue-tint); border-radius: 999px; padding: 4px 9px; margin-top: 1px; }
+  .usecase b { color: var(--ink); font-weight: 600; }
+  .opener { margin-top: 15px; font-size: 13.5px; font-weight: 600; color: var(--blue); display: flex; align-items: center; gap: 7px; }
+  .opener::after { content: "▾"; font-size: 11px; transition: transform .25s ease; }
+  details.case[open] .opener::after { transform: rotate(180deg); }
+  details.case:not([open]) .opener .lbl-shut { display: none; }
+  details.case[open] .opener .lbl-open { display: none; }
+  .case-detail { padding: 0 28px 28px; border-top: 1px solid var(--line); margin-top: 4px; }
+  .case-detail > .case-media { margin-top: 24px; }
+  .case-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  .case-head h3 { font-size: 24px; font-weight: 800; margin-top: 5px; }
+  .case-meta { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+  .case-body { display: grid; grid-template-columns: 1.12fr 1fr; gap: 30px; margin-top: 22px; }
+  @media (max-width: 820px) { .case-body { grid-template-columns: 1fr; gap: 22px; } }
+  .statrow { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; }
+  .stat .v { font-size: 21px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 11px; color: var(--ink-faint); margin-top: 2px; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
+  .note { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 12px 15px;
+    background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; font-size: 13.5px; color: var(--ink-soft); }
+  .note b { color: var(--ink); font-weight: 600; }
+  .case-media { margin: 20px 0 4px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #000; aspect-ratio: 16 / 9; box-shadow: var(--shadow); }
+  .case-media video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+  .char-strip { display: flex; gap: 12px; flex-wrap: wrap; margin: 4px 0 2px; }
+  .char-card { width: 104px; margin: 0; }
+  .char-card img { width: 104px; height: 104px; object-fit: cover; display: block; border-radius: 12px; border: 1px solid var(--line); background: #f4efe6; }
+  .char-card figcaption { font-size: 11px; color: var(--ink-faint); margin-top: 5px; text-align: center; line-height: 1.3; }
+  .sheet-strip { display: grid; gap: 14px; margin: 4px 0 2px; }
+  .sheet-card { margin: 0; }
+  .sheet-card img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #f4efe6; }
+  .sheet-card figcaption { font-size: 11.5px; color: var(--ink-faint); margin-top: 6px; line-height: 1.4; }
+  .decrow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 640px) { .decrow { grid-template-columns: 1fr; } }
+  .input { background: var(--blue-tint); border: 1px solid #ccd9fb; border-radius: 12px; padding: 16px 18px; }
+  .input h4 { font-size: 14px; font-weight: 800; color: var(--blue-deep); margin-bottom: 6px; }
+  .input p { font-size: 14px; color: var(--ink-soft); }
+  .decgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 780px) { .decgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .decgrid { grid-template-columns: 1fr; } }
+  .dec { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .dec h4 { font-size: 15px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .dec h4 .d { width: 8px; height: 8px; border-radius: 2px; background: var(--blue); flex: none; }
+  .dec p { font-size: 13.5px; color: var(--ink-soft); }
+  .dec p b { color: var(--ink); font-weight: 600; }
+
+  .costgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 820px) { .costgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 440px) { .costgrid { grid-template-columns: 1fr; } }
+  .costcard { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+  .costcard .amt { font-size: 25px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .costcard .amt.zero { color: var(--free); }
+  .costcard .what { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .costcard .who { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-family: var(--mono); }
+
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) { .trust { grid-template-columns: 1fr; } }
+  .trust .t h3 { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 9px; }
+  .trust .t p { margin-top: 8px; font-size: 14.5px; color: var(--ink-soft); }
+  .tk { width: 9px; height: 9px; border-radius: 2px; background: var(--blue); flex: none; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 64px; color: var(--ink-faint); font-size: 14px; background: var(--paper); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { color: var(--blue); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cap, .step, .costcard { transition: transform .18s ease; }
+    .cap:hover, .costcard:hover { transform: translateY(-2px); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 18px; }
+    .hero { padding: 48px 0 8px; }
+    .cap { padding: 20px; }
+    section { padding: 44px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="./index.html" style="color:var(--ink)"><span class="mark">◆</span> SoeMind&nbsp;Forge</a>
+    <nav class="top">
+      <a href="#flow" class="hide-sm">လုပ်ဆောင်ပုံ</a>
+      <a href="#projects">ပရောဂျက်များ</a>
+      <a href="#video" class="hide-sm">ဗီဒီယို</a>
+      <a href="#captions" class="hide-sm">စာတန်းထိုး</a>
+      <a href="#voice">အသံသွင်း</a>
+      <a href="#cost" class="hide-sm">ကုန်ကျစရိတ်</a>
+      <a href="./index.html">ပင်မ</a>
+      <span class="lang"><a href="./showcase.html">EN</a><a href="./showcase.my.html" class="on">မြန်မာ</a><a href="./showcase.th.html">ไทย</a></span>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" style="border-top:0">
+    <div class="eyebrow">AI content studio</div>
+    <h1>ရိုးရှင်းသော စကားလုံးဖြင့် ပြောပါ။ studio အဆင့် content ရယူပါ။</h1>
+    <p class="lead">ဗီဒီယို၊ စာတန်းထိုး၊ အသံသွင်း၊ ရုပ်ပုံ နှင့် ဂီတ — စီစဉ်၊ စျေးနှုန်းသတ်မှတ်၊ ထုတ်လုပ်ပြီး
+      တင်ရန်အသင့် ပြင်ဆင်ပေးသည်။ လူတစ်ယောက်နှင့် ပြောသကဲ့သို့ ပြောဆိုပါ။ နောက်ကွယ်တွင် စည်းကမ်းရှိ၊
+      ထပ်ခါတလဲလဲ လုပ်နိုင်သော ထုတ်လုပ်မှုလုပ်ငန်းစဉ်ကို လည်ပတ်ပေးသည်။</p>
+    <div class="say">
+      <span class="chip">“ကျွန်တော့် ကော်ဖီ brand အတွက် <b>TikTok ကြော်ငြာ</b> လုပ်ပေးပါ။”</span>
+      <span class="chip">“မြန်မာဘာသာဖြင့် <b>စာတန်းထိုး</b> ထည့်ပေးပါ။”</span>
+      <span class="chip">“<b>နွေးထွေးသော အသံသွင်း</b> တစ်ခု ဖန်တီးပေးပါ။”</span>
+      <span class="chip">“<b>claymation</b> ရှင်းလင်းချက်ဗီဒီယို အဖြစ် ပြောင်းပေးပါ။”</span>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">ကျွမ်းကျင်သော လုပ်ငန်းစဉ်</div>
+        <h2>လုပ်ငန်းတိုင်း တူညီသော လေးဆင့်ဖြင့် လည်ပတ်သည်</h2>
+        <p>ခန့်မှန်းစရာမလို၊ မမျှော်လင့်ထားသော ငွေတောင်းခံလွှာမရှိ၊ “မြင်ကွင်းတိုင်း လူသစ်တစ်ယောက်၏ မျက်နှာ” မရှိ။
+          ဤအခြေခံသည် အောက်ပါအရာအားလုံး၏ အောက်တွင် တည်ရှိသည် — ၎င်းသည် output ကို တစ်ညီတည်းဖြစ်စေပြီး client ထံ လက်ဆင့်ကမ်းရန် ဘေးကင်းစေသည်။</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Brand ကို သတ်မှတ်ပါ</h3>
+          <p>သင့်အမည်၊ ပရိသတ်၊ အရောင်များ၊ လေသံ နှင့် ဘယ်တော့မှ မပြောစေချင်သောအရာများကို တစ်ကြိမ်တည်း မှတ်သားပြီး နေရာတိုင်းတွင် ပြန်လည်အသုံးပြုသည်။</p></div>
+        <div class="step"><div class="n">02</div><h3>ကုန်ကျစရိတ် သဘောတူပါ</h3>
+          <p>မည်သည့်အရာမျှ မဖန်တီးမီ ခန့်မှန်းငွေကို <em>ကြိုတင်</em> မြင်ရသည်။ budget အမြင့်ဆုံးကို code ဖြင့် ထိန်းချုပ်ထားသည် — အလွန်အကျွံ သုံးစွဲ၍မရ။</p></div>
+        <div class="step"><div class="n">03</div><h3>အစမ်းကြည့်၊ ပြီးမှ ထုတ်လုပ်</h3>
+          <p>စျေးသက်သာသော အစမ်းများ ဦးစွာ။ သင် ဦးတည်ချက်ကို ရွေးချယ်သည်။ ထို့နောက်မှသာ ပြီးဆုံးသော render အတွက် ငွေသုံးစွဲသည်။</p></div>
+        <div class="step"><div class="n">04</div><h3>တင်ရန် Package ပြင်ဆင်</h3>
+          <p>platform တစ်ခုစီအလိုက် အရွယ်အစားမှန်ကန်စွာ၊ စာတန်းထိုး၊ hashtag နှင့် alt text များနှင့်အတူ — ၎င်းကို မည်သို့ ဖန်တီးခဲ့ကြောင်း အတိအကျ မှတ်တမ်းနှင့်အတူ။</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">တကယ့်ပရောဂျက်များ · အဆင့်လိုက်</div>
+        <h2>၎င်းဖြင့် တကယ်ဖန်တီးထားသော ရုပ်ရှင်နှစ်ကား</h2>
+        <p>နမူနာများ မဟုတ် — တကယ့် pipeline၊ တကယ့် output အရေအတွက်၊ ပရောဂျက် ledger မှ တကယ့်ကုန်ကျစရိတ်ဖြင့်
+          အစမှအဆုံး ထုတ်လုပ်ထားသော တကယ့်ရုပ်ရှင်တိုများ။ နှစ်ကားစလုံးသည် ~၉၂ စက္ကန့်ကြာ papercraft ရုပ်ရှင်တိုများ ဖြစ်သည်။</p>
+      </div>
+
+      <div class="case-grid">
+
+      <details class="case">
+        <summary>
+          <div class="cover">
+            <img loading="lazy" src="./assets/case/cover-emberfell.jpg" alt="Emberfell II: The Gates key art" />
+            <div class="veil"></div>
+            <div class="on-cover">
+              <div class="eyebrow" style="color:#9fc0ff">Case study · Papercraft ဂုဏ်ပြုချက်</div>
+              <h3>Emberfell II: The Gates</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="case-meta">
+              <span class="badge core">3D papercraft</span>
+              <span class="badge opt">16:9 · YouTube</span>
+              <span class="badge opt">၁၀၄ စက္ကန့် · ၁၂ ခန်း</span>
+            </div>
+            <div class="usecase" style="margin-top:14px">
+              <span class="uk">Use case</span>
+              <span><b>ဇာတ်လမ်းအကြောင်း agent နှင့် စကားပြောရုံပါပဲ။</b> prompt မရေး၊ shot list မလို — Arthas နှင့် Culling of Stratholme အကြောင်း စကားဝိုင်းတစ်ခုကနေ ဇာတ်ညွှန်းရေး၊ ဇာတ်ကောင်ချ၊ shot တစ်ခုစီအတွက် model ရွေး၊ ပြီးတော့ ရိုက်ကူးပေးခဲ့သည်။</span>
+            </div>
+            <div class="opener"><span class="lbl-open">မည်သို့ ဖန်တီးခဲ့သည် ကြည့်ရန်</span><span class="lbl-shut">အသေးစိတ်ကို ဖျောက်ရန်</span></div>
+          </div>
+        </summary>
+
+        <div class="case-detail">
+        <div class="case-media"><video poster="./assets/case/emberfell.jpg" controls preload="none" playsinline><source src="./assets/case/emberfell.mp4" type="video/mp4"></video></div>
+        <p class="outcome"><b>ရည်ရွယ်ချက်:</b> <b>Warcraft III: Reign of Chaos</b> ၏ အခက်ခဲဆုံး မြင်ကွင်းဖြစ်သော
+          Culling of Stratholme — ရောဂါကူးစက်ခံထားရသော မြို့တစ်မြို့ကို လူသားဘဝ မပျက်သေးခင် Arthas က သတ်ဖြတ်ရန် အမိန့်ပေးသည့် အခန်း —
+          ကို ဂုဏ်ပြုသည့် ~၁၀၅ စက္ကန့်ကြာ papercraft တစ်ကား။ မူရင်း ဇာတ်ကောင်များ နှင့် မူရင်း စကားပြောများဖြင့် ဖြတ်စက္ကူအဖြစ်
+          ပြန်လည်စိတ်ကူးထားသည်: မိမိ၏ ပြည်သူများအပေါ် တံခါးပိတ်ရမည့် မင်းသား၊ မလုပ်ပါနှင့်ဟု တောင်းပန်သော ဆရာ၊ နှင့် ထွက်ခွာသွားသော ဆေးဆရာမ။
+          အခြေအနေကို ကိုးကားသည်၊ ကူးယူချက် မဟုတ်ပါ။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောခဲ့သည်</span>
+          <span class="q">“Warcraft III မှ Arthas အကြောင်း ပြောပြပါ — ဘယ်ဇာတ်လမ်းက အာရုံစိုက်မှု ရနိုင်မလဲ? <b>papercraft ကား</b> အဖြစ် လုပ်ပါ၊ ၂ မိနစ်အောက်။ သရုပ်ဆောင်ခန်းများအတွက် <b>Omni Flash</b>၊ တိတ်ဆိတ်သော ခန်းများအတွက် <b>Veo 3.1 lite</b> သုံးပါ။”</span></div>
+
+        <div class="label">ပွင့်လင်းမြင်သာမှု — အမှန်တကယ် ထုတ်လုပ်ခဲ့သော ဇာတ်ကောင် model sheet များ</div>
+        <div class="sheet-strip">
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-corin-sheet.jpg" alt="corin papercraft model sheet" /><figcaption><b>Prince Corin</b> — sheet တစ်ခုတည်း: ကိုယ်လုံး turnaround (ရှေ့ / ¾ / ဘေး / နောက်)၊ မျက်နှာ close-up၊ ခါးအထက် နှင့် sun-crest၊ ဓား၊ ဖိနပ် အသေးစိတ် crop များ။</figcaption></figure>
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-veyron-sheet.jpg" alt="veyron papercraft model sheet" /><figcaption><b>Marshal Veyron</b> — အခြားနည်းလမ်း ရှာဖို့ တောင်းပန်သော ဆရာ။ ကိုးကားပုံ မပါဘဲ စာသားသက်သက်ဖြင့် ဖန်တီးထားသည်။</figcaption></figure>
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-sera-sheet.jpg" alt="sera papercraft model sheet" /><figcaption><b>Sera</b> — ရောဂါကို ရှာဖွေတွေ့ရှိပြီး ထွက်ခွာသွားသော ဆေးဆရာမ။ သူမ၏ စရိုက်စာကြောင်းကို sheet ပေါ်တွင် ရိုက်နှိပ်ထားသည် — clip တိုင်း၌ သူမ၏ သရုပ်ဆောင်မှုကို ၎င်းက ဦးဆောင်သည်။</figcaption></figure>
+        </div>
+        <div class="note"><span>ဇာတ်ကောင်တစ်ဦးလျှင် ပုံတစ်ပုံ — ရှုထောင့်တစ်ခုလျှင် ပုံတစ်ပုံ မဟုတ်ပါ — ထို့ကြောင့် ဇာတ်ကောင်တစ်ဦးလုံး၏ အထောက်အထားသည် ကိုးကားနေရာ တစ်ခုတည်းဖြင့် သယ်ဆောင်နိုင်သည်။ ဇာတ်ကောင်ပါဝင်သော keyframe တိုင်းက ဤ sheet များကို ကိုးကားသည် (Corin ၏ sheet ကို ၇ ခုတွင်) — ထို့ကြောင့် မျက်နှာများ တစ်ကားလုံး တည်တံ့သည်။</span></div>
+
+        <div class="case-body">
+          <div>
+            <div class="label">မည်သို့ ဖန်တီးခဲ့သည် — တကယ့် pipeline</div>
+            <ol class="flow">
+              <li><b>ဇာတ်ကောင်များ ပုံသေချုပ်</b> — Corin ကို ပထမကားမှ ဆက်လက်သုံးစွဲ၊ Veyron နှင့် Sera ကို စာသားမှ model sheet အသစ်များအဖြစ် ဖန်တီးပြီး registry သို့ သိမ်း။</li>
+              <li><b>keyframe ၁၂ ခု ဖန်တီး</b> — မြင်ကွင်းတစ်ခုစီအတွက် အတည်ပြုပြီးသား ရုပ်ပုံငြိမ်၊ တစ်ခုစီသည် ပုံသေချုပ်ထားသော sheet များကို ကိုးကားသည်။ <em>မည်သည့်ဗီဒီယိုအတွက်မှ ငွေမပေးမီ အတည်ပြုပြီး။</em></li>
+              <li><b>shot အလိုက် model ရွေးချယ်</b> — သရုပ်ဆောင်ခန်း ၈ ခုကို Omni <code>3d-papercraft</code> (မျက်နှာ၊ စကားပြော၊ နှုတ်ခမ်းလှုပ်ရှားမှု)၊ တိတ်ဆိတ်သောခန်း ၄ ခုကို <b>Veo 3.1 lite</b> ($0.03/s) — ပြာကျခြင်း၊ လည်နေသော pinwheel၊ တိတ်ဆိတ်သော နောက်ဆက်တွဲ။</li>
+              <li><b>clip များကိုပင် စကားပြောစေ</b> — Omni သည် စကားပြော နှင့် အသံကို တစ်ကြိမ်တည်း ထုတ်ပေးသည်။ သီးခြား အသံသွင်း မလို။ ၁၀၆ စက္ကန့် ဂီတသည် အောက်တွင် ရှိသည်။</li>
+              <li><b>ပေါင်းစပ်</b> — မြင်ကွင်း ၁၂ ခုကို မူရင်းအသံ အပြည့်အဝ နှင့် ဂီတ ၁၄% ဖြင့် ချုပ်ဆက်။</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ထွက်လာသည့်အရာ</div>
+            <div class="statrow">
+              <div class="stat"><div class="v">104.0s</div><div class="l">နောက်ဆုံးရုပ်ရှင်</div></div>
+              <div class="stat"><div class="v">12</div><div class="l">Clip / မြင်ကွင်းများ</div></div>
+              <div class="stat"><div class="v">$11.93</div><div class="l">စုစုပေါင်း သုံးစွဲ</div></div>
+              <div class="stat"><div class="v">$25</div><div class="l">Budget အမြင့်ဆုံး</div></div>
+            </div>
+            <div class="pills">
+              <span class="pill">model sheet အသစ် ၂ ခု</span><span class="pill">keyframe ၁၂ ခု</span><span class="pill">Omni clip ၈ ခု</span><span class="pill">Veo-lite clip ၄ ခု</span><span class="pill">ဂီတ bed ၁ ခု</span><span class="pill">နောက်ဆုံးရုပ်ရှင် ၁ ကား (104s)</span>
+            </div>
+            <div class="note"><span>မြင်ကွင်း ၂ ခုကို safety filter က ငြင်းပယ်ခဲ့ပြီး တစ်ခုကို blocking မှန်ကန်စွာ ဖတ်ရှုနိုင်သည်အထိ ၃ ကြိမ် ပြန်လည်ဖွဲ့စည်းခဲ့သည် — ပြန်လုပ်မှုတိုင်းကို folder ၏ <code>prompts.txt</code> တွင် မှတ်တမ်းတင်ထားပြီး၊ ~$1/clip ဗီဒီယိုသုံးစွဲမှုမတိုင်မီ စျေးသက်သာသော keyframe ကို အမြဲ အတည်ပြုခဲ့သည်။</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <!-- CASE 2 -->
+      <details class="case">
+        <summary>
+          <div class="cover">
+            <img loading="lazy" src="./assets/case/cover-a-second-either-way.jpg" alt="A Second Either Way key art" />
+            <div class="veil"></div>
+            <div class="on-cover">
+              <div class="eyebrow" style="color:#9fc0ff">Case study · ကိုးကားဗီဒီယို ပြန်လုပ်ခြင်း</div>
+              <h3>A Second Either Way</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="case-meta">
+              <span class="badge core">3D papercraft</span>
+              <span class="badge opt">16:9 · YouTube</span>
+              <span class="badge opt">၉၂ စက္ကန့် · ၁၁ ခန်း</span>
+            </div>
+            <div class="usecase" style="margin-top:14px">
+              <span class="uk">Use case</span>
+              <span><b>YouTube link တစ်ခု ထည့်ပြီး စတိုင်ကို ပြောလိုက်ရုံပါပဲ။</b> “ဤဗီဒီယိုကို ခွဲခြမ်းစိတ်ဖြာပြီး papercraft စတိုင်ဖြင့် ဆင်တူတစ်ခု လုပ်ပေးပါ၊ ၂ မိနစ်အောက်။” ၅:၁၈ မူရင်းကို ကြည့်ပြီး scene ၇၀ အဖြစ် ခွဲခြမ်း၊ မူရင်းဇာတ်ကောင်များဖြင့် ဖွဲ့စည်းပုံကို ပြန်တည်ဆောက်ခဲ့သည်။</span>
+            </div>
+            <div class="opener"><span class="lbl-open">မည်သို့ ဖန်တီးခဲ့သည် ကြည့်ရန်</span><span class="lbl-shut">အသေးစိတ်ကို ဖျောက်ရန်</span></div>
+          </div>
+        </summary>
+
+        <div class="case-detail">
+        <div class="case-media"><video poster="./assets/case/a-second-either-way.jpg" controls preload="none" playsinline><source src="./assets/case/a-second-either-way.mp4" type="video/mp4"></video></div>
+        <p class="outcome"><b>ရည်ရွယ်ချက်:</b> ရှိပြီးသား ရုပ်ရှင်တိုတစ်ကား (“ONE SECOND LATE”) ၏ <em>ဖွဲ့စည်းပုံနှင့် အရှိန်အဟုန်</em> ကို
+          papercraft “sliding-doors” အချစ်ဇာတ်လမ်းအဖြစ် ပြန်လည်ဖန်တီးရန် — လုံးဝမူရင်းဇာတ်ကောင်များနှင့်
+          စကားပြောကို စကားရပ်ပြောင်းလဲ၍၊ ရုပ်ရှင်ရိုက်ကွက် သို့မဟုတ် ပုံသဏ္ဌာန်များ ကူးယူခြင်းမရှိဘဲ၊ <b>5:18 မှ ၂ မိနစ်အောက်သို့ ချုံ့ခြင်း</b>။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောခဲ့သည်</span>
+          <span class="q">“[YouTube link တစ်ခု] — <b>ဤဗီဒီယိုကို ခွဲခြမ်းစိတ်ဖြာပါ</b>၊ ထိုကဲ့သို့ ဒါပေမဲ့ <b>papercraft စတိုင်</b> ဖြင့် တစ်ခု ဖန်တီးချင်တယ်။ ၂ မိနစ်ထက် မကျော်ဖို့။”</span></div>
+
+        <div class="label">ပွင့်လင်းမြင်သာမှု — အမှန်တကယ် ထုတ်လုပ်ခဲ့သော ဇာတ်ကောင် character sheet များ (အဆင့် ၂ ရလဒ်)</div>
+        <div class="char-strip">
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-front.jpg" alt="Eli character sheet — front view, papercraft" /><figcaption>Eli · front</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-three_quarter.jpg" alt="Eli character sheet — three-quarter view" /><figcaption>Eli · ¾ view</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-full_body.jpg" alt="Eli character sheet — full body" /><figcaption>Eli · full body</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-front.jpg" alt="Nora character sheet — front view, with her red scarf" /><figcaption>Nora · front</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-three_quarter.jpg" alt="Nora character sheet — three-quarter view" /><figcaption>Nora · ¾ view</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-full_body.jpg" alt="Nora character sheet — full body" /><figcaption>Nora · full body</figcaption></figure>
+        </div>
+        <div class="note"><span>Nora ၏ ခြယ်လှယ်ပြန်ထားသော အနီရောင် scarf ကို character sheet ထဲမှာပင် သတ်မှတ်ထားသောကြောင့် scene တိုင်းတွင် ထပ်မဖော်ပြဘဲ တည်မြဲနေသည်။</span></div>
+
+        <div class="case-body">
+          <div>
+            <div class="label">မည်သို့ ဖန်တီးခဲ့သည် — တကယ့် pipeline</div>
+            <ol class="flow">
+              <li><b>ကိုးကားဗီဒီယိုကို ခွဲခြမ်းစိတ်ဖြာ</b> — agent သည် 5:18 မူရင်းကို ကြည့်ရှုပြီး ၎င်း၏ ဖွဲ့စည်းပုံ၊ အရှိန်အဟုန် နှင့် စတိုင်ကို <b>မြင်ကွင်း ၇၀</b> ခွဲ၍ အနှစ်ချုပ်ကာ ပြန်လည်ဖန်တီးရေးအစီအစဉ်ကို ထုတ်ပေးသည်။ <em>(~$0.17)</em></li>
+              <li><b>မူရင်းဇာတ်ကောင် ၂ ဦး ပုံသေချုပ်</b> — Eli နှင့် သူမ၏ အမှတ်အသား နီရောင်ပုဝါနှင့် Nora (မူရင်းရုပ်ရှင်၏ တွေ့ဆုံ prop ကို ပြန်လည်တီထွင်ထားခြင်း) — character sheet များကို registry သို့။</li>
+              <li><b>keyframe ၁၁ ခု ဖန်တီး</b> — ပုံသေချုပ်ထားသော ဇာတ်ကောင်များကို ကိုးကားသည့် အတည်ပြုပြီး ရုပ်ပုံငြိမ်များ။</li>
+              <li><b>clip ၁၁ ခုသို့ လှုပ်ရှားစေ</b> — Omni <code>3d-papercraft</code>၊ image-to-video၊ clip အလိုက် camera move (တစ်ခုစီ ၈–၁၀ စက္ကန့်)။</li>
+              <li><b>အသံ &amp; ဂီတ — ပြီးမှ ဆုံးဖြတ်ချက်တစ်ခု</b> — အသံ ၃ မျိုးဖြင့် voiceover ထုတ်ခဲ့သော်လည်း ပြန်နားထောင်ကြည့်ရာ clip များ၏ မူရင်း Omni အသံက ပိုကောင်းသဖြင့် TTS ကို ဖယ်ပြီး မူရင်းအသံကို ထားခဲ့သည်။</li>
+              <li><b>ပေါင်းစပ်</b> — ပြိုင်တူအချိန်ဇယား ဖွဲ့စည်းပုံ မပျက်ဘဲ ၉၂ စက္ကန့်ကြာ နောက်ဆုံးဖြတ်ချုပ်အဖြစ် ချုပ်ဆက်။</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ထွက်လာသည့်အရာ</div>
+            <div class="statrow">
+              <div class="stat"><div class="v">92.0s</div><div class="l">နောက်ဆုံးရုပ်ရှင်</div></div>
+              <div class="stat"><div class="v">70→11</div><div class="l">ကိုးကားမြင်ကွင်း → clip</div></div>
+              <div class="stat"><div class="v">$10.85</div><div class="l">စုစုပေါင်း သုံးစွဲ</div></div>
+              <div class="stat"><div class="v">$25</div><div class="l">Budget အမြင့်ဆုံး</div></div>
+            </div>
+            <div class="pills">
+              <span class="pill">character sheet ၂ ခု</span><span class="pill">keyframe ၁၁ ခု</span>
+              <span class="pill">clip ၁၁ ခု</span><span class="pill">အသံသွင်း ၅ ခု (မူရင်း clip အသံ သုံး)</span>
+              <span class="pill">ဂီတ bed ၁ ခု</span><span class="pill">နောက်ဆုံးရုပ်ရှင် ၁ ကား (32MB)</span>
+            </div>
+            <div class="note"><span>ဂီတအဆင့်သည် <b>လုပ်ဆောင်နေစဉ် ပျက်ကွက်ခဲ့သည်</b> (model တစ်ခုက 404 ပြန်ပေးသည်)။ pipeline က ၎င်းကို ဖမ်းမိပြီး fallback ဖြင့် ပြန်လည်လည်ပတ်ကာ ပြန်ပေါင်းစပ်ခဲ့သည် — ဖန်တီးပြီးသား အသံသွင်းများကို ပြန်အသုံးပြု၍ $0.08 ဖြင့်။ <b>မည်သည့်အရာမျှ ပျောက်ဆုံးခြင်း သို့မဟုတ် နှစ်ကြိမ်ကောက်ခံခြင်း မရှိပါ။</b></span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="video">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">စွမ်းဆောင်ရည်</div>
+        <h2>ဗီဒီယို ဖန်တီးခြင်း</h2>
+        <p>စာကြောင်းတစ်ကြောင်း၊ အစပြုရုပ်ပုံတစ်ပုံ သို့မဟုတ် ရှိပြီးသား clip တစ်ခုမှ — တစ်ကြိမ်တည်းတွင် တကယ့် native အသံနှင့်အတူ။</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>Omni ဗီဒီယို</h3>
+          <span class="badge core">Gemini · core</span>
+          <span class="cost">~$1.03 / 10-second clip</span>
+        </div>
+        <p class="outcome"><b>သင်ရရှိသည့်အရာ:</b> လှုပ်ရှားမှု <b>နှင့်</b> အသံ အတူတကွ ဖန်တီးထားသော တို၍ ပြီးဆုံးသည့် ဗီဒီယို clip တစ်ခု (~၁၀ စက္ကန့်အထိ)
+          — ကုန်ပစ္စည်း sizzle၊ စကားပြော ရှင်းလင်းချက် သို့မဟုတ် ရွေးချယ်ထားသော အနုပညာစတိုင်ဖြင့် မြင်ကွင်းတစ်ခု။
+          ၎င်းသည် <b>သင့်တွင် ရှိပြီးသား clip တစ်ခုကိုလည်း တည်းဖြတ်နိုင်သည်</b>: မျက်နှာပြင်ပေါ်စာသား၊ အသံ effect များ ထည့်ခြင်း၊ သို့မဟုတ်
+          အစမှ ပြန်မဖန်တီးဘဲ စတိုင်ပြောင်းခြင်း။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“ကျွန်တော့် ကော်ဖီအိတ်ကို <b>၁၀ စက္ကန့်ကြာ claymation ရှင်းလင်းချက်</b> လုပ်ပေးပါ၊ နွေးထွေးသော မနက်ခင်းအလင်း၊ ဖြည်းဖြည်း push-in။”</span></div>
+        <div class="cap-grid">
+          <div>
+            <div class="label">သင့် studio က မည်သို့ ဖန်တီးသည်</div>
+            <ol class="flow">
+              <li><b>အစပြုနေရာ</b> ရွေးပါ — စာသား prompt၊ keyframe ရုပ်ပုံတစ်ပုံ၊ ကိုးကားရုပ်ပုံ ၅ ပုံအထိ၊ သို့မဟုတ် တည်းဖြတ်ရန် ရှိပြီးသား ဗီဒီယိုတစ်ခု။</li>
+              <li><b>အနုပညာစတိုင်</b> တစ်ခု ရွေးပါ (သို့မဟုတ် photoreal ထားပါ)။ ၎င်းသည် အမြဲ သင့်ဆုံးဖြတ်ချက်ဖြစ်သည် — တိတ်တဆိတ် ဘယ်တော့မှ မရွေးပါ။</li>
+              <li>စမ်းသပ်ပြီးသား preset ၄၆ ခုမှ <b>camera move</b> တစ်ခု အဆိုပြုပါ — clip တစ်ခုလျှင် သန့်ရှင်းသော move တစ်ခု။</li>
+              <li>ကုန်ကျစရိတ်ကို ခန့်မှန်း၊ အတည်ပြုပြီး render လုပ်ပါ။ တိကျသော clip ကို ပြန်ဖန်တီးနိုင်ရန် prompt ကို သိမ်းဆည်းထားသည်။</li>
+            </ol>
+            <div class="cmd">
+              <span class="c-note"># behind the scenes, one command runs the clip</span><br>
+              <span class="c-cmd">generateOmniVideoClip</span> '{<br>
+              &nbsp;&nbsp;"prompt": "Founder holds the bag to camera, warm light",<br>
+              &nbsp;&nbsp;"artStyle": "claymation", "cameraMove": "slow-push-in",<br>
+              &nbsp;&nbsp;"outputPath": "…/clip-01.mp4" }'
+            </div>
+            <div class="cmd-cap">Call တစ်ခု ဝင်၊ ပြီးဆုံးသော clip တစ်ခု ထွက် — အသံနှင့်အတူ။</div>
+          </div>
+          <div>
+            <div class="label">အစပြုနေရာ ငါးမျိုး</div>
+            <div class="knobs">
+              <div class="row"><div class="k">text</div><div class="v"><b>Prompt သာ</b> — ရှင်းလင်းချက်၊ sizzle reel များ</div></div>
+              <div class="row"><div class="k">image</div><div class="v"><b>keyframe တစ်ခု</b> — အတည်ပြုပြီး ရုပ်ပုံငြိမ်ကို လှုပ်ရှားစေ</div></div>
+              <div class="row"><div class="k">references</div><div class="v"><b>ရုပ်ပုံ ၂–၅ ပုံ</b> — ဇာတ်ကောင် + ကုန်ပစ္စည်း + နောက်ခံ ပုံသေချုပ်</div></div>
+              <div class="row"><div class="k">edit</div><div class="v"><b>clip တစ်ခု ပြင်</b> — စာသား / SFX ထည့် / စတိုင်ပြောင်း</div></div>
+              <div class="row"><div class="k">extend</div><div class="v">မြင်ကွင်းတစ်ခုကို ဆက်လက် <b>ရှေ့ဆက်</b></div></div>
+            </div>
+            <div class="label">အနုပညာစတိုင် ၁၀ မျိုး — သင်ရွေးပါ</div>
+            <div class="pills">
+              <span class="pill">claymation</span><span class="pill">pixel-art</span>
+              <span class="pill">whiteboard-doodle</span><span class="pill">fluffy-toy</span>
+              <span class="pill">3d-papercraft</span><span class="pill">low-poly</span>
+              <span class="pill">2d-illustration</span><span class="pill">isometric-flat-vector</span>
+              <span class="pill">mixed-media</span><span class="pill">3d-mix</span>
+            </div>
+            <p class="outcome" style="font-size:13.5px;color:var(--ink-faint)">
+              ရုပ်ရှင်ဆန်သော B-roll သို့မဟုတ် ပထမနှင့်နောက်ဆုံးဖရိမ် တိကျသော ဖော်ထုတ်မှုများ လိုအပ်ပါသလား? ပိုမိုမြင့်မားသော fidelity ရုပ်ရှင်
+              engine (Veo) က ၎င်းတို့ကို ကိုင်တွယ်သည် — စက္ကန့်အလိုက် စျေးနှုန်းသတ်မှတ်။</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="captions">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">စွမ်းဆောင်ရည်</div>
+        <h2>စာသား &amp; စာတန်းထိုး ထည့်ခြင်း</h2>
+        <p>စာသားကို တကယ့် font များဖြင့် local တွင် render လုပ်သည် — pixel ထက်သေချာ၊ မြန်မာအက္ခရာ ဘေးကင်းပြီး <b>အခမဲ့</b>။ AI သည်
+          လှပသော မြင်ကွင်းများကို ဆွဲသော်လည်း စာလုံးများကို ဖျက်ဆီးသဖြင့် စကားလုံးများသည် AI ကို ဘယ်တော့မှ မထိပါ။</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>စာတန်းထိုး</h3>
+          <span class="badge free">$0 · local တွင် render</span>
+          <span class="cost">မြန်မာ / ထိုင်း / Latin — အားလုံး မှန်ကန်စွာ ပုံဖော်</span>
+        </div>
+        <p class="outcome"><b>သင်ရရှိသည့်အရာ:</b> ပြီးဆုံးသော ဗီဒီယိုပေါ်တွင် အချိန်ကိုက် burn ထားသော စာတန်းထိုးများ၊ အချိန်ကို တကယ့်အသံမှ ယူထားသည်။
+          သင်သည် <b>ဗီဒီယို၏ လုပ်ဆောင်ချက်အလိုက် နည်းလမ်း</b> ကို ရွေးသည် — တံုးတိသော default တစ်ခုတည်း မဟုတ်။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“ဤဗီဒီယိုသို့ <b>မြန်မာစာတန်းထိုး ထည့်ပြီး</b> ကုန်ပစ္စည်းအမည်ကို မီးမောင်းထိုးပြပါ။”</span></div>
+
+        <div class="label">စာတန်းထိုး နည်းလမ်း နှစ်မျိုး — ဗီဒီယိုအလိုက် ရွေးပါ</div>
+        <div class="modes">
+          <div class="mode">
+            <h4>ပုံမှန်မုဒ်</h4>
+            <div class="sub">ဘေးကင်း၊ အမြဲဖတ်ရလွယ်သော default</div>
+            <ul>
+              <li>သန့်ရှင်းသော အောက်သုံးပုံ <b>pill transcript</b>၊ တစ်ကြိမ်လျှင် တစ်ကြောင်း</li>
+              <li>platform ခလုတ်များ ကင်းလွတ်သော ဘေးကင်းဇုန်တွင် တည်ရှိ</li>
+              <li>talking-head၊ tutorial၊ ရိုးရှင်းသော ရှင်းလင်းချက်များအတွက် အကောင်းဆုံး</li>
+              <li>အဓိကစကားလုံးတစ်ခုသည် သင့် accent အရောင်ဖြင့် တောက်ပနိုင်</li>
+            </ul>
+          </div>
+          <div class="mode creative">
+            <h4>ဖန်တီးမှုမုဒ်</h4>
+            <div class="sub">အယ်ဒီတာဆန်သော အဟုန်၊ တမင်ရွေးချယ် (clip တစ်ခုလျှင် တစ်ကြိမ်)</div>
+            <ul>
+              <li><b>Hero punch-in</b> — hook နှင့် hype အတွက် beat တစ်ခုလျှင် စကားလုံးကြီးတစ်လုံး</li>
+              <li><b>Keyword accent</b> — အရေးပါသော စကားလုံး ၁–၂ လုံးကို မီးမောင်းထိုးပြ</li>
+              <li>ခရီးသွား &amp; မြင်ကွင်းစုံအတွက် အပေါ်ဆုံးတွင် <b>နေရာ / label တံဆိပ်</b></li>
+              <li><b>ဇာတ်ကောင်နောက်ကွယ်ရှိ စာသား</b> — လူ ရွေ့လျားနေစဉ် စကားလုံးသည် သူ့ <em>နောက်ကွယ်</em> တွင် တည်ရှိ</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cap-grid" style="margin-top:24px">
+          <div>
+            <div class="label">သင့် studio က မည်သို့ ဖန်တီးသည်</div>
+            <ol class="flow">
+              <li>တိကျသော အချိန်များအတွက် အသံကို စာသားပြောင်း (မြန်မာအပါအဝင် မည်သည့်ဘာသာစကားမဆို)။</li>
+              <li>ဗီဒီယို၏ ပုံသဏ္ဌာန်နှင့် ရည်ရွယ်ချက်နှင့် ကိုက်ညီသော အထက်ပါနည်းလမ်းကို ရွေးပါ။</li>
+              <li>အရွယ်အစား၊ အောက်ခြေမှ အမြင့်၊ နှင့် accent အရောင်ကို သတ်မှတ်ပါ။ အလေးပေးရမည့် စကားလုံးများကို မှတ်သားပါ။</li>
+              <li>local တွင် burn လုပ်ပါ — ကုန်ကျစရိတ်မရှိ၊ အသံ မထိ၊ ကိုက်ညီသော subtitle ဖိုင်လည်း သိမ်းဆည်းသည်။</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ချိန်ညှိစရာများ</div>
+            <div class="knobs">
+              <div class="row"><div class="k">style</div><div class="v"><b>pill</b> (transcript) သို့မဟုတ် <b>hero</b> (စကားလုံးကြီး ဟင်းလင်း)</div></div>
+              <div class="row"><div class="k">pos</div><div class="v">အောက် · အလယ် · <b>အပေါ်</b> (တံဆိပ်)</div></div>
+              <div class="row"><div class="k">size</div><div class="v">စာကြောင်းအလိုက် အရွယ်အစား override</div></div>
+              <div class="row"><div class="k">accent</div><div class="v"><b>**မီးမောင်းထိုးထား**</b> သည့် စကားလုံးအတွက် အရောင်</div></div>
+              <div class="row"><div class="k">marginBottom</div><div class="v">platform UI အထက် အမြင့်</div></div>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-note"># timings come from the transcript, then:</span><br>
+              <span class="c-cmd">renderCaptionedVideo</span> '{ "videoPath":"final.mp4",<br>
+              &nbsp;&nbsp;"cues":[{"start":0,"end":2,"text":"the **VoxCPM** way"}],<br>
+              &nbsp;&nbsp;"accentColor":"#1b4fd8", "outputPath":"final-cc.mp4" }'
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="text-ai">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">အတွင်းပိုင်း လုပ်ဆောင်ပုံ</div>
+        <h2>မြင်ကွင်းကို အရင်ဖတ်ပြီးမှ ချပေးသော စာတန်းများ</h2>
+        <p>စာသားကို နေရာတစ်ခုတည်းတွင် အတည်တကျ ချထားပြီး အဆင်ပြေမည်ဟု မျှော်လင့်ရုံ မဟုတ်ပါ။ render မလုပ်မီ agent သည်
+          ဗီဒီယို frame အစစ်များနှင့် အသံကို စစ်ဆေးပြီးမှ စကားလုံးများ မြင်ကွင်းနှင့် ကိုက်ညီစေရန် — ဖတ်ရလွယ်ကူ၊
+          ဘရန်းနှင့် လိုက်ဖက်ကာ မျက်နှာကို ဘယ်တော့မှ မဖုံးအောင် — အသွင်အပြင် တိုင်းကို ဆုံးဖြတ်ပေးသည်။</p>
+      </div>
+      <div class="cap">
+        <div class="decrow">
+          <div class="input"><h4>frame များကို ဖတ်သည်</h4><p>နေရာလွတ် ဘယ်မှာရှိသလဲ၊ နောက်ခံသည် တောက်ပ၊ မှောင်မိုက် သို့မဟုတ်
+            ရှုပ်ထွေးနေသလား၊ ဇာတ်ဆောင်၏ မျက်နှာ ဘယ်နေရာတွင် ရှိသလဲ — frame များကို ခွဲခြမ်းစိတ်ဖြာ၍ ရှာဖွေသည်။</p></div>
+          <div class="input"><h4>အသံကို ဖတ်သည်</h4><p>စာသားမှ စကားလုံးတစ်လုံးချင်းစီ၏ တိကျသော အချိန်ကိုက်များနှင့်
+            ဘယ်စကားလုံးများက အလေးပေးမှုကို သယ်ဆောင်သည်ကို သိရှိ၍ — စာတန်းများ ရစ်သမ်နှင့်အတူ ကျရောက်စေသည်။</p></div>
+        </div>
+        <div class="label">ထို့နောက် — မြင်ကွင်းအလိုက် ဆုံးဖြတ်သည်</div>
+        <div class="decgrid">
+          <div class="dec"><h4><span class="d"></span>နေရာ</h4><p><b>အလွတ်ဆုံး နေရာ</b> (ကောင်းကင်၊ နံရံ၊ ရေ) တွင် ချထားသည် — မျက်စိမှိတ်ကာ အလယ်တွင် မဟုတ် — မျက်နှာနှင့် platform ၏ ခလုတ်နေရာမှ ကင်းလွတ်စေသည်။</p></div>
+          <div class="dec"><h4><span class="d"></span>အရွယ်အစား</h4><p><b>hook စကားလုံး</b> ကို ကြီးကြီးထားသည် (frame အနားမှ ကျော်ထွက်နိုင်သည်); စာသားစာကြောင်းက ရိုးရိုးသာ ဖြစ်သည်။ အရွယ်အစားသည် စကားလုံး၏ အရေးပါမှုကို လိုက်၍ ပြောင်းသည်။</p></div>
+          <div class="dec"><h4><span class="d"></span>အရောင်</h4><p>နောက်ခံနှင့် ချိန်ဆ၍ — <b>မှောင်ပေါ်တွင် အလင်း၊ လင်းပေါ်တွင် အမှောင်</b> — အဓိက စကားလုံး ၁–၂ လုံးကို သင့်ဘရန်း accent သို့ ပြောင်းလဲပေးသည်။</p></div>
+          <div class="dec"><h4><span class="d"></span>ဖတ်ရလွယ်ကူမှု</h4><p>ရှုပ်ထွေး သို့မဟုတ် အသားအရေ ကြမ်းသော နောက်ခံပေါ်တွင် စာသား မပျောက်ပျက်စေရန် ၎င်း၏ နောက်တွင် <b>မှုန်ဝါးသော scrim သို့မဟုတ် pill</b> ကို ထည့်ပေးသည်။</p></div>
+          <div class="dec"><h4><span class="d"></span>စတိုင်</h4><p>မြင်ကွင်းအလိုက် ရွေးချယ်သည် — <b>pill စာသား</b>၊ <b>hero punch-in</b>၊ <b>အထက်ပိုင်း တည်နေရာ တံဆိပ်</b>၊ သို့မဟုတ် အထင်ကရ <b>ဇာတ်ဆောင်နောက်ကွယ်မှ စာသား</b>။</p></div>
+          <div class="dec"><h4><span class="d"></span>အက်နီမေးရှင်း</h4><p><b>spring ဝင်ရောက်မှု</b> ဖြင့် တစ်ကြိမ်လျှင် စာကြောင်းတစ်ကြောင်းစီ၊ <b>အသံ ရစ်သမ်နှင့် အချိန်ကိုက်</b> — ဖတ်ရလွယ်ကူ၍ စာသားတန်း တစ်ခုလုံး ဘယ်တော့မှ မဖြစ်စေပါ။</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voice">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">စွမ်းဆောင်ရည်</div>
+        <h2>အသံသွင်း</h2>
+        <p>လမ်းကြောင်း နှစ်မျိုး: <b>အခမဲ့</b> ရိုးရှင်းသော narrator တစ်ခု၊ သို့မဟုတ် စာကြောင်းလိုက် ချိန်ညှိသည့် <b>ခံစားမှုပါ၊ ညွှန်ကြားထားသော</b> အသံတစ်ခု။</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>အခမဲ့ narration — Microsoft Edge အသံများ</h3>
+          <span class="badge free">$0 · API key မလို</span>
+          <span class="cost">မြန်မာ (ကျား &amp; မ) ပါဝင်</span>
+        </div>
+        <p class="outcome"><b>သင်ရရှိသည့်အရာ:</b> ကုန်ကျစရိတ်မရှိဘဲ သန့်ရှင်း၊ ကြည်လင်သော narration — မူကြမ်းများ၊ ပမာဏများ၊
+          သို့မဟုတ် ရိုးရှင်းသော ဖတ်ခြင်းသာ လိုအပ်သည့်အခါ အကောင်းဆုံး။ <b>အမြန်နှုန်း၊ အသံအတိုးအကျယ် နှင့် pitch</b> ကို ချိန်ညှိနိုင်သည်၊
+          သို့သော် သရုပ်ဆောင်မှု သို့မဟုတ် ခံစားမှု မရှိ။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“ဤscript ၏ <b>အခမဲ့ မြန်မာအသံသွင်း</b> ကို ပေးပါ။”</span></div>
+        <div class="cap-grid">
+          <div>
+            <div class="label">သင့် studio က မည်သို့ ဖန်တီးသည်</div>
+            <ol class="flow">
+              <li>script ပေးပြီး အသံတစ်ခု ရွေးပါ (ဥပမာ မြန်မာ <b>my-female</b> / <b>my-male</b>)။</li>
+              <li>လိုအပ်ပါက rate၊ volume၊ pitch ကို ချိန်ညှိပါ။</li>
+              <li>Render — အခမဲ့၊ ချက်ချင်း၊ အသင့်သုံး audio ဖိုင်အဖြစ် သိမ်းဆည်း။</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ချိန်ညှိစရာများ</div>
+            <div class="knobs">
+              <div class="row"><div class="k">voice</div><div class="v"><b>my-female</b>၊ my-male၊ + ကမ္ဘာ့အသံ များစွာ</div></div>
+              <div class="row"><div class="k">rate</div><div class="v">ပိုမြန် / ပိုနှေး</div></div>
+              <div class="row"><div class="k">volume</div><div class="v">ပိုကျယ် / ပိုတိုး</div></div>
+              <div class="row"><div class="k">pitch</div><div class="v">ပိုမြင့် / ပိုနိမ့်</div></div>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-free"># free — no key, not billed</span><br>
+              <span class="c-cmd">generateEdgeTTSVoiceover</span> '{ "script":"…",<br>
+              &nbsp;&nbsp;"voice":"my-female", "outputPath":"vo.wav" }'
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>ခံစားမှုပါ narration — Gemini အသံများ</h3>
+          <span class="badge core">Gemini · ညွှန်ကြားထား</span>
+          <span class="cost">~$0.001 / sentence</span>
+        </div>
+        <p class="outcome"><b>သင်ရရှိသည့်အရာ:</b> <b>သရုပ်ဆောင်သည့်</b> အသံတစ်ခု။ ဇာတ်ကောင်၊ စတိုင်၊ အရှိန်နှင့် လေယူလေသိမ်းကို သင်ရွေးသည် —
+          <b>[excited]</b>၊ <b>[pause]</b> သို့မဟုတ် <b>[whispers]</b> ကဲ့သို့ cue များဖြင့် script ထဲတွင်တိုက်ရိုက် ခံစားမှုကို ညွှန်ကြားနိုင်သည်။
+          ဘယ်တော့မှ ပြားနေသော ဖတ်ခြင်း မဟုတ်။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“<b>နွေးထွေး၊ ကျွမ်းကျင်သော အသံသွင်း</b> တစ်ခု ဖန်တီးပေးပါ — ပထမစာကြောင်းတွင် စိတ်လှုပ်ရှားနေသလို ကြားပါစေ။”</span></div>
+
+        <div class="label">အသံ ရွေးပါ</div>
+        <div class="scroller">
+          <table class="voices">
+            <thead><tr><th>အသံ</th><th>ကျား/မ</th><th>အကောင်းဆုံး အသုံး</th></tr></thead>
+            <tbody>
+              <tr><td>Kore</td><td>အမျိုးသမီး</td><td>ကျွမ်းကျင်၊ ကြည်လင်</td></tr>
+              <tr><td>Aoede</td><td>အမျိုးသမီး</td><td>နွေးထွေး၊ ဖော်ရွေ၊ ချဉ်းကပ်ရလွယ်</td></tr>
+              <tr><td>Leda</td><td>အမျိုးသမီး</td><td>နူးညံ့၊ သိမ်မွေ့</td></tr>
+              <tr><td>Zephyr</td><td>အမျိုးသား</td><td>ကျွမ်းကျင်၊ တည်ငြိမ်သော narration</td></tr>
+              <tr><td>Puck</td><td>အမျိုးသား</td><td>တက်ကြွ၊ ပေါ့ပါး၊ လူငယ်ဆန်</td></tr>
+              <tr><td>Charon</td><td>အမျိုးသား</td><td>အသံနက်၊ ဩဇာရှိ</td></tr>
+              <tr><td>Fenrir</td><td>အမျိုးသား</td><td>ခိုင်မာ၊ ဒရာမာဆန်</td></tr>
+              <tr><td>Orus</td><td>အမျိုးသား</td><td>ရင့်ကျက်၊ ပညာရှိ၊ ယုံကြည်ရ</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cap-grid" style="margin-top:22px">
+          <div>
+            <div class="label">parameter များ သတ်မှတ်ပါ</div>
+            <div class="knobs">
+              <div class="row"><div class="k">style</div><div class="v">neutral · professional · casual · energetic · calm · excited · serious</div></div>
+              <div class="row"><div class="k">pace</div><div class="v">natural · slow · fast</div></div>
+              <div class="row"><div class="k">accent</div><div class="v">american · british · australian · indian</div></div>
+              <div class="row"><div class="k">audioProfile</div><div class="v">လွတ်လပ်စာသား ဒါရိုက်တာမှတ်ချက် — <b>“နွေးထွေးသော ရေဒီယို host၊ အနည်းငယ် ပြုံးနေ”</b></div></div>
+              <div class="row"><div class="k">multi-speaker</div><div class="v">ပြောဆိုသူတစ်ဦးစီအတွက် အသံ တစ်မျိုးစီ (podcast၊ စကားပြော)</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="label">script ထဲတွင် ခံစားမှုကို တိုက်ရိုက်ညွှန်ကြားပါ</div>
+            <div class="pills">
+              <span class="pill on">[excited]</span><span class="pill on">[pause]</span>
+              <span class="pill on">[whispers]</span><span class="pill on">[dry chuckle]</span>
+              <span class="pill">tag ၂၀၀+ ခု ထပ်</span>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-cmd">generateVoiceover</span> '{<br>
+              &nbsp;&nbsp;"script":"[excited] This changes everything. [pause] Really.",<br>
+              &nbsp;&nbsp;"voiceName":"Kore",<br>
+              &nbsp;&nbsp;"voiceStyle":{"style":"professional","pace":"natural",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;"accent":"american_general","audioProfile":"warm, confident"},<br>
+              &nbsp;&nbsp;"outputPath":"vo.wav" }'
+            </div>
+            <div class="cmd-cap">ရွေးချယ်ထားသော အသံကို ပရောဂျက်နှင့် ချိတ်ဆက်ထားသဖြင့် ဗီဒီယိုတိုင်း တူညီသော brand အသံ ဖြစ်သည်။</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="outcome" style="font-size:14.5px;color:var(--ink-faint)">
+        ဇာတ်ကောင်ကို သူ့ကိုယ်ပိုင်အသံဖြင့် <b>မျက်နှာပြင်ပေါ်တွင် စကားပြောစေ</b> ချင်ပါသလား? ၎င်းသည် talking avatar — နောက်တစ်ခု။</p>
+    </div>
+  </section>
+
+  <section id="more">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">နှင့် အခြားများ</div>
+        <h2>Talking avatar များ၊ ရုပ်ပုံ &amp; ဂီတ</h2>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>Talking avatar — စကားပြောသည့် ဇာတ်ကောင်</h3></div>
+        <p class="outcome">မျက်နှာတစ်ခုကို စကားပြောစေရန် နည်းလမ်းသုံးမျိုး၊ ပါးစပ်ပေါ်တွင် <b>မည်သူ့အသံ</b> ကို လိုချင်သည်ဖြင့် ရွေးချယ်:</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“ကျွန်တော့်ကိုယ်ပိုင် အသံသွင်းချက်ကို သုံး၍ <b>ကျွန်တော့် founder ဓာတ်ပုံကို မြန်မာဘာသာဖြင့် စကားပြောစေ</b> ပါ။”</span></div>
+        <div class="knobs" style="margin-top:16px">
+          <div class="row"><div class="k">Gemini</div><div class="v"><b>Gemini ၏ ကိုယ်ပိုင်ဖန်တီးအသံ</b> — အင်္ဂလိပ်မဟုတ်သော &amp; မြန်မာအသံထွက်အတွက် အကောင်းဆုံး</div></div>
+          <div class="row"><div class="k">Seedance</div><div class="v"><b>သင်ပေးသော custom အသံ</b> — သင့် audio နှင့် lip-sync၊ clip တိုများ <span class="badge opt">optional</span></div></div>
+          <div class="row"><div class="k">InfiniteTalk</div><div class="v"><b>သင်ကိုယ်တိုင် သွင်းထားသော အသံ</b> — အရှည်ကန့်သတ်ချက်မရှိ (≤60s ထားရန် အကောင်းဆုံး) <span class="badge opt">optional</span></div></div>
+        </div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>ရုပ်ပုံ &amp; slide များ</h3><span class="cost">ရုပ်ပုံတစ်ပုံ ~$0.03 မှ</span></div>
+        <p class="outcome">Thumbnail များ၊ carousel များ၊ ကုန်ပစ္စည်း shot များ (တကယ့်ဓာတ်ပုံတစ်ပုံမှ e-commerce preset ၂၆ ခု)၊ logo များ
+          နှင့် social cover များ — ၎င်းတို့ပေါ်တွင် pixel-perfect စာသားကို local တွင် အခမဲ့ တင်ထားခြင်းဖြင့်။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“ကျွန်တော့် ကုန်ပစ္စည်းဓာတ်ပုံကို Instagram အတွက် <b>lifestyle thumbnail</b> အဖြစ် ပြောင်းပေးပါ။”</span></div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>ဂီတ</h3><span class="cost">၃၀ စက္ကန့်လျှင် ~$0.04</span></div>
+        <p class="outcome">နောက်ခံ bed များ၊ jingle များ နှင့် intro များ — နောက်ဆုံး mix တွင် သင့်အသံသွင်းအောက်၌ အလိုအလျောက် လျှော့ကျပေးသည်။</p>
+        <div class="ask"><span class="who">သင် agent ကို ဤသို့ ပြောသည်</span>
+          <span class="q">“အသံသွင်းအောက်တွင် <b>တက်ကြွသော ၃၀ စက္ကန့်ကြာ ဂီတ bed</b> တစ်ခု ထည့်ပေးပါ။”</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cost">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">အံ့အားသင့်စရာ မရှိ</div>
+        <h2>အရာများ၏ ကုန်ကျစရိတ်</h2>
+        <p>သင်သည် ဖန်တီးမှုတစ်ခုစီအလိုက် AI provider များကိုသာ ပေးချေရသည် — studio က ခန့်မှန်းငွေကို ပြသပြီး ငွေတစ်ပြားမသုံးမီ
+          အမြင့်ဆုံးကို ထိန်းချုပ်သည်။ local စာသား၊ စာတန်းထိုး နှင့် အခမဲ့အသံများ ကုန်ကျစရိတ် <b>မရှိ</b>။</p>
+      </div>
+      <div class="costgrid">
+        <div class="costcard"><div class="amt zero tnum">$0</div><div class="what">အခမဲ့ narration (Edge TTS)</div><div class="who">no key, not billed</div></div>
+        <div class="costcard"><div class="amt zero tnum">$0</div><div class="what">စာတန်းထိုး &amp; မျက်နှာပြင်ပေါ်စာသား</div><div class="who">rendered locally</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.001</div><div class="what">ခံစားမှုပါ အသံသွင်း / စာကြောင်း</div><div class="who">Gemini TTS</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.03</div><div class="what">အရည်အသွေးရှိ ရုပ်ပုံတစ်ပုံ</div><div class="who">Gemini · Nano Banana</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.04</div><div class="what">ဂီတ ၃၀ စက္ကန့်</div><div class="who">Gemini · Lyria</div></div>
+        <div class="costcard"><div class="amt tnum">~$1.03</div><div class="what">၁၀ စက္ကန့် Omni ဗီဒီယို clip</div><div class="who">Gemini · အသံနှင့်</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.80</div><div class="what">၈ စက္ကန့် ရုပ်ရှင်ဆန် clip</div><div class="who">Veo · စက္ကန့်အလိုက်</div></div>
+        <div class="costcard"><div class="amt tnum">~$3.65</div><div class="what">၃၂ စက္ကန့် brand ရုပ်ရှင်အပြည့်အစုံ</div><div class="who">ဇာတ်ကောင် + clip ၄ ခု + VO</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trust">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">အဘယ်ကြောင့် ရောင်းရန် ဘေးကင်းသနည်း</div>
+        <h2>ကစားစရာ မဟုတ်၊ studio တစ်ခုကဲ့သို့ တည်ဆောက်ထား</h2>
+      </div>
+      <div class="trust">
+        <div class="t"><h3><span class="tk"></span> ငွေသည် သဘောတူချက်ဖြင့်သာ ရွေ့လျားသည်</h3>
+          <p>ပရောဂျက်တိုင်းတွင် budget အမြင့်ဆုံးနှင့် သုံးစွဲမှု ledger ရှိသည်။ ခန့်မှန်းငွေ ဦးစွာ ပြသသည်။ အမြင့်ဆုံးကို code ဖြင့် ထိန်းချုပ်ထားသဖြင့် အလွန်အကျွံ ရုပ်ပိုင်းအရ သုံးစွဲ၍မရ။</p></div>
+        <div class="t"><h3><span class="tk"></span> တစ်ညီတည်းဖြစ်မှုကို အင်ဂျင်နီယာဆန်ဆန် တည်ဆောက်</h3>
+          <p>ဇာတ်ကောင်များ၊ ကုန်ပစ္စည်းများ၊ logo များ နှင့် အသံများကို တစ်ကြိမ်တည်း ဖန်တီး၍ ပုံသေချုပ်ထားသည်။ တူညီသော မျက်နှာနှင့် အသံသည် campaign တစ်ခုလုံးတွင် သယ်ဆောင်သည်။</p></div>
+        <div class="t"><h3><span class="tk"></span> သက်သေအထောက်အထား တကယ်ဖြစ်နေစေ</h3>
+          <p>studio ကို ချီးမွမ်းစကား၊ စာရင်းအင်း သို့မဟုတ် သတင်းများ တီထွင်ခြင်းမှ တင်းကျပ်စွာ တားမြစ်ထားသည်။ သင့်ကိန်းဂဏန်းများ တစ်လုံးမကျန် — သို့မဟုတ် ဘာမှ မရှိ။ လုပ်ငန်းတိုင်း ၎င်းကို မည်သို့ ဖန်တီးခဲ့ကြောင်း အတိအကျ မှတ်တမ်း ထားရှိသည်။</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b style="color:var(--ink)">SoeMind Forge</b> — ရိုးရှင်းသော စကားလုံးဖြင့် ပြောပါ၊ တင်ရန်အသင့် content ရယူပါ။
+      &nbsp;<a href="./index.html">ပင်မ</a> · <a href="https://github.com/minkhant1996/soemind-forge">GitHub</a></div>
+    <div>Google Gemini အတွက် အကောင်းဆုံးပြင်ဆင်ထား · optional OpenRouter &amp; RunPod add-on များ</div>
+  </div>
+</footer>
+
+</body>
+</html>

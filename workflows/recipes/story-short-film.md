@@ -52,6 +52,9 @@ Write EVERYTHING down before generating a single image. Structure:
 # <Title>
 Logline: <one sentence>
 Runtime: <15/30/60s> · Format: <16:9 | 9:16> · Style: <photorealistic | claymation | …>
+Style Block: templates/style-block.md — write it ONCE (variant A, from
+templates/style-block.template.md), lock it, and prepend it verbatim wherever
+`<style>` appears in the prompts below (sheets, storyboard, every clip).
 
 ## Storyline
 <3-6 beats: setup → complication → turn → resolution>

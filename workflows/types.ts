@@ -804,19 +804,32 @@ export type MusicQuality = 'standard' | 'pro';
 export interface CharacterSheetInput {
   /** Locked physical description (face, hair, wardrobe, accessories). */
   description: string;
-  /** Folder to write the angle images into. */
+  /** Folder to write the sheet (or angle images) into. */
   outputDir: string;
-  /** Filename stem, e.g. "char-sarah" → char-sarah-front.png. Default: "character". */
+  /** Filename stem, e.g. "char-sarah" → char-sarah-sheet.png. Default: "character". */
   idStem?: string;
-  /** Angles to render. Default: front, three_quarter, profile. */
+  /**
+   * 'sheet' (default): ONE model-sheet image — full-body turnaround (front /
+   * three-quarter / side / back) + face close-up + waist-up half-body + costume
+   * detail crops, all labeled. One file = one reference slot.
+   * 'per-angle': legacy mode, one image per angle from `angles`.
+   */
+  layout?: 'sheet' | 'per-angle';
+  /** Character display name printed on the sheet (layout 'sheet'). Default: idStem. */
+  characterName?: string;
+  /** Personality lines to print on the sheet — they drive acting in clips that reference it. */
+  personality?: string;
+  /** Angles to render (layout 'per-angle' only). Default: front, three_quarter, profile. */
   angles?: Array<'front' | 'three_quarter' | 'profile' | 'full_body'>;
+  /** Default: '16:9' for layout 'sheet', '9:16' for 'per-angle'. */
   aspectRatio?: AspectRatio;
+  /** Default: '2K' for layout 'sheet' (small views need the pixels), '1K' for 'per-angle'. */
   imageSize?: ImageSize;
   personGeneration?: 'allow' | 'block';
 }
 
 export interface CharacterSheetOutput {
-  /** angle -> written file path */
+  /** 'sheet' -> single model-sheet path, or angle -> per-angle file path */
   files: Record<string, string>;
   cost: CostInfo;
 }

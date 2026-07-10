@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SoeMind Forge</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">SF</div>
+      <div class="brand-name">SoeMind<br/>Forge</div>
+    </div>
+    <ol id="steps-nav">
+      <li data-step="0">Welcome</li>
+      <li data-step="1">System check</li>
+      <li data-step="2">Studio folder</li>
+      <li data-step="3">API keys</li>
+      <li data-step="4">Install &amp; build</li>
+      <li data-step="5">Health check</li>
+      <li data-step="6">Launch</li>
+    </ol>
+    <div class="sidebar-foot">v0.1.0</div>
+  </aside>
+
+  <main id="content">
+
+    <!-- 0 · Welcome -->
+    <section class="step" data-step="0">
+      <h1>Welcome to SoeMind Forge</h1>
+      <p class="lead">This wizard installs everything the AI content studio needs — dependencies,
+      the toolkit itself, your API keys, and the agent skills — then launches your AI assistant.</p>
+      <div class="field">
+        <label>Which AI assistant will drive the studio?</label>
+        <select id="tool-select">
+          <option value="claude" selected>Claude Code (recommended)</option>
+          <option value="gemini">Gemini CLI</option>
+          <option value="codex">Codex CLI</option>
+          <option value="hermes">Hermes</option>
+          <option value="openclaw">OpenClaw</option>
+        </select>
+      </div>
+      <p class="lead">Skills, your projects, and all generated content live together inside the
+      studio folder you pick in a moment — nothing is scattered across your system.</p>
+    </section>
+
+    <!-- 1 · System check -->
+    <section class="step" data-step="1">
+      <h1>System check</h1>
+      <p class="lead">Checking the tools the studio needs. Required items must be green to continue.</p>
+      <div id="deps-list" class="deps"></div>
+      <div class="row">
+        <button class="btn ghost" id="recheck-btn">Re-check</button>
+        <button class="btn hidden" id="install-deps-btn">Install missing — one click</button>
+        <button class="btn ghost hidden" id="install-cli-btn"></button>
+      </div>
+      <p id="deps-status" class="status"></p>
+      <pre id="cli-install-log" class="log hidden"></pre>
+    </section>
+
+    <!-- 2 · Studio folder -->
+    <section class="step" data-step="2">
+      <h1>Studio folder</h1>
+      <p class="lead">Where should the studio live? If the folder is empty, the toolkit is downloaded into it;
+      if it already contains SoeMind Forge, it's used as-is.</p>
+      <div class="row">
+        <input type="text" id="path-input" spellcheck="false" />
+        <button class="btn ghost" id="browse-btn">Browse…</button>
+      </div>
+      <p id="path-status" class="status"></p>
+      <button class="btn hidden" id="clone-btn">Download studio into this folder</button>
+      <pre id="clone-log" class="log hidden"></pre>
+    </section>
+
+    <!-- 3 · API keys -->
+    <section class="step" data-step="3">
+      <h1>API keys</h1>
+      <p class="lead">Keys are stored only on this machine, in the studio's <code>.env</code> file.</p>
+      <div class="field">
+        <label>Gemini API key <span class="req">required</span> — powers video, images, music, TTS
+          (<span class="hint-link">get one at aistudio.google.com</span>)</label>
+        <input type="password" id="key-gemini" placeholder="AIza…" spellcheck="false" />
+      </div>
+      <div class="field">
+        <label>OpenRouter API key <span class="opt">optional</span> — Seedance talking avatar, GPT/Claude text models</label>
+        <input type="password" id="key-openrouter" placeholder="sk-or-…" spellcheck="false" />
+      </div>
+      <div class="field">
+        <label>RunPod API key <span class="opt">optional</span> — InfiniteTalk lip-sync to your own voice</label>
+        <input type="password" id="key-runpod" placeholder="rpa_…" spellcheck="false" />
+      </div>
+      <p id="keys-status" class="status"></p>
+    </section>
+
+    <!-- 4 · Install & build -->
+    <section class="step" data-step="4">
+      <h1>Install &amp; build</h1>
+      <p class="lead">Installing npm dependencies, building the Gemini and workflow modules, and installing
+      the agent skills. This runs the studio's own setup script and can take a few minutes on first run.</p>
+      <button class="btn" id="setup-btn">Run installation</button>
+      <pre id="setup-log" class="log hidden"></pre>
+      <p id="setup-status" class="status"></p>
+    </section>
+
+    <!-- 5 · Doctor -->
+    <section class="step" data-step="5">
+      <h1>Health check</h1>
+      <p class="lead">Running the studio's <code>doctor</code> — it verifies API keys, builds, and optional tools.</p>
+      <button class="btn" id="doctor-btn">Run health check</button>
+      <pre id="doctor-log" class="log hidden"></pre>
+      <p id="doctor-status" class="status"></p>
+    </section>
+
+    <!-- 6 · Launch -->
+    <section class="step" data-step="6">
+      <h1>Ready to create</h1>
+      <p class="lead">Everything is installed. Launch opens your AI assistant in a terminal inside the
+      studio folder — just tell it what to make.</p>
+      <div class="launch-card">
+        <button class="btn big" id="launch-btn">🚀 Open Studio</button>
+        <div class="row wrap">
+          <button class="btn ghost" id="open-folder-btn">Open studio folder</button>
+          <button class="btn ghost" id="edit-keys-btn">Edit API keys</button>
+          <button class="btn ghost" id="rerun-doctor-btn">Health check</button>
+          <button class="btn ghost" id="rerun-setup-btn">Re-run setup</button>
+        </div>
+      </div>
+      <p id="launch-status" class="status"></p>
+      <div class="tips">
+        <p><strong>Try saying:</strong></p>
+        <ul>
+          <li>"Set up my brand" — interview + project scaffold</li>
+          <li>"Make a 15s TikTok ad for my product"</li>
+          <li>"Create a 30-day content calendar"</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer id="wizard-footer">
+      <button class="btn ghost" id="back-btn">Back</button>
+      <button class="btn" id="next-btn">Next</button>
+    </footer>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

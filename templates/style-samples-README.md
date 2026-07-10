@@ -11,6 +11,13 @@
 2. **Agent learns your style** → Applies to generated content
 3. **No samples?** → Agent uses best practices for engaging content
 
+> **For agents:** this folder is the user's DROP INBOX. Samples the user confirms
+> as references get PROMOTED: copy the file to `assets/style/` and
+> `registerAsset '["{name}","style_references",...]'` with a `what_we_like` note
+> (from the folder's notes.md). Only registered refs are resolvable by
+> `resolveAsset` — preflight and the generate skills read the registry, not this
+> inbox. Caption/script examples go to `assets/style/copy-examples.md`.
+
 ---
 
 ## Folder Structure

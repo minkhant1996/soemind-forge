@@ -14,6 +14,64 @@ capability that isn't wired up; tell the user it's a manual/roadmap item.
 
 ---
 
+## 0-pre. THE THREE TEXT ROUTES — pick one before anything else (READ FIRST)
+
+Every on-video text job goes down one of three routes. Name the route in your
+plan; they have different costs and different failure modes.
+
+| Route | What | Cost | Command | When |
+|---|---|---|---|---|
+| **A — Normal captions** | Transcript pills at 3/4 screen, white-on-dark, accent keywords | **$0** (local Remotion) | `renderCaptionedVideo` (burn onto finished video) or `scrim:true` caption elements in `renderTextMotion` | Every talking/VO video gets these. Default. |
+| **B — Creative text, AI-designed** | Agent designs the overlay: analyzes the frame, picks WHERE (negative space) / WHAT (transcript words) / HOW (per-word style+motion), renders pixel-exact | **$0** (local Remotion) | `renderTextMotion` (+ rembg §6 for behind-subject) | Hero words, kinetic beats, self-demonstrating typography, video-in-text, behind-subject — the default creative route. |
+| **C — Creative text, Omni-baked** | Gemini Omni EDIT redraws the footage with text/graphics baked INTO the scene (hand-lettering, painted-on-wall, doodle worlds) | **PAID ≈ $0.10/sec** (~$1 per 10s clip, token-priced) | `generateOmniVideoClip` task `edit` (§8) | Only when the text must look organic to the scene (drawn/painted/physical) or the whole frame gets restyled. Confirm spend first. |
+
+**Route A house style (production-locked):** white Inter 700 on dark pill
+`rgba(2,8,20,0.62)` + subtle blue accent border, centered at **y = 0.75**
+(`marginBottom ≈ 430` on 1920-tall). Cues from `transcribeAudio` timestamps;
+text from the human script (ASR mangles names). Accent 1–2 keywords per cue
+(`**word**` in renderCaptionedVideo, `==word==` in renderTextMotion).
+
+**Route B is a design task, not a template.** The agent must:
+1. **Grab a frame** (`ffmpeg -ss N -i clip -frames:v 1 f.png`) and LOOK at it.
+2. **Find the subject's negative space** — place words there, never by frame
+   corners. Close 9:16 talking head → the only safe band is ABOVE the head
+   (y ≈ 0.09); b-roll → the empty third. Words on a face = instant amateur.
+3. **Pick words from the video's own transcript** (never leftover/test text),
+   timed to the spoken moment.
+4. **Style per word** — renderTextMotion supports per-element font/size/color/
+   gradient/stroke/glow/badge/highlight, 20+ entrances, loops, letter/word
+   stagger, `mediaFill` (video-in-text), `behind:true` (rembg matte). A word
+   can demonstrate itself: "size" zooms in bigger, "animation" wiggles.
+5. **Frame-grab VERIFY the render before assembling** — placement bugs are
+   invisible in JSON and obvious in a PNG.
+
+**Route C is paid and has hard physics** — read §8 before writing the prompt.
+
+**⚠️ ASK THE USER before any creative text work (binding, RULES.md #8):**
+Route A needs no ask — every VO video gets captions. But when the request
+calls for CREATIVE text, present the choice explicitly and wait:
+
+> "Creative text — two ways: **free** (Remotion — I design the overlay:
+> placement, per-word style, motion; pixel-exact) or **paid with Gemini Omni**
+> (~$0.10/sec, ≈$1 per 10s clip — text drawn/painted INTO the scene,
+> hand-lettered look). Which one?"
+
+Default recommendation = **free (Route B)** unless the user's reference shows
+an in-scene/hand-drawn look only Omni produces. Never route to Omni silently;
+never present Omni without its price.
+
+**If the user picks Omni, CALCULATE the job's real price and show it before
+running** — not just the rate. Count every Omni call the job needs (a >10s
+scene splits into multiple ≤10s calls; retries are extra) at ≈$0.10/sec:
+
+> "Scene is 18s → 2 Omni calls (9s + 9s) ≈ **$1.90**. Budget: $X spent /
+> $Y cap → $Z after. Proceed?"
+
+Then `checkBudget` with that estimate before the first call (the CLI enforces
+the cap, but the user hears the number from you first, per RULES.md #3).
+
+---
+
 ## 0. Caption method selector — DECIDE by the video, don't default blindly (READ FIRST)
 
 Captions are not one-size-fits-all. **Pick the method from the video's shape and
@@ -188,7 +246,58 @@ including hero titles and side badges, not just burned captions.
 
 ---
 
-## 8. Quick capability matrix
+## 8. Route C — creative text with Gemini Omni (PAID, production rules)
+
+Omni `edit` redraws every frame, so text is baked INTO the scene — hand-drawn
+marker doodles, painted-on-wall words, letters the subject walks in front of.
+The look is organic in a way overlays can't fake. It is **not free**:
+**≈ $0.10/second** measured across 16 production calls ($0.89/8s · $0.99/9s ·
+$1.03/10s — token-priced). State the estimate + `checkBudget` before running.
+
+```bash
+node workflows/cli.cjs generateOmniVideoClip '{
+  "task": "edit",
+  "inputVideoPath": "clips/broll-8s.mp4",
+  "prompt": "Keep everything the same — same people, same motion, same camera, same timing, same lighting. Only add bright-yellow hand-drawn marker doodles: 00:02 — a hand-lettered word position sketches itself upper left inside a loose marker oval. 00:05 — a giant doodle checkmark draws itself with sparkle rays and holds. (no subtitles)",
+  "outputPath": "clips/broll-8s-doodled.mp4"
+}'
+# output is ALWAYS silent → remux:
+node workflows/cli.cjs mixVideoAudio '{"videoPath":"clips/broll-8s-doodled.mp4","voiceoverPath":"audio/vo.wav","outputPath":"clips/scene.mp4"}'
+```
+
+**Production rules (each one cost real money to learn — don't rediscover):**
+
+1. **Timestamped beats WORK.** `00:02 — {…} 00:05 — {…}` inside one prompt
+   lands multiple timed scene changes reliably. Key the timestamps to the VO
+   transcript so graphics hit the spoken words.
+2. **Keep the prompt MINIMAL.** Descriptive prompts + a character ref image →
+   `400 Input blocked` ($0, pre-generation). Drop the ref image when the edit
+   doesn't change the person (identity passes through from the footage) and
+   strip adjectives. Minimal prompts passed 5/5 after verbose ones failed.
+3. **Behind-subject text occludes ONLY at head/shoulder height** (3 pass /
+   3 fail): a word crossing the narrow head silhouette hides correctly; a word
+   crossing the torso gets painted IN FRONT every time. Phrase as "painted on
+   the wall BEHIND the man… letters never drawn over his body". For guaranteed
+   torso-level occlusion use the FREE rembg matte (§6) instead.
+4. **`duration` is a STRING** `'4s'…'10s'` — a bare number → `400 Invalid
+   input at 'response_format'`. Edit tasks: don't pass duration/aspect at all.
+5. **10s hard cap per call.** Longer VO → split the base video into ≤10s
+   segments, Omni-edit each, `concat`, then a small `setpts` stretch (≤~7% is
+   invisible on b-roll) to match the VO length, then remux.
+6. **Short English bakes are reliable; keep baked words ≤ 2–3 words.** Verify
+   every bake with a frame grab — labels can come out truncated ("subje").
+7. **The claim follows the route.** If the VO says "cost $0 / local render",
+   that's Route A/B only — re-record the line if the same content ships via
+   Omni (≈$0.10/sec). Never let reused copy overclaim.
+
+**Choosing B vs C:** B is free, pixel-exact, and owns precise typography,
+captions, and guaranteed occlusion. C buys an in-scene organic look (drawn,
+painted, physical) and whole-frame restyles. Ask the user before spending; a
+hybrid (C for the doodle world, A for captions on top) is often the answer.
+
+---
+
+## 9. Quick capability matrix
 
 | Want to do this | Supported today | Tool |
 |---|---|---|
@@ -200,11 +309,13 @@ including hero titles and side badges, not just burned captions.
 | Per-WORD **accent color** in a caption cue (`**word**` → accent) | ✅ | `renderCaptionedVideo` (KineticReel is still per-line only) |
 | Stacked multi-line caption w/ staggered entrance | ✅ | `renderCaptionedVideo` cue `text:"a\nb"` |
 | Text stroke/outline | ✅ in captions (hero `style`) · ❌ roadmap in KineticReel | `renderCaptionedVideo` hero; else `scrim` |
-| Per-WORD size/weight within one KineticReel line | ❌ roadmap | split into adjacent lines as a workaround |
-| Gradient/metallic text color | ❌ roadmap | — |
+| Per-WORD size/weight within one KineticReel line | ❌ roadmap | use `renderTextMotion` separate elements instead |
+| Gradient/metallic text color | ✅ | `renderTextMotion` `gradient` (shadow auto-converts to drop-shadow so the fill stays bright) |
 | Rotated side badge / margin watermark | ❌ roadmap | manual ffmpeg `transpose` workaround, § 1 |
 | Text-behind-subject (occlusion by a moving person) | ✅ recipe (rembg) | § 6 recipe — repeatable, not a one-shot command yet |
-| Skew/3D-perspective per letter | ❌ out of scope for now | — |
+| Skew/3D-perspective per letter | ✅ | `renderTextMotion` `perLetter` (stepY/stepRotate/skew) |
+| Video-inside-letters (media fill) | ✅ | `renderTextMotion` `mediaFill` |
+| Text baked INTO the scene (drawn/painted, subject walks past) | ✅ PAID | Omni edit — §8 (~$0.10/sec) |
 
 Don't tell a user any ❌/⚠️ row "just works" — name the gap and offer the
 workaround or the roadmap item explicitly.

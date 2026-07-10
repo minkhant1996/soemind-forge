@@ -22,6 +22,29 @@ Pull context from the project first when it exists (`project.md` audience/pain p
 
 ---
 
+## STEP 0: Check for reference copy BEFORE writing anything
+
+Voice consistency comes from examples, not adjectives. Before generating hooks,
+scripts, or captions:
+
+1. **Check the registry** for saved copy examples:
+   ```bash
+   node workflows/cli.cjs resolveAsset '["{name}","style-copy"]'   # a style_references id holding copy examples
+   cat projects/{name}/assets/style/copy-examples.md 2>/dev/null
+   cat projects/{name}/style-samples/caption-examples/*.md 2>/dev/null   # user's drop inbox
+   ```
+   Found → extract the patterns (sentence length, emoji use, hashtag style, CTA
+   phrasing, formality) and MIRROR them in everything you write below.
+2. **Nothing saved → ask once:**
+   > *"Do you have past posts, captions, or scripts that worked well — or accounts
+   > whose copy style you like? Paste 1-3 examples (or 'none' — I'll go from brand.md)."*
+   - Examples given → save to `projects/{name}/assets/style/copy-examples.md` and
+     register (`registerAsset '["{name}","style_references",...]'`) so future pieces reuse them.
+   - "none" → proceed from `brand.md` tone and state which tone assumptions you made.
+3. When examples exist, note in `prompts.txt` which reference the copy was matched to.
+
+---
+
 ## STEP 1: Hooks (pick the angle before writing the whole thing)
 
 Generate a spread of hooks across angles and let the user choose 1–2 to build on.

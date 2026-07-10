@@ -40,6 +40,15 @@
    user's call: ASK before picking an art style; PROPOSE camera moves and
    product-shot sets (by channel) for confirmation. Product shots always
    start from a real product photo — never generate the product from text.
+9. **Creative text on video: ASK the route.** Offer the user the explicit
+   choice — **free** (Remotion `renderTextMotion`, agent-designed overlay) or
+   **paid with Gemini Omni** (in-scene baked text, ≈$0.10/sec) — recommend
+   free, and never route to Omni silently. If the user picks Omni, CALCULATE
+   the job's actual total first (count every ≤10s call the scenes need ×
+   ~$0.10/sec, splits and all), state it alongside the budget position, and
+   `checkBudget` before the first call. Normal transcript captions need no
+   ask — every VO video gets them ($0). Route details:
+   `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` §0-pre + §8.
 
 Skills live in `skills/*/SKILL.md`; campaign playbooks in `workflows/recipes/`;
 a filled example project in `examples/demo-brand/`.

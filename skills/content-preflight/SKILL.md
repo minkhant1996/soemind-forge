@@ -40,13 +40,25 @@ Look the pair up in the **Requirements Matrix** to get the required inputs.
 
 ## STEP 2: Check project context
 
+**Never assume which project — and never silently create a new one.** List what
+exists and match the request against it first:
+
 ```bash
-ls projects/{name}/ 2>/dev/null
+ls projects/ 2>/dev/null        # all existing projects
+ls projects/{name}/ 2>/dev/null # the candidate
 ```
 
-- **No project?** Offer: (a) create one now (`/plan-content` sets up the folder +
-  templates), or (b) **minimal mode** — a quick one-off with no brand context.
-  If minimal mode, **say so explicitly** and skip to STEP 5.
+- **Request relates to an existing project** (same business, product line, brand,
+  or audience — read its `project.md` to judge, don't match on name alone) →
+  **ask:** *"This looks like it belongs to `projects/{existing}/` — continue
+  there? You'd inherit its brand, characters, voices, and style refs, so
+  everything stays consistent."* Only branch a new project if the user says so.
+- **Genuinely new/unrelated** → **ask permission before creating:**
+  *"No existing project fits — create `projects/{new-name}/`? (or: one-off in
+  minimal mode, no brand context)"* Don't scaffold folders until they confirm.
+- **No projects at all?** Offer: (a) create one now (`/plan-content` sets up the
+  folder + templates), or (b) **minimal mode** — a quick one-off with no brand
+  context. If minimal mode, **say so explicitly** and skip to STEP 5.
 - **Project exists?** Read:
   - `projects/{name}/templates/project.md` → business, audience, pain points, offer, CTA
   - `projects/{name}/templates/brand.md` → colors, tone, restrictions, aesthetic
@@ -101,8 +113,11 @@ r.ok === false → resolve it:
 ```
 
 **Detail questions per asset type** are in `content-requirements.md §4`. For a
-**character that must stay consistent across many pieces**, generate a small
-character sheet (front + 3⁄4 + profile) and lock it.
+**character that must stay consistent across many pieces**, generate a
+character model sheet — ONE image with a full-body turnaround (front / 3⁄4 /
+side / back), face close-up, half-body shot and costume detail crops
+(`generateCharacterSheet`, default layout) — and lock it. One file = one
+reference slot in every later generation.
 
 ### Registering a new asset (saves the path for reuse)
 
@@ -117,6 +132,34 @@ locations → `'locations'`, music → `'music'`, style refs → `'style_referen
 > **Always pass real, existing relative paths.** Files live under
 > `projects/{name}/assets/`; registry paths are relative to the project root.
 
+### Style references (taste, not identity) — check registry, then ask ONCE
+
+Identity assets keep the SUBJECT consistent; style references keep the LOOK and
+VOICE consistent. Before writing any prompt, script, or caption:
+
+```bash
+node workflows/cli.cjs resolveAsset '["{name}","style-main"]'   # or any style_references id
+```
+
+- **Registered style refs exist** → USE them: pass image files as additional
+  reference images (state the ref's role: "style only, not subject"), and mirror
+  the `what_we_like` notes in prompts/copy. Don't improvise a look the project
+  already has.
+- **None registered** → check the drop inbox first: `ls projects/{name}/style-samples/`
+  (video/image/caption/audio examples the user added by hand, with notes.md).
+  Found something relevant → confirm with the user, then PROMOTE it: copy to
+  `assets/style/`, register it (`style_references`, `what_we_like` from notes.md).
+- **Inbox empty too** → ask ONCE per project:
+  > *"Do you have examples of the look/voice you like — past posts or thumbnails,
+  > captions or scripts that performed well, or a video to emulate? (paste text,
+  > give file paths/links, or say 'none')"*
+  - Images → copy to `assets/style/` → `registerAsset('{name}','style_references',...)`
+    with a `what_we_like` note.
+  - Copy examples (captions/scripts) → save to `assets/style/copy-examples.md`,
+    register the same way — the write-copy skill reads it.
+  - A reference video/link → route through the `analyze-video` skill first.
+  - "none" → note it in brand.md so no one re-asks every piece.
+
 ---
 
 ## STEP 5: Apply the edge-case checklist
@@ -130,7 +173,10 @@ Scan `content-requirements.md §5` and handle anything that applies. The high-va
   "guaranteed/cure/risk-free".
 - **Non-English / Myanmar script** → confirm font/script support.
 - **Series/campaign** → lock character + location + voice + music once; every
-  piece references the same ids.
+  piece references the same ids. ALSO lock a **Style Block**
+  (`templates/style-block.template.md` → `projects/{name}/templates/style-block.md`,
+  registered as `style_references`, locked) — it gets prepended to every prompt of
+  the series so the LOOK stays constant, not just the subjects.
 - **"Just do it"** → still resolve required inputs; state every assumption.
 
 ---

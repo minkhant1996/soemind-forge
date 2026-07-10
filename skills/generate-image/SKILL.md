@@ -214,9 +214,23 @@ Presets involving people (`model-usage`, `hands-*`, `in-hand-scale`) need
 
 3. **Platform?** (determines aspect ratio)
 
-4. **Reference images?** (check assets folder)
+4. **Reference images?** Two kinds — resolve BOTH before writing any prompt:
+   - **Identity refs** (character/product/logo) → `resolveAsset` from the registry;
+     never re-describe a registered subject.
+   - **Style refs** (the LOOK: past thumbnails/posts, an aesthetic the user likes) →
+     check `style_references` in the registry; if none, ask once: *"Any existing
+     images/thumbnails whose style I should match?"* Pass them via
+     `referenceImagePaths` with their role stated ("style only, not subject") and
+     mirror their palette/layout in the prompt. Save + register new ones for reuse.
 
-5. **For carousels:** How many slides?
+5. **For carousels:** How many slides? (style refs apply to EVERY slide — one look
+   across the set)
+
+6. **Part of a series/campaign?** (product-shot campaign, film keyframes, episode
+   art) → the project should have a locked `templates/style-block.md` — prepend it
+   verbatim to EVERY image prompt of the series. If it doesn't exist yet, create it
+   with the user from `templates/style-block.template.md` (variant C for product
+   campaigns) before generating. One-off image → brand.md aesthetic is enough.
 
 ---
 

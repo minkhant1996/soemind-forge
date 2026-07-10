@@ -87,7 +87,10 @@ const COMMANDS = {
     'packageContent', 'transcribeVideo', 'extractClip',
   ],
   'Remotion (local text rendering, $0)': [
-    'renderKineticReel', 'renderSlideStill', 'renderCaptionedVideo',
+    'renderKineticReel', 'renderSlideStill', 'renderCaptionedVideo', 'renderTextMotion',
+  ],
+  'Text tools (frame-aware)': [
+    'suggestTextPlacement', 'suggestTextDesign', 'transcriptToElements', 'subjectMatte',
   ],
   'Manifest (generation audit trail)': [
     'createGenerationManifest', 'addManifestEntry', 'loadManifest',
@@ -126,6 +129,7 @@ const PAID_COMMANDS = new Set([
   'reviewOutput', 'reviewVideoOutput', 'reviewScript', 'reviewImagePrompt', 'reviewVideoPrompt',
   'reviewThumbnail', 'reviewContentPlan', 'reviewBatch',
   'transcribeVideo',
+  'suggestTextPlacement', 'suggestTextDesign', // call a vision model (analyzeImage) — pennies, gate + record
 ]);
 // Edge TTS is FREE (no API key, no paid provider) — never budget-gate it, even
 // though it lives in the 'Audio / music' group above.
@@ -415,10 +419,20 @@ async function runDoctor(ping) {
   else warn('ffmpeg not found — mixVideoAudio/assembleFinal will fail',
     'macOS: brew install ffmpeg · Ubuntu: sudo apt install ffmpeg · Windows: https://ffmpeg.org/download.html');
 
-  const edgeTts = require('child_process').spawnSync('python3', ['-c', 'import edge_tts']).status === 0;
+  // Windows exposes `python`, not `python3` — probe both.
+  const edgeTts = ['python3', 'python'].some((cmd) =>
+    require('child_process').spawnSync(cmd, ['-c', 'import edge_tts']).status === 0);
   if (edgeTts) console.log('  ✅ edge-tts installed (generateEdgeTTSVoiceover — FREE voiceover, no key)');
   else warn('edge-tts not installed — no generateEdgeTTSVoiceover (FREE Microsoft TTS, optional)',
-    'python3 -m pip install edge-tts');
+    'python3 -m pip install edge-tts  (Windows: python -m pip install edge-tts)');
+
+  // rembg powers the text-behind-subject recipe (TEXT-OVERLAY-DESIGN-GUIDE § 6).
+  // The import doubles as a health check: a numpy/scipy ABI mismatch fails here too.
+  const rembg = ['python3', 'python'].some((cmd) =>
+    require('child_process').spawnSync(cmd, ['-c', 'import rembg, PIL']).status === 0);
+  if (rembg) console.log('  ✅ rembg installed (text-behind-subject recipe — TEXT-OVERLAY-DESIGN-GUIDE § 6)');
+  else warn('rembg not installed or broken — no text-behind-subject recipe (optional)',
+    'python3 -m pip install "rembg[cpu]" pillow  — if installed but failing, a numpy 2.x ABI conflict is likely: python3 -m pip install -U scipy');
 
   // Stale pricing silently breaks cost estimates and the budget guard's trust.
   for (const rel of ['gemini/pricing.json', 'openrouter/pricing.json']) {

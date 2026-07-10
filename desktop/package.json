@@ -1,0 +1,14 @@
+{
+  "name": "soemind-forge-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop installer + launcher for SoeMind Forge (Tauri)",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "icon": "tauri icon src-tauri/icons/icon-source.png"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

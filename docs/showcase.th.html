@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>SoeMind Forge สร้างอะไรได้บ้าง — วิดีโอ AI, คำบรรยาย, เสียงพากย์ และวิธีการทำงาน</title>
+<meta name="description" content="ทัวร์แบบเข้าใจง่ายว่า SoeMind Forge ผลิตอะไรได้บ้าง — วิดีโอ AI ด้วย Omni, คำบรรยายที่รองรับภาษาพม่าอย่างปลอดภัย (โหมดปกติและโหมดสร้างสรรค์), เสียงพากย์ทั้งแบบฟรีและแบบมีอารมณ์, อวตารพูดได้, ภาพและเพลง — พร้อมกระบวนการผลิตที่เป็นมืออาชีพและควบคุมงบประมาณได้เบื้องหลังทุกชิ้นงาน" />
+<meta name="author" content="minkhant1996" />
+<link rel="canonical" href="https://soemind-forge.soemindai.com/showcase.th.html" />
+<meta name="robots" content="index, follow" />
+<link rel="alternate" hreflang="en" href="https://soemind-forge.soemindai.com/showcase.html" />
+<link rel="alternate" hreflang="my" href="https://soemind-forge.soemindai.com/showcase.my.html" />
+<link rel="alternate" hreflang="th" href="https://soemind-forge.soemindai.com/showcase.th.html" />
+<link rel="alternate" hreflang="x-default" href="https://soemind-forge.soemindai.com/showcase.html" />
+<meta property="og:locale" content="th_TH" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="SoeMind Forge สร้างอะไรได้บ้าง — และทำอย่างไร" />
+<meta property="og:description" content="วิดีโอ AI ด้วย Omni, คำบรรยาย, เสียงพากย์, อวตารพูดได้, ภาพและเพลง จากภาษาพูดธรรมดา — พร้อมพารามิเตอร์จริงและต้นทุนที่ตรงไปตรงมา" />
+<meta property="og:url" content="https://soemind-forge.soemindai.com/showcase.th.html" />
+<meta property="og:site_name" content="SoeMind Forge" />
+<meta property="og:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta property="og:image:alt" content="Prince Corin at the gates — a frame from Emberfell II, a papercraft short film made with SoeMind Forge" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta name="twitter:title" content="SoeMind Forge สร้างอะไรได้บ้าง — และทำอย่างไร" />
+<meta name="twitter:description" content="ทัวร์แบบเข้าใจง่ายของสตูดิโอคอนเทนต์ AI: วิดีโอ, คำบรรยาย, เสียงพากย์, อวตารพูดได้ และต้นทุน" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --ground: #f6f3ec;         /* off-white page ground */
+    --paper: #efebe2;          /* deeper off-white for alt sections */
+    --ink: #1a1c1f;            /* charcoal */
+    --ink-soft: #50555d;
+    --ink-faint: #7c818a;
+    --blue: #1b4fd8;           /* single accent */
+    --blue-deep: #153fb0;
+    --blue-tint: #e9effe;
+    --blue-grad: linear-gradient(135deg, #3b6bff 0%, #1b4fd8 55%, #153fb0 100%);
+    --free: #0e875a;
+    --free-tint: #e2f2ea;
+    --line: #e4e0d6;
+    --line-strong: #d6d1c4;
+    --code-bg: #1b1e22; --code-ink: #e6e4de; --code-dim: #8b929c; --code-blue: #8fb2ff; --code-free: #5fd3a0;
+    --shadow: 0 10px 30px rgba(26, 28, 31, 0.07);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans Thai", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body { font-family: var(--sans); background: var(--ground); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased; font-size: 17px; }
+  body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: 4px; background: var(--blue-grad); z-index: 100; }
+  h1, h2, h3, h4 { line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+  h1, h2, h3, p, li { overflow-wrap: break-word; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--blue); }
+
+  /* top nav */
+  header.bar { position: sticky; top: 0; z-index: 20; background: rgba(246,243,236,.86);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; align-items: center; gap: 20px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .brand .mark { width: 26px; height: 26px; border-radius: 8px; background: var(--blue-grad);
+    display: grid; place-items: center; color: #fff; font-size: 14px; }
+  nav.top { margin-left: auto; display: flex; gap: 20px; font-size: 14px; font-weight: 500; }
+  nav.top a { color: var(--ink-soft); }
+  nav.top a:hover { color: var(--ink); text-decoration: none; }
+  nav.top .lang { display: inline-flex; gap: 2px; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+  nav.top .lang a { padding: 5px 9px; font-size: 12.5px; color: var(--ink-faint); font-weight: 600; }
+  nav.top .lang a:hover { color: var(--ink); text-decoration: none; background: var(--paper); }
+  nav.top .lang a.on { background: var(--blue); color: #fff; }
+  @media (max-width: 760px) { nav.top a.hide-sm { display: none; } }
+
+  /* hero */
+  .hero { padding: 70px 0 12px; }
+  .hero h1 { font-size: clamp(34px, 5.6vw, 56px); font-weight: 800; max-width: 17ch; }
+  .hero .lead { margin-top: 20px; font-size: clamp(17px, 2.3vw, 21px); color: var(--ink-soft); max-width: 62ch; }
+  .say { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .say .chip { background: var(--white); border: 1px solid var(--line-strong); border-radius: 999px;
+    padding: 8px 15px; font-size: 14.5px; color: var(--ink-soft); box-shadow: var(--shadow); }
+  .say .chip b { color: var(--ink); font-weight: 600; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .sec-head { max-width: 72ch; margin-bottom: 32px; }
+  .sec-head h2 { font-size: clamp(25px, 3.5vw, 34px); font-weight: 800; margin-top: 10px; padding-bottom: 12px; position: relative; }
+  .sec-head h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 46px; height: 3px; border-radius: 3px; background: var(--blue-grad); }
+  .sec-head p { margin-top: 16px; color: var(--ink-soft); font-size: 18px; }
+
+  /* four-step spine */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--white); border: 1px solid var(--line); border-radius: 15px; padding: 21px; box-shadow: var(--shadow); }
+  .step .n { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--blue); }
+  .step h3 { font-size: 17px; font-weight: 700; margin-top: 9px; }
+  .step p { margin-top: 8px; font-size: 14px; color: var(--ink-soft); }
+
+  /* capability cards */
+  .cap { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .cap + .cap { margin-top: 20px; }
+  .cap-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .cap-top h3 { font-size: 22px; font-weight: 800; }
+  .cap-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 30px; margin-top: 20px; }
+  @media (max-width: 780px) { .cap-grid { grid-template-columns: 1fr; gap: 22px; } }
+  .outcome { font-size: 16.5px; color: var(--ink-soft); margin-top: 12px; }
+  .outcome b { color: var(--ink); font-weight: 600; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin: 20px 0 12px; }
+
+  ol.flow { list-style: none; counter-reset: s; }
+  ol.flow li { position: relative; padding: 0 0 13px 34px; counter-increment: s; font-size: 15px; color: var(--ink-soft); }
+  ol.flow li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 23px; height: 23px; border-radius: 50%;
+    background: var(--blue-tint); color: var(--blue-deep); font-size: 12.5px; font-weight: 700; display: grid; place-items: center; font-family: var(--mono); }
+  ol.flow li:last-child { padding-bottom: 0; }
+  ol.flow li b { color: var(--ink); font-weight: 600; }
+
+  .knobs { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .knobs .row { display: grid; grid-template-columns: 122px 1fr; gap: 14px; padding: 11px 15px; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .knobs .row:last-child { border-bottom: 0; }
+  .knobs .row:nth-child(even) { background: var(--paper); }
+  .knobs .k { color: var(--ink-faint); font-weight: 600; font-family: var(--mono); font-size: 12.5px; padding-top: 2px; }
+  .knobs .v { color: var(--ink-soft); }
+  .knobs .v b { color: var(--ink); font-weight: 600; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill { font-size: 12.5px; font-family: var(--mono); background: var(--paper); border: 1px solid var(--line-strong); color: var(--ink-soft); border-radius: 7px; padding: 4px 9px; }
+  .pill.on { background: var(--blue-tint); border-color: transparent; color: var(--blue-deep); }
+
+  table.voices { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.voices th, table.voices td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  table.voices th { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; }
+  table.voices td:first-child { font-weight: 600; color: var(--ink); }
+  table.voices td:nth-child(2) { color: var(--ink-faint); }
+  .scroller { overflow-x: auto; }
+
+  .cmd { background: var(--code-bg); border-radius: 12px; padding: 15px 17px; margin-top: 14px; font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--code-ink); overflow-x: auto; }
+  .cmd .c-note { color: var(--code-dim); }
+  .cmd .c-cmd { color: var(--code-blue); }
+  .cmd .c-free { color: var(--code-free); }
+  .cmd-cap { font-size: 12.5px; color: var(--ink-faint); margin-top: 9px; }
+
+  /* the plain-English instruction you give the agent */
+  .ask { display: flex; gap: 13px; align-items: flex-start; background: var(--blue-tint);
+    border: 1px solid #ccd9fb; border-radius: 13px; padding: 14px 17px; margin-top: 18px; }
+  .ask .who { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue-deep); white-space: nowrap; padding-top: 3px; flex: none; }
+  .ask .q { font-size: 16.5px; color: var(--ink); }
+  .ask .q b { font-weight: 600; }
+
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .badge.free { background: var(--free-tint); color: var(--free); }
+  .badge.core { background: var(--blue-tint); color: var(--blue-deep); }
+  .badge.opt { background: var(--paper); color: var(--ink-faint); border: 1px solid var(--line-strong); }
+  .cost { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--ink-faint); font-weight: 600; white-space: nowrap; }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .modes { grid-template-columns: 1fr; } }
+  .mode { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--paper); }
+  .mode.creative { border-color: #b9caf7; }
+  .mode h4 { font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+  .mode .sub { font-size: 13px; color: var(--ink-faint); margin-bottom: 12px; }
+  .mode ul { padding-left: 18px; font-size: 14px; color: var(--ink-soft); }
+  .mode ul li { margin: 5px 0; }
+
+  /* case studies */
+  .case { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .case + .case { margin-top: 20px; }
+  /* click-to-open project cards */
+  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 820px) { .case-grid { grid-template-columns: 1fr; } }
+  details.case { padding: 0; overflow: hidden; }
+  details.case + details.case { margin-top: 0; }
+  details.case[open] { grid-column: 1 / -1; }
+  details.case > summary { list-style: none; cursor: pointer; display: block; }
+  details.case > summary::-webkit-details-marker { display: none; }
+  .cover { position: relative; aspect-ratio: 16 / 9; background: #0d0f12; overflow: hidden; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+  details.case:not([open]) > summary:hover .cover img { transform: scale(1.035); }
+  .cover .veil { position: absolute; inset: auto 0 0 0; height: 55%;
+    background: linear-gradient(to top, rgba(10,12,15,.86), rgba(10,12,15,0)); }
+  .cover .on-cover { position: absolute; left: 20px; right: 20px; bottom: 15px; color: #fff; }
+  .cover .on-cover h3 { font-size: 21px; font-weight: 800; }
+  .card-body { padding: 20px 22px 22px; }
+  .usecase { display: flex; gap: 11px; align-items: flex-start; font-size: 14.5px; color: var(--ink-soft); }
+  .usecase .uk { flex: none; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue); background: var(--blue-tint); border-radius: 999px; padding: 4px 9px; margin-top: 1px; }
+  .usecase b { color: var(--ink); font-weight: 600; }
+  .opener { margin-top: 15px; font-size: 13.5px; font-weight: 600; color: var(--blue); display: flex; align-items: center; gap: 7px; }
+  .opener::after { content: "▾"; font-size: 11px; transition: transform .25s ease; }
+  details.case[open] .opener::after { transform: rotate(180deg); }
+  details.case:not([open]) .opener .lbl-shut { display: none; }
+  details.case[open] .opener .lbl-open { display: none; }
+  .case-detail { padding: 0 28px 28px; border-top: 1px solid var(--line); margin-top: 4px; }
+  .case-detail > .case-media { margin-top: 24px; }
+  .case-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  .case-head h3 { font-size: 24px; font-weight: 800; margin-top: 5px; }
+  .case-meta { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+  .case-body { display: grid; grid-template-columns: 1.12fr 1fr; gap: 30px; margin-top: 22px; }
+  @media (max-width: 820px) { .case-body { grid-template-columns: 1fr; gap: 22px; } }
+  .statrow { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; }
+  .stat .v { font-size: 21px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 11px; color: var(--ink-faint); margin-top: 2px; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
+  .note { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 12px 15px;
+    background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; font-size: 13.5px; color: var(--ink-soft); }
+  .note b { color: var(--ink); font-weight: 600; }
+  .case-media { margin: 20px 0 4px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #000; aspect-ratio: 16 / 9; box-shadow: var(--shadow); }
+  .case-media video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+  .char-strip { display: flex; gap: 12px; flex-wrap: wrap; margin: 4px 0 2px; }
+  .char-card { width: 104px; margin: 0; }
+  .char-card img { width: 104px; height: 104px; object-fit: cover; display: block; border-radius: 12px; border: 1px solid var(--line); background: #f4efe6; }
+  .char-card figcaption { font-size: 11px; color: var(--ink-faint); margin-top: 5px; text-align: center; line-height: 1.3; }
+  .sheet-strip { display: grid; gap: 14px; margin: 4px 0 2px; }
+  .sheet-card { margin: 0; }
+  .sheet-card img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #f4efe6; }
+  .sheet-card figcaption { font-size: 11.5px; color: var(--ink-faint); margin-top: 6px; line-height: 1.4; }
+  .decrow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 640px) { .decrow { grid-template-columns: 1fr; } }
+  .input { background: var(--blue-tint); border: 1px solid #ccd9fb; border-radius: 12px; padding: 16px 18px; }
+  .input h4 { font-size: 14px; font-weight: 800; color: var(--blue-deep); margin-bottom: 6px; }
+  .input p { font-size: 14px; color: var(--ink-soft); }
+  .decgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 780px) { .decgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .decgrid { grid-template-columns: 1fr; } }
+  .dec { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .dec h4 { font-size: 15px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .dec h4 .d { width: 8px; height: 8px; border-radius: 2px; background: var(--blue); flex: none; }
+  .dec p { font-size: 13.5px; color: var(--ink-soft); }
+  .dec p b { color: var(--ink); font-weight: 600; }
+
+  .costgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 820px) { .costgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 440px) { .costgrid { grid-template-columns: 1fr; } }
+  .costcard { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+  .costcard .amt { font-size: 25px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .costcard .amt.zero { color: var(--free); }
+  .costcard .what { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .costcard .who { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-family: var(--mono); }
+
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) { .trust { grid-template-columns: 1fr; } }
+  .trust .t h3 { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 9px; }
+  .trust .t p { margin-top: 8px; font-size: 14.5px; color: var(--ink-soft); }
+  .tk { width: 9px; height: 9px; border-radius: 2px; background: var(--blue); flex: none; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 64px; color: var(--ink-faint); font-size: 14px; background: var(--paper); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { color: var(--blue); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cap, .step, .costcard { transition: transform .18s ease; }
+    .cap:hover, .costcard:hover { transform: translateY(-2px); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 18px; }
+    .hero { padding: 48px 0 8px; }
+    .cap { padding: 20px; }
+    section { padding: 44px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="./index.html" style="color:var(--ink)"><span class="mark">◆</span> SoeMind&nbsp;Forge</a>
+    <nav class="top">
+      <a href="#flow" class="hide-sm">วิธีการทำงาน</a>
+      <a href="#projects">โปรเจกต์</a>
+      <a href="#video" class="hide-sm">วิดีโอ</a>
+      <a href="#captions" class="hide-sm">คำบรรยาย</a>
+      <a href="#voice">เสียงพากย์</a>
+      <a href="#cost" class="hide-sm">ต้นทุน</a>
+      <a href="./index.html">หน้าแรก</a>
+      <span class="lang"><a href="./showcase.html">EN</a><a href="./showcase.my.html">မြန်မာ</a><a href="./showcase.th.html" class="on">ไทย</a></span>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" style="border-top:0">
+    <div class="eyebrow">สตูดิโอคอนเทนต์ AI</div>
+    <h1>อธิบายด้วยภาษาพูดธรรมดา ได้คอนเทนต์ระดับสตูดิโอ</h1>
+    <p class="lead">วิดีโอ คำบรรยาย เสียงพากย์ ภาพ และเพลง — วางแผน ตั้งราคา ผลิต
+      และแพ็กพร้อมโพสต์ คุณคุยกับมันเหมือนคุยกับคน ส่วนเบื้องหลังมันดำเนิน
+      กระบวนการผลิตที่มีวินัยและทำซ้ำได้</p>
+    <div class="say">
+      <span class="chip">“ทำ<b>โฆษณา TikTok</b> ให้แบรนด์กาแฟของฉัน”</span>
+      <span class="chip">“เพิ่ม<b>คำบรรยาย</b>ภาษาพม่า”</span>
+      <span class="chip">“อัด<b>เสียงพากย์ที่อบอุ่น</b>”</span>
+      <span class="chip">“เปลี่ยนเป็นวิดีโออธิบายสไตล์<b>ดินปั้น</b>”</span>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">กระบวนการทำงานแบบมืออาชีพ</div>
+        <h2>ทุกงานดำเนินสี่ขั้นตอนเดียวกัน</h2>
+        <p>ไม่มีการเดา ไม่มีบิลเซอร์ไพรส์ ไม่มี “หน้าคนแปลกใหม่ในทุกฉาก” แกนนี้อยู่ใต้
+          ทุกอย่างด้านล่าง — มันคือสิ่งที่ทำให้ผลงานสม่ำเสมอและปลอดภัยพอที่จะส่งมอบให้ลูกค้า</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>ตั้งค่าแบรนด์</h3>
+          <p>ชื่อ กลุ่มเป้าหมาย สีสัน โทน และสิ่งที่คุณไม่อยากให้พูดถึงเลย ถูกบันทึกครั้งเดียวและนำไปใช้ซ้ำทุกที่</p></div>
+        <div class="step"><div class="n">02</div><h3>ตกลงเรื่องต้นทุน</h3>
+          <p>คุณเห็นราคาประเมิน<em>ก่อน</em>ที่จะสร้างอะไรก็ตาม เพดานงบประมาณถูกบังคับใช้ในโค้ด — ใช้เกินไม่ได้</p></div>
+        <div class="step"><div class="n">03</div><h3>พรีวิวก่อน แล้วจึงผลิต</h3>
+          <p>พรีวิวราคาถูกก่อน คุณเลือกทิศทาง แล้วมันจึงจ่ายเงินสำหรับการเรนเดอร์ชิ้นงานสำเร็จ</p></div>
+        <div class="step"><div class="n">04</div><h3>แพ็กพร้อมโพสต์</h3>
+          <p>ปรับขนาดถูกต้องตามแต่ละแพลตฟอร์ม พร้อมคำบรรยาย แฮชแท็ก และ alt text — พร้อมบันทึกว่ามันถูกสร้างขึ้นอย่างไรอย่างชัดเจน</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">โปรเจกต์จริง · ทีละขั้นตอน</div>
+        <h2>สองภาพยนตร์ที่สร้างด้วยมันจริง ๆ</h2>
+        <p>ไม่ใช่ตัวอย่างจำลอง — เป็นหนังสั้นจริงที่ผลิตครบวงจร ด้วยไปป์ไลน์จริง จำนวนผลงานจริง
+          และต้นทุนจริงจากบัญชีแยกประเภทของโปรเจกต์ ทั้งคู่เป็นหนังสั้นสไตล์กระดาษตัดความยาวราว 92 วินาที</p>
+      </div>
+
+      <div class="case-grid">
+
+      <details class="case">
+        <summary>
+          <div class="cover">
+            <img loading="lazy" src="./assets/case/cover-emberfell.jpg" alt="Emberfell II: The Gates key art" />
+            <div class="veil"></div>
+            <div class="on-cover">
+              <div class="eyebrow" style="color:#9fc0ff">Case study · คารวะสไตล์กระดาษตัด</div>
+              <h3>Emberfell II: The Gates</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="case-meta">
+              <span class="badge core">3D papercraft</span>
+              <span class="badge opt">16:9 · YouTube</span>
+              <span class="badge opt">104 วิ · 12 ฉาก</span>
+            </div>
+            <div class="usecase" style="margin-top:14px">
+              <span class="uk">Use case</span>
+              <span><b>แค่คุยกับ agent เรื่องโครงเรื่อง</b> ไม่ต้องเขียน prompt ไม่ต้องมีชอตลิสต์ — บทสนทนาเรื่อง Arthas และ the Culling of Stratholme แล้วมันเขียนบท คัดตัวละคร เลือกโมเดลให้เหมาะกับแต่ละช็อต และถ่ายทำให้</span>
+            </div>
+            <div class="opener"><span class="lbl-open">ดูวิธีสร้าง</span><span class="lbl-shut">ซ่อนรายละเอียด</span></div>
+          </div>
+        </summary>
+
+        <div class="case-detail">
+        <div class="case-media"><video poster="./assets/case/emberfell.jpg" controls preload="none" playsinline><source src="./assets/case/emberfell.mp4" type="video/mp4"></video></div>
+        <p class="outcome"><b>เป้าหมาย:</b> หนังสั้นกระดาษตัดความยาว ~105 วินาที คารวะฉากที่หนักที่สุดใน
+          <b>Warcraft III: Reign of Chaos</b> — the Culling of Stratholme ที่ Arthas สั่งสังหารเมืองซึ่งติดโรคระบาด
+          ขณะที่ผู้คนยังเป็นมนุษย์อยู่ ตีความใหม่ในสไตล์กระดาษตัด ด้วยตัวละครและบทสนทนาต้นฉบับทั้งหมด:
+          เจ้าชายที่ต้องปิดประตูใส่ประชาชนของตัวเอง อาจารย์ที่อ้อนวอนไม่ให้ทำ และหมอผู้เยียวยาที่เดินจากไป
+          มันอ้างอิงสถานการณ์ ไม่ใช่การลอกเลียน</p>
+        <div class="ask"><span class="who">คุณบอกกับ agent ว่า</span>
+          <span class="q">“เล่าเรื่อง Arthas จาก Warcraft III ให้ฟังหน่อย — เรื่องไหนจะดึงดูดความสนใจที่สุด? ทำเป็น<b>หนังสั้นกระดาษตัด</b> ไม่เกิน 2 นาที ใช้ <b>Omni Flash</b> สำหรับฉากที่มีการแสดง และ <b>Veo 3.1 lite</b> สำหรับฉากเงียบ”</span></div>
+
+        <div class="label">ความโปร่งใส — character model sheet ที่สร้างขึ้นจริง</div>
+        <div class="sheet-strip">
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-corin-sheet.jpg" alt="corin papercraft model sheet" /><figcaption><b>Prince Corin</b> — ชีทเดียว: turnaround เต็มตัว (หน้า / ¾ / ข้าง / หลัง), โคลสอัพใบหน้า, ครึ่งตัว และภาพขยายรายละเอียดตราสุริยะ ดาบ และรองเท้า</figcaption></figure>
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-veyron-sheet.jpg" alt="veyron papercraft model sheet" /><figcaption><b>Marshal Veyron</b> — อาจารย์ผู้อ้อนวอนให้เขาหาทางอื่น สร้างจากข้อความล้วน ไม่มีภาพอ้างอิง</figcaption></figure>
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-sera-sheet.jpg" alt="sera papercraft model sheet" /><figcaption><b>Sera</b> — หมอผู้พบโรคระบาด และเดินจากไป บุคลิกของเธอถูกพิมพ์ไว้บนชีท: มันกำกับการแสดงของเธอในทุกคลิป</figcaption></figure>
+        </div>
+        <div class="note"><span>หนึ่งภาพต่อหนึ่งตัวละคร ไม่ใช่หนึ่งภาพต่อหนึ่งมุม — อัตลักษณ์ทั้งหมดจึงเดินทางไปในช่องอ้างอิงเดียว ทุก keyframe ที่มีตัวละครอ้างอิงชีทเหล่านี้ (ของ Corin ใน 7 ภาพ) ใบหน้าจึงคงที่ตลอดทั้งเรื่อง</span></div>
+
+        <div class="case-body">
+          <div>
+            <div class="label">สร้างขึ้นอย่างไร — pipeline จริง</div>
+            <ol class="flow">
+              <li><b>ล็อกนักแสดง</b> — Corin ต่อยอดจากหนังเรื่องแรก; Veyron และ Sera สร้างเป็น model sheet ใหม่จากข้อความ แล้วบันทึกลง registry</li>
+              <li><b>สร้าง 12 keyframe</b> — ภาพนิ่งที่อนุมัติแล้วหนึ่งภาพต่อฉาก แต่ละภาพอ้างอิงชีทที่ล็อกไว้ <em>อนุมัติก่อนจ่ายค่าวิดีโอใด ๆ</em></li>
+              <li><b>เลือกโมเดลให้เหมาะกับช็อต</b> — 8 ฉากการแสดงใช้ Omni <code>3d-papercraft</code> (ใบหน้า บทพูด ลิปซิงค์); 4 ฉากเงียบใช้ <b>Veo 3.1 lite</b> ที่ $0.03/วินาที — เถ้าโปรยลง กังหันกระดาษหมุน ความเงียบหลังเหตุการณ์</li>
+              <li><b>ปล่อยให้คลิปพูดเอง</b> — Omni สร้างบทพูดและเสียงในรอบเดียวกัน ไม่ต้องมีเสียงพากย์แยก มีดนตรีประกอบ 106 วินาทีรองอยู่ด้านล่าง</li>
+              <li><b>ประกอบ</b> — เย็บ 12 ฉากเข้าด้วยกัน เสียงต้นฉบับเต็มระดับ ดนตรีที่ 14%</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">สิ่งที่ได้ออกมา</div>
+            <div class="statrow">
+              <div class="stat"><div class="v">104.0s</div><div class="l">หนังฉบับสมบูรณ์</div></div>
+              <div class="stat"><div class="v">12</div><div class="l">คลิป / ฉาก</div></div>
+              <div class="stat"><div class="v">$11.93</div><div class="l">ใช้จ่ายทั้งหมด</div></div>
+              <div class="stat"><div class="v">$25</div><div class="l">เพดานงบ</div></div>
+            </div>
+            <div class="pills">
+              <span class="pill">model sheet ใหม่ 2 ชุด</span><span class="pill">12 keyframe</span><span class="pill">8 คลิป Omni</span><span class="pill">4 คลิป Veo-lite</span><span class="pill">ดนตรี 1 แทร็ก</span><span class="pill">หนัง 1 เรื่อง (104 วิ)</span>
+            </div>
+            <div class="note"><span>สองฉากถูกตัวกรองความปลอดภัยปฏิเสธ และอีกหนึ่งฉากต้องจัดวางใหม่ถึงสามครั้งกว่าการเคลื่อนไหวจะอ่านออก — ทุกครั้งที่ลองใหม่ถูกบันทึกไว้ใน <code>prompts.txt</code> ของโฟลเดอร์ และ keyframe ราคาถูกได้รับอนุมัติเสมอก่อนจ่ายค่าคลิป ~$1</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <!-- CASE 2 -->
+      <details class="case">
+        <summary>
+          <div class="cover">
+            <img loading="lazy" src="./assets/case/cover-a-second-either-way.jpg" alt="A Second Either Way key art" />
+            <div class="veil"></div>
+            <div class="on-cover">
+              <div class="eyebrow" style="color:#9fc0ff">Case study · สร้างใหม่จากวิดีโออ้างอิง</div>
+              <h3>A Second Either Way</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="case-meta">
+              <span class="badge core">3D papercraft</span>
+              <span class="badge opt">16:9 · YouTube</span>
+              <span class="badge opt">92 วิ · 11 ฉาก</span>
+            </div>
+            <div class="usecase" style="margin-top:14px">
+              <span class="uk">Use case</span>
+              <span><b>วางลิงก์ YouTube แล้วบอกสไตล์ที่ต้องการ</b> “วิเคราะห์วิดีโอนี้ ทำแบบเดียวกันในสไตล์กระดาษตัด ไม่เกิน 2 นาที” มันดูต้นฉบับความยาว 5:18 แยกเป็น 70 ฉาก แล้วสร้างโครงสร้างขึ้นใหม่ด้วยตัวละครต้นฉบับ</span>
+            </div>
+            <div class="opener"><span class="lbl-open">ดูวิธีสร้าง</span><span class="lbl-shut">ซ่อนรายละเอียด</span></div>
+          </div>
+        </summary>
+
+        <div class="case-detail">
+        <div class="case-media"><video poster="./assets/case/a-second-either-way.jpg" controls preload="none" playsinline><source src="./assets/case/a-second-either-way.mp4" type="video/mp4"></video></div>
+        <p class="outcome"><b>เป้าหมาย:</b> จำลอง<em>โครงสร้างและจังหวะ</em>ของหนังสั้นที่มีอยู่แล้ว
+          (“ONE SECOND LATE”) ให้เป็นเรื่องรักแบบ “ประตูเลื่อน” สไตล์กระดาษตัด — ด้วยตัวละครต้นฉบับดั้งเดิมทั้งหมดและ
+          บทพูดที่เรียบเรียงใหม่ ไม่มีการลอกฟุตเทจหรือหน้าตาใคร และ <b>บีบอัดจาก 5:18 ให้เหลือต่ำกว่า 2 นาที</b></p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“[ลิงก์ YouTube] — <b>วิเคราะห์วิดีโอนี้</b> ฉันอยากสร้างอะไรทำนองนี้แต่เป็น<b>สไตล์กระดาษตัด</b> ไม่เกิน 2 นาที”</span></div>
+
+        <div class="label">ความโปร่งใส — character sheet ที่สร้างขึ้นจริง (ผลลัพธ์ขั้นตอนที่ 2)</div>
+        <div class="char-strip">
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-front.jpg" alt="Eli character sheet — front view, papercraft" /><figcaption>Eli · front</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-three_quarter.jpg" alt="Eli character sheet — three-quarter view" /><figcaption>Eli · ¾ view</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-full_body.jpg" alt="Eli character sheet — full body" /><figcaption>Eli · full body</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-front.jpg" alt="Nora character sheet — front view, with her red scarf" /><figcaption>Nora · front</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-three_quarter.jpg" alt="Nora character sheet — three-quarter view" /><figcaption>Nora · ¾ view</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-full_body.jpg" alt="Nora character sheet — full body" /><figcaption>Nora · full body</figcaption></figure>
+        </div>
+        <div class="note"><span>ผ้าพันคอสีแดงของ Nora — พร็อพ meet-cute ที่ตีความใหม่ — ถูกล็อกไว้ใน sheet เอง จึงคงอยู่ทุกฉากโดยไม่ต้องบรรยายซ้ำ</span></div>
+
+        <div class="case-body">
+          <div>
+            <div class="label">สร้างขึ้นอย่างไร — ไปป์ไลน์จริง</div>
+            <ol class="flow">
+              <li><b>วิเคราะห์วิดีโออ้างอิง</b> — เอเจนต์ดูต้นฉบับความยาว 5:18 และผลิตการแยกย่อย <b>70 ฉาก</b> ของโครงสร้าง จังหวะ และสไตล์ พร้อมแผนการจำลอง <em>(~$0.17)</em></li>
+              <li><b>ล็อกตัวละครต้นฉบับ 2 ตัว</b> — Eli และ Nora พร้อมผ้าพันคอสีแดงอันเป็นเอกลักษณ์ (พร็อพจุดพบรักของหนังต้นฉบับ ที่คิดใหม่) — ชีตตัวละครลงในรีจิสทรี</li>
+              <li><b>สร้างคีย์เฟรม 11 ภาพ</b> — ภาพนิ่งที่อนุมัติแล้วซึ่งอ้างอิงตัวละครที่ล็อกไว้</li>
+              <li><b>แปลงเป็น 11 คลิป</b> — Omni <code>3d-papercraft</code>, image-to-video, การเคลื่อนกล้องต่อคลิป (8–10 วินาทีต่อคลิป)</li>
+              <li><b>เสียงพากย์และเพลง — แล้วตัดสินใจ</b> — สร้างเสียงพากย์ครอบคลุม 3 เสียง แต่พอฟังจริง เสียง Omni ดั้งเดิมของคลิปดีกว่า จึงตัด TTS ออกและใช้เสียงต้นฉบับแทน</li>
+              <li><b>ประกอบร่าง</b> — เย็บเข้าด้วยกันเป็นฉบับตัดต่อสำเร็จความยาว 92 วินาที โดยคงโครงสร้างไทม์ไลน์คู่ขนานไว้ครบ</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ได้อะไรออกมา</div>
+            <div class="statrow">
+              <div class="stat"><div class="v">92.0s</div><div class="l">ภาพยนตร์สำเร็จ</div></div>
+              <div class="stat"><div class="v">70→11</div><div class="l">ฉากอ้างอิง → คลิป</div></div>
+              <div class="stat"><div class="v">$10.85</div><div class="l">ใช้จ่ายทั้งหมด</div></div>
+              <div class="stat"><div class="v">$25</div><div class="l">เพดานงบประมาณ</div></div>
+            </div>
+            <div class="pills">
+              <span class="pill">ชีตตัวละคร 2 ชุด</span><span class="pill">คีย์เฟรม 11 ภาพ</span>
+              <span class="pill">11 คลิป</span><span class="pill">เสียงพากย์ 5 เสียง (ใช้เสียงต้นฉบับของคลิป)</span>
+              <span class="pill">เพลงประกอบ 1 เพลง</span><span class="pill">ภาพยนตร์สำเร็จ 1 เรื่อง (32MB)</span>
+            </div>
+            <div class="note"><span>ขั้นตอนสร้างเพลง<b>ล้มเหลวกลางคัน</b> (โมเดลคืนค่า 404) ไปป์ไลน์จับข้อผิดพลาดได้ รันใหม่ด้วยตัวสำรองและประกอบร่างใหม่ — โดยนำเสียงพากย์ที่ทำไว้แล้วกลับมาใช้ ในราคา $0.08 <b>ไม่มีอะไรสูญหายหรือถูกเก็บเงินซ้ำ</b></span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="video">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">ความสามารถ</div>
+        <h2>การสร้างวิดีโอ</h2>
+        <p>จากประโยคเดียว ภาพเริ่มต้น หรือคลิปที่มีอยู่แล้ว — พร้อมเสียงจริงแบบเนทีฟในรอบเดียวกัน</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>Omni video</h3>
+          <span class="badge core">Gemini · หลัก</span>
+          <span class="cost">~$1.03 / 10-second clip</span>
+        </div>
+        <p class="outcome"><b>สิ่งที่คุณได้:</b> คลิปวิดีโอสั้นที่เสร็จสมบูรณ์ (ยาวสูงสุดราว 10 วินาที) โดยมีการเคลื่อนไหว
+          <b>และ</b> เสียงสร้างขึ้นพร้อมกัน — โฆษณาสินค้า วิดีโออธิบายแบบพูดได้ หรือฉากในสไตล์
+          ศิลปะที่เลือก มันยัง<b>แก้ไขคลิปที่คุณมีอยู่แล้ว</b>ได้ด้วย: เพิ่มข้อความบนจอ เอฟเฟกต์เสียง หรือ
+          เปลี่ยนสไตล์ โดยไม่ต้องสร้างใหม่ตั้งแต่ต้น</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“ทำ<b>วิดีโออธิบายสไตล์ดินปั้น 10 วินาที</b> ของถุงกาแฟฉัน แสงเช้าอบอุ่น ค่อย ๆ ดันกล้องเข้า”</span></div>
+        <div class="cap-grid">
+          <div>
+            <div class="label">สตูดิโอของคุณสร้างมันอย่างไร</div>
+            <ol class="flow">
+              <li>เลือก<b>จุดเริ่มต้น</b> — พรอมป์ข้อความ ภาพคีย์เฟรมหนึ่งภาพ ภาพอ้างอิงสูงสุดห้าภาพ หรือวิดีโอที่มีอยู่เพื่อแก้ไข</li>
+              <li>เลือก<b>สไตล์ศิลปะ</b> (หรือคงความสมจริงเหมือนภาพถ่าย) สิ่งนี้เป็นการตัดสินใจของคุณเสมอ — ไม่มีการเลือกแบบเงียบ ๆ</li>
+              <li>เสนอ<b>การเคลื่อนกล้อง</b>จากพรีเซ็ตที่ทดสอบแล้ว 46 แบบ — หนึ่งการเคลื่อนที่สะอาดต่อคลิป</li>
+              <li>ประเมินต้นทุน ยืนยัน แล้วเรนเดอร์ พรอมป์ถูกบันทึกไว้เพื่อให้สร้างคลิปเดิมซ้ำได้แม่นยำ</li>
+            </ol>
+            <div class="cmd">
+              <span class="c-note"># behind the scenes, one command runs the clip</span><br>
+              <span class="c-cmd">generateOmniVideoClip</span> '{<br>
+              &nbsp;&nbsp;"prompt": "Founder holds the bag to camera, warm light",<br>
+              &nbsp;&nbsp;"artStyle": "claymation", "cameraMove": "slow-push-in",<br>
+              &nbsp;&nbsp;"outputPath": "…/clip-01.mp4" }'
+            </div>
+            <div class="cmd-cap">คำสั่งเดียวเข้าไป ได้คลิปสำเร็จหนึ่งคลิปออกมา — พร้อมเสียง</div>
+          </div>
+          <div>
+            <div class="label">ห้าจุดเริ่มต้น</div>
+            <div class="knobs">
+              <div class="row"><div class="k">text</div><div class="v"><b>พรอมป์อย่างเดียว</b> — วิดีโออธิบาย รีลโฆษณา</div></div>
+              <div class="row"><div class="k">image</div><div class="v"><b>คีย์เฟรมหนึ่งภาพ</b> — ทำให้ภาพนิ่งที่อนุมัติแล้วเคลื่อนไหว</div></div>
+              <div class="row"><div class="k">references</div><div class="v"><b>2–5 ภาพ</b> — ล็อกตัวละคร + สินค้า + ฉาก</div></div>
+              <div class="row"><div class="k">edit</div><div class="v"><b>แก้คลิป</b> — เพิ่มข้อความ / SFX / เปลี่ยนสไตล์</div></div>
+              <div class="row"><div class="k">extend</div><div class="v"><b>ต่อ</b>ฉากออกไป</div></div>
+            </div>
+            <div class="label">10 สไตล์ศิลปะ — คุณเลือกเอง</div>
+            <div class="pills">
+              <span class="pill">claymation</span><span class="pill">pixel-art</span>
+              <span class="pill">whiteboard-doodle</span><span class="pill">fluffy-toy</span>
+              <span class="pill">3d-papercraft</span><span class="pill">low-poly</span>
+              <span class="pill">2d-illustration</span><span class="pill">isometric-flat-vector</span>
+              <span class="pill">mixed-media</span><span class="pill">3d-mix</span>
+            </div>
+            <p class="outcome" style="font-size:13.5px;color:var(--ink-faint)">
+              ต้องการ B-roll เชิงภาพยนตร์ หรือการเผยเฟรมแรก-เฟรมสุดท้ายที่แม่นยำแทน? เอนจินภาพยนตร์
+              ความละเอียดสูงกว่า (Veo) จัดการสิ่งเหล่านั้น — คิดราคาต่อวินาที</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="captions">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">ความสามารถ</div>
+        <h2>การเพิ่มข้อความและคำบรรยาย</h2>
+        <p>ข้อความถูกเรนเดอร์ในเครื่องด้วยฟอนต์จริง — คมชัดระดับพิกเซล รองรับภาษาพม่าอย่างปลอดภัย และ<b>ฟรี</b> AI วาด
+          ฉากได้สวยงามแต่ทำตัวอักษรเพี้ยน ดังนั้นถ้อยคำจึงไม่แตะ AI เลย</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>คำบรรยาย</h3>
+          <span class="badge free">$0 · เรนเดอร์ในเครื่อง</span>
+          <span class="cost">พม่า / ไทย / ละติน — จัดรูปถูกต้องทั้งหมด</span>
+        </div>
+        <p class="outcome"><b>สิ่งที่คุณได้:</b> คำบรรยายจับเวลาที่เบิร์นลงบนวิดีโอสำเร็จ โดยจังหวะเวลามาจาก
+          เสียงจริง คุณเลือก<b>วิธีการตามหน้าที่ของวิดีโอ</b> — ไม่ใช่ค่าเริ่มต้นตายตัวแบบเดียว</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“<b>เพิ่มคำบรรยายภาษาพม่า</b>ในวิดีโอนี้และไฮไลต์ชื่อสินค้า”</span></div>
+
+        <div class="label">สองวิธีทำคำบรรยาย — เลือกตามวิดีโอ</div>
+        <div class="modes">
+          <div class="mode">
+            <h4>โหมดปกติ</h4>
+            <div class="sub">ค่าเริ่มต้นที่ปลอดภัย อ่านง่ายเสมอ</div>
+            <ul>
+              <li><b>ทรานสคริปต์แบบแคปซูล</b>สะอาดที่ส่วนล่างของจอ ทีละบรรทัด</li>
+              <li>อยู่ในโซนปลอดภัย พ้นจากปุ่มของแพลตฟอร์ม</li>
+              <li>เหมาะกับพูดหน้ากล้อง สอนใช้งาน วิดีโออธิบายตรงไปตรงมา</li>
+              <li>คำสำคัญหนึ่งคำสามารถเรืองแสงในสีเน้นของคุณได้</li>
+            </ul>
+          </div>
+          <div class="mode creative">
+            <h4>โหมดสร้างสรรค์</h4>
+            <div class="sub">พลังแบบกองบรรณาธิการ เลือกอย่างตั้งใจ (ครั้งเดียวต่อคลิป)</div>
+            <ul>
+              <li><b>คำเด่นซูมเข้า</b> — หนึ่งคำใหญ่ต่อจังหวะ สำหรับฮุกและการเร้าใจ</li>
+              <li><b>เน้นคีย์เวิร์ด</b> — ไฮไลต์ 1–2 คำที่สำคัญ</li>
+              <li><b>ป้ายสถานที่ / ป้ายกำกับ</b>ที่ด้านบน สำหรับการท่องเที่ยวและหลายฉาก</li>
+              <li><b>ข้อความหลังตัวแบบ</b> — คำอยู่<em>ด้านหลัง</em>ตัวคนขณะเคลื่อนไหว</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cap-grid" style="margin-top:24px">
+          <div>
+            <div class="label">สตูดิโอของคุณสร้างมันอย่างไร</div>
+            <ol class="flow">
+              <li>ถอดเสียงเพื่อจับเวลาที่แม่นยำ (ทุกภาษา รวมถึงพม่า)</li>
+              <li>เลือกวิธีการข้างต้นที่เข้ากับรูปทรงและเป้าหมายของวิดีโอ</li>
+              <li>ตั้งขนาด ความสูงจากขอบล่าง และสีเน้น มาร์กคำที่จะเน้น</li>
+              <li>เบิร์นเข้าในเครื่อง — ไม่มีค่าใช้จ่าย เสียงไม่ถูกแตะต้อง และบันทึกไฟล์ซับไตเติลที่ตรงกันไว้ด้วย</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ปุ่มปรับ</div>
+            <div class="knobs">
+              <div class="row"><div class="k">style</div><div class="v"><b>pill</b> (ทรานสคริปต์) หรือ <b>hero</b> (คำใหญ่โล่ง)</div></div>
+              <div class="row"><div class="k">pos</div><div class="v">ล่าง · กลาง · <b>บน</b> (ป้าย)</div></div>
+              <div class="row"><div class="k">size</div><div class="v">กำหนดขนาดต่อบรรทัด</div></div>
+              <div class="row"><div class="k">accent</div><div class="v">สีสำหรับคำที่ <b>**ไฮไลต์**</b></div></div>
+              <div class="row"><div class="k">marginBottom</div><div class="v">ความสูงเหนือ UI ของแพลตฟอร์ม</div></div>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-note"># timings come from the transcript, then:</span><br>
+              <span class="c-cmd">renderCaptionedVideo</span> '{ "videoPath":"final.mp4",<br>
+              &nbsp;&nbsp;"cues":[{"start":0,"end":2,"text":"the **VoxCPM** way"}],<br>
+              &nbsp;&nbsp;"accentColor":"#1b4fd8", "outputPath":"final-cc.mp4" }'
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="text-ai">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">เบื้องหลังการทำงาน</div>
+        <h2>คำบรรยายที่อ่านเฟรมภาพก่อนเป็นอันดับแรก</h2>
+        <p>ข้อความไม่ได้ถูกวางลงในตำแหน่งตายตัวแล้วหวังว่าจะเข้าที่ ก่อนเรนเดอร์ เอเจนต์จะตรวจสอบเฟรมภาพจริง
+          และเสียงในวิดีโอ แล้วตัดสินใจทุกคุณสมบัติเพื่อให้คำต่าง ๆ เข้ากับช็อต — อ่านง่าย
+          ตรงกับแบรนด์ และไม่บังใบหน้าเด็ดขาด</p>
+      </div>
+      <div class="cap">
+        <div class="decrow">
+          <div class="input"><h4>อ่านเฟรมภาพ</h4><p>พื้นที่ว่างอยู่ตรงไหน พื้นหลังสว่าง
+            มืด หรือรกตา และใบหน้าของตัวแบบอยู่ตำแหน่งใด — วิเคราะห์ได้จากเฟรมภาพ</p></div>
+          <div class="input"><h4>อ่านเสียง</h4><p>จังหวะเวลาของทุกคำอย่างแม่นยำจากบทถอดเสียง และ
+            คำใดที่ต้องเน้น — เพื่อให้คำบรรยายลงจังหวะพอดี</p></div>
+        </div>
+        <div class="label">แล้วจึงตัดสินใจ — แยกตามแต่ละช็อต</div>
+        <div class="decgrid">
+          <div class="dec"><h4><span class="d"></span>ตำแหน่ง</h4><p>วางไว้ใน<b>บริเวณที่ว่างที่สุด</b> (ท้องฟ้า ผนัง ผืนน้ำ) — ไม่ใช่กลางจอแบบสุ่มสี่สุ่มห้า — และเลี่ยงใบหน้ากับโซนปุ่มของแพลตฟอร์ม</p></div>
+          <div class="dec"><h4><span class="d"></span>ขนาด</h4><p><b>คำที่เป็นฮุก</b>จะใหญ่ (อาจล้นออกนอกขอบเฟรมได้) ส่วนบรรทัดบทถอดเสียงจะคงขนาดพอเหมาะ ขนาดจึงสะท้อนว่าคำนั้นสำคัญแค่ไหน</p></div>
+          <div class="dec"><h4><span class="d"></span>สี</h4><p>เทียบสีกับพื้นหลัง — <b>สีอ่อนบนพื้นเข้ม สีเข้มบนพื้นอ่อน</b> — พร้อมเปลี่ยนคำสำคัญ 1–2 คำให้เป็นสีเน้นของแบรนด์คุณ</p></div>
+          <div class="dec"><h4><span class="d"></span>ความชัดเจน</h4><p>บนพื้นหลังที่รกตาหรือมีลวดลาย จะเพิ่ม<b>แผ่นฝ้าหรือแคปซูลรองพื้น</b>ไว้ด้านหลังข้อความ เพื่อไม่ให้ข้อความจมหายไป</p></div>
+          <div class="dec"><h4><span class="d"></span>สไตล์</h4><p>เลือกตามช็อต: <b>บทถอดเสียงแบบแคปซูล</b>, <b>ฮีโร่พันช์อิน</b>, <b>ป้ายบอกสถานที่ด้านบน</b>, หรือสไตล์เอกลักษณ์ <b>ข้อความอยู่หลังตัวแบบ</b></p></div>
+          <div class="dec"><h4><span class="d"></span>แอนิเมชัน</h4><p><b>การเข้าแบบสปริง</b> ทีละบรรทัด <b>จับจังหวะให้ตรงกับเสียง</b> — อ่านง่าย ไม่ใช่กำแพงตัวอักษร</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voice">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">ความสามารถ</div>
+        <h2>เสียงพากย์</h2>
+        <p>สองเส้นทาง: ผู้บรรยายธรรมดาแบบ<b>ฟรี</b> หรือเสียงที่<b>มีอารมณ์และกำกับได้</b>ที่คุณปรับได้ทีละบรรทัด</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>เสียงบรรยายฟรี — เสียงจาก Microsoft Edge</h3>
+          <span class="badge free">$0 · ไม่ต้องใช้ API key</span>
+          <span class="cost">รวมภาษาพม่า (ชาย &amp; หญิง)</span>
+        </div>
+        <p class="outcome"><b>สิ่งที่คุณได้:</b> เสียงบรรยายที่สะอาดชัดเจนโดยไม่มีค่าใช้จ่าย — เหมาะกับฉบับร่าง งานปริมาณมาก
+          หรือเมื่อต้องการเพียงการอ่านธรรมดา คุณปรับ<b>ความเร็ว ระดับเสียง และระดับสูงต่ำ</b>ได้เล็กน้อย แต่ไม่มี
+          การแสดงหรืออารมณ์</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“ขอ<b>เสียงพากย์ภาษาพม่าฟรี</b>ของสคริปต์นี้”</span></div>
+        <div class="cap-grid">
+          <div>
+            <div class="label">สตูดิโอของคุณสร้างมันอย่างไร</div>
+            <ol class="flow">
+              <li>ให้สคริปต์และเลือกเสียง (เช่น พม่า <b>my-female</b> / <b>my-male</b>)</li>
+              <li>ปรับ rate, volume, pitch ได้ตามต้องการ</li>
+              <li>เรนเดอร์ — ฟรี ทันที บันทึกเป็นไฟล์เสียงพร้อมใช้</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">ปุ่มปรับ</div>
+            <div class="knobs">
+              <div class="row"><div class="k">voice</div><div class="v"><b>my-female</b>, my-male, + เสียงทั่วโลกอีกมากมาย</div></div>
+              <div class="row"><div class="k">rate</div><div class="v">เร็วขึ้น / ช้าลง</div></div>
+              <div class="row"><div class="k">volume</div><div class="v">ดังขึ้น / เบาลง</div></div>
+              <div class="row"><div class="k">pitch</div><div class="v">สูงขึ้น / ต่ำลง</div></div>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-free"># free — no key, not billed</span><br>
+              <span class="c-cmd">generateEdgeTTSVoiceover</span> '{ "script":"…",<br>
+              &nbsp;&nbsp;"voice":"my-female", "outputPath":"vo.wav" }'
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>เสียงบรรยายมีอารมณ์ — เสียงจาก Gemini</h3>
+          <span class="badge core">Gemini · กำกับได้</span>
+          <span class="cost">~$0.001 / sentence</span>
+        </div>
+        <p class="outcome"><b>สิ่งที่คุณได้:</b> เสียงที่<b>แสดง</b>ได้ คุณเลือกตัวละคร สไตล์
+          จังหวะ และสำเนียง — และกำกับอารมณ์ได้ในสคริปต์เลยด้วยคิวอย่าง
+          <b>[excited]</b>, <b>[pause]</b> หรือ <b>[whispers]</b> ไม่ใช่การอ่านราบเรียบเลย</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“อัด<b>เสียงพากย์ที่อบอุ่นและเป็นมืออาชีพ</b> — ให้ฟังดูตื่นเต้นในบรรทัดแรก”</span></div>
+
+        <div class="label">เลือกเสียง</div>
+        <div class="scroller">
+          <table class="voices">
+            <thead><tr><th>เสียง</th><th>เพศ</th><th>เหมาะสำหรับ</th></tr></thead>
+            <tbody>
+              <tr><td>Kore</td><td>หญิง</td><td>เป็นมืออาชีพ ชัดเจน</td></tr>
+              <tr><td>Aoede</td><td>หญิง</td><td>อบอุ่น เป็นมิตร เข้าถึงง่าย</td></tr>
+              <tr><td>Leda</td><td>หญิง</td><td>นุ่มนวล อ่อนโยน</td></tr>
+              <tr><td>Zephyr</td><td>ชาย</td><td>เป็นมืออาชีพ บรรยายสงบ</td></tr>
+              <tr><td>Puck</td><td>ชาย</td><td>มีพลัง สบาย ๆ วัยรุ่น</td></tr>
+              <tr><td>Charon</td><td>ชาย</td><td>ทุ้มลึก น่าเชื่อถือ</td></tr>
+              <tr><td>Fenrir</td><td>ชาย</td><td>หนักแน่น ดราม่า</td></tr>
+              <tr><td>Orus</td><td>ชาย</td><td>สุขุม ฉลาด น่าไว้ใจ</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cap-grid" style="margin-top:22px">
+          <div>
+            <div class="label">ตั้งค่าพารามิเตอร์</div>
+            <div class="knobs">
+              <div class="row"><div class="k">style</div><div class="v">neutral · professional · casual · energetic · calm · excited · serious</div></div>
+              <div class="row"><div class="k">pace</div><div class="v">natural · slow · fast</div></div>
+              <div class="row"><div class="k">accent</div><div class="v">american · british · australian · indian</div></div>
+              <div class="row"><div class="k">audioProfile</div><div class="v">โน้ตกำกับแบบข้อความอิสระ — <b>“พิธีกรวิทยุอบอุ่น ยิ้มเล็กน้อย”</b></div></div>
+              <div class="row"><div class="k">multi-speaker</div><div class="v">เสียงต่างกันต่อผู้พูด (พอดแคสต์ บทสนทนา)</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="label">กำกับอารมณ์ในสคริปต์</div>
+            <div class="pills">
+              <span class="pill on">[excited]</span><span class="pill on">[pause]</span>
+              <span class="pill on">[whispers]</span><span class="pill on">[dry chuckle]</span>
+              <span class="pill">แท็กอีก 200+ แบบ</span>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-cmd">generateVoiceover</span> '{<br>
+              &nbsp;&nbsp;"script":"[excited] This changes everything. [pause] Really.",<br>
+              &nbsp;&nbsp;"voiceName":"Kore",<br>
+              &nbsp;&nbsp;"voiceStyle":{"style":"professional","pace":"natural",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;"accent":"american_general","audioProfile":"warm, confident"},<br>
+              &nbsp;&nbsp;"outputPath":"vo.wav" }'
+            </div>
+            <div class="cmd-cap">เสียงที่เลือกถูกล็อกไว้กับโปรเจกต์ ทุกวิดีโอจึงฟังเหมือนเป็นแบรนด์เดียวกัน</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="outcome" style="font-size:14.5px;color:var(--ink-faint)">
+        อยากให้ตัวละคร<b>พูดบนจอ</b>ด้วยเสียงของตัวเอง? นั่นคืออวตารพูดได้ — ต่อไปนี้</p>
+    </div>
+  </section>
+
+  <section id="more">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">และอีกมากมาย</div>
+        <h2>อวตารพูดได้ ภาพ และเพลง</h2>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>อวตารพูดได้ — ตัวละครที่พูดได้</h3></div>
+        <p class="outcome">สามวิธีทำให้ใบหน้าพูดได้ เลือกตาม<b>เสียงของใคร</b>ที่คุณอยากให้อยู่บนริมฝีปาก:</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“<b>ทำให้รูปผู้ก่อตั้งของฉันพูด</b>เป็นภาษาพม่า โดยใช้เสียงที่ฉันอัดเอง”</span></div>
+        <div class="knobs" style="margin-top:16px">
+          <div class="row"><div class="k">Gemini</div><div class="v"><b>เสียงที่ Gemini สร้างเอง</b> — ดีที่สุดสำหรับภาษาที่ไม่ใช่อังกฤษและการออกเสียงพม่า</div></div>
+          <div class="row"><div class="k">Seedance</div><div class="v"><b>เสียงที่คุณจัดหาเอง</b> — ลิปซิงก์เข้ากับเสียงของคุณ คลิปสั้น ๆ <span class="badge opt">เลือกได้</span></div></div>
+          <div class="row"><div class="k">InfiniteTalk</div><div class="v"><b>เสียงที่คุณอัดเอง</b> — ไม่จำกัดความยาว (ควรอยู่ที่ ≤60 วินาที) <span class="badge opt">เลือกได้</span></div></div>
+        </div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>ภาพและสไลด์</h3><span class="cost">เริ่มต้น ~$0.03 ต่อภาพ</span></div>
+        <p class="outcome">ภาพหน้าปก คารูเซล ภาพสินค้า (พรีเซ็ตอีคอมเมิร์ซ 26 แบบ จากรูปถ่ายจริงเพียงรูปเดียว) โลโก้
+          และภาพปกโซเชียล — พร้อมข้อความคมชัดระดับพิกเซลที่วางทับในเครื่อง โดยไม่มีค่าใช้จ่าย</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“เปลี่ยนรูปสินค้าของฉันให้เป็น<b>ภาพหน้าปกไลฟ์สไตล์</b>สำหรับ Instagram”</span></div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>เพลง</h3><span class="cost">~$0.04 ต่อ 30 วินาที</span></div>
+        <p class="outcome">เพลงประกอบ จิงเกิล และอินโทร — ที่ลดเสียงลงอัตโนมัติใต้เสียงพากย์ของคุณในการมิกซ์สุดท้าย</p>
+        <div class="ask"><span class="who">คุณบอกเอเจนต์ว่า</span>
+          <span class="q">“เพิ่ม<b>เพลงประกอบสนุก ๆ ยาว 30 วินาที</b>ใต้เสียงพากย์”</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cost">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">ไม่มีเซอร์ไพรส์</div>
+        <h2>แต่ละอย่างมีต้นทุนเท่าไร</h2>
+        <p>คุณจ่ายเฉพาะให้ผู้ให้บริการ AI ต่อการสร้างหนึ่งครั้ง — และสตูดิโอแสดงราคาประเมินและบังคับใช้เพดาน
+          ก่อนใช้จ่ายแม้แต่เซนต์เดียว ข้อความในเครื่อง คำบรรยาย และเสียงฟรี ราคา<b>ศูนย์บาท</b></p>
+      </div>
+      <div class="costgrid">
+        <div class="costcard"><div class="amt zero tnum">$0</div><div class="what">เสียงบรรยายฟรี (Edge TTS)</div><div class="who">no key, not billed</div></div>
+        <div class="costcard"><div class="amt zero tnum">$0</div><div class="what">คำบรรยายและข้อความบนจอ</div><div class="who">rendered locally</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.001</div><div class="what">เสียงพากย์มีอารมณ์ / ประโยค</div><div class="who">Gemini TTS</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.03</div><div class="what">ภาพคุณภาพดีหนึ่งภาพ</div><div class="who">Gemini · Nano Banana</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.04</div><div class="what">เพลง 30 วินาที</div><div class="who">Gemini · Lyria</div></div>
+        <div class="costcard"><div class="amt tnum">~$1.03</div><div class="what">คลิปวิดีโอ Omni 10 วินาที</div><div class="who">Gemini · พร้อมเสียง</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.80</div><div class="what">คลิปเชิงภาพยนตร์ 8 วินาที</div><div class="who">Veo · ต่อวินาที</div></div>
+        <div class="costcard"><div class="amt tnum">~$3.65</div><div class="what">ภาพยนตร์แบรนด์เต็ม 32 วินาที</div><div class="who">ตัวละคร + 4 คลิป + VO</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trust">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">ทำไมจึงปลอดภัยพอที่จะขาย</div>
+        <h2>สร้างแบบสตูดิโอ ไม่ใช่ของเล่น</h2>
+      </div>
+      <div class="trust">
+        <div class="t"><h3><span class="tk"></span> เงินเคลื่อนเมื่อได้รับความยินยอมเท่านั้น</h3>
+          <p>ทุกโปรเจกต์มีเพดานงบประมาณและบัญชีการใช้จ่าย ราคาประเมินแสดงก่อน เพดานถูกบังคับใช้ในโค้ด จึงใช้จ่ายเกินไม่ได้ทางกายภาพ</p></div>
+        <div class="t"><h3><span class="tk"></span> ความสม่ำเสมอถูกออกแบบมา</h3>
+          <p>ตัวละคร สินค้า โลโก้ และเสียง สร้างครั้งเดียวและล็อกไว้ ใบหน้าและเสียงเดียวกันคงอยู่ตลอดทั้งแคมเปญ</p></div>
+        <div class="t"><h3><span class="tk"></span> หลักฐานยังคงเป็นของจริง</h3>
+          <p>สตูดิโอถูกบล็อกอย่างเข้มงวดไม่ให้กุคำรับรอง สถิติ หรือข่าว ตัวเลขของคุณ ตรงตามคำต่อคำ — หรือไม่มีเลย ทุกงานเก็บบันทึกไว้ว่ามันถูกสร้างขึ้นอย่างไรอย่างชัดเจน</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b style="color:var(--ink)">SoeMind Forge</b> — อธิบายด้วยภาษาพูดธรรมดา ได้คอนเทนต์พร้อมโพสต์
+      &nbsp;<a href="./index.html">หน้าแรก</a> · <a href="https://github.com/minkhant1996/soemind-forge">GitHub</a></div>
+    <div>ปรับให้เหมาะกับ Google Gemini · ส่วนเสริม OpenRouter &amp; RunPod (เลือกได้)</div>
+  </div>
+</footer>
+
+</body>
+</html>

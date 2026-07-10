@@ -169,8 +169,9 @@ Does a usable reference already exist?
 **Character (person):** gender & age · ethnicity/skin · hair (color/length/style) ·
 face/build · exact wardrobe + colors · accessories · vibe/expression ·
 **speaks?** → also capture voice (name/style/pace/accent). Generate a small
-**character sheet** (front + 3⁄4 + profile) so later scenes stay consistent, then
-`locked: true`.
+**character model sheet** — ONE image: full-body turnaround (front / 3⁄4 / side /
+back) + face close-up + half-body + costume detail crops, all labeled — so later
+scenes stay consistent, then `locked: true`.
 
 **Product (mockup, pre-launch only):** exact form/material/color · size · logo
 placement · packaging? · angles needed. *Never* mockup a real product you could

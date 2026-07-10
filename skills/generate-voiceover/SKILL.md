@@ -6,6 +6,27 @@ allowed-tools: Bash Read Write Edit
 
 # Generate Voiceover
 
+## 🔴 WHEN NOT TO USE THIS SKILL
+
+**Voiceover is for NARRATION ONLY** — a narrator speaking over visuals, with no
+on-screen speaker.
+
+**Do NOT generate a voiceover for a scene where a character speaks on camera.**
+Those clips (Omni `text_to_video` / `image_to_video` / `reference_to_video`, Veo
+and Seedance speaking clips) generate their own dialogue audio and lip-sync. The
+lines belong in the **video prompt** (`says: <exact words>`), not in a TTS file.
+Layering TTS on top double-stacks two performances and muddies the mix.
+
+| Scene | Audio source |
+|---|---|
+| Character speaks on camera | The clip's own audio — quote the dialogue in the video prompt |
+| Narrator over visuals | **This skill** |
+| Silent / ambient b-roll | Music bed + clip ambience |
+
+See `workflows/VIDEO-PROMPT-GUIDE.md` §4e-vo.
+
+---
+
 ## How to run it (IMPORTANT) — CALL THE CLI, DON'T WRITE A SCRIPT
 
 **Do NOT create a `projects/{name}/scripts/*.ts` file. Run the workflow command:**
@@ -112,11 +133,19 @@ user adjusts, you don't decide alone.
 - **Accent** — american_general · british_rp · australian · indian
 - **Audio profile** (optional, fine control) — a free-text line, e.g.
   *"warm radio host with a slight smile"* → maps to `voiceStyle.audioProfile`
-- **Script** — the exact words. Estimate length: ~2.5 words/sec at natural pace, so an
-  N-second piece ≈ N×2.5 words. Flag if the script is too long/short for the target.
+- **Script** — the exact words, formatted per **§ Script formatting & pacing** below
+  (punctuation = pause control; normalize numbers/symbols/URLs). Estimate length:
+  ~2.5 words/sec at natural pace, so an N-second piece ≈ N×2.5 words. Flag if the
+  script is too long/short for the target.
 - **Pronunciation** — call out brand names / foreign / unusual words and ask for the
   intended pronunciation (e.g. "Acme" → "AK-mee"); for non-English/Myanmar/Thai confirm
   language + script handling.
+- **Reference read** — ask once: *"Is there a narration you'd like this to sound
+  like — a past VO of yours, a creator/channel, or an ad read? (link/file/description,
+  or 'none')"* If given, translate what you hear/see into concrete params: voice pick,
+  style, pace, and an `audioProfile` line describing that delivery — and check
+  `assets/style/copy-examples.md` for past scripts whose phrasing the new script
+  should match. Save the description to the registered voice so future VOs reuse it.
 - **Music under the voiceover?** — yes/no; if yes, note volume (e.g. 30%) for the mix.
 
 ## Step 3: Show the full setup and CONFIRM (do NOT auto-run)
@@ -209,17 +238,52 @@ Save to: `projects/{name}/output-contents/` or current directory
 
 Example: 100-word script = ~$0.01
 
-## Tips
+## Script formatting & pacing — SPACING AND PUNCTUATION ARE DELIVERY CONTROLS
 
-- Keep sentences short for natural pauses
-- Use punctuation to control pacing
-- Test different voices for best fit
-- For dramatic effect, use style: 'excited' or 'serious'
+The TTS model reads the script *as formatted*. Whitespace, punctuation, and line
+breaks all change the output audio — write the script for the ear, not the eye.
+
+**Punctuation → pause mapping (use deliberately):**
+
+| You write | The model does |
+|---|---|
+| `,` comma | short beat |
+| `.` period | full stop + breath |
+| `…` ellipsis | hesitation / trailing off |
+| `—` em-dash | dramatic beat mid-sentence |
+| `?` / `!` | rising / emphatic intonation |
+| blank line (paragraph break) | longer pause, topic shift |
+| `[short pause]` / `[long pause]` tag | explicit pause where punctuation isn't enough |
+
+- **Keep sentences short** — one idea per sentence reads naturally; long
+  comma-chains rush and flatten.
+- **Normalize whitespace** — collapse double spaces and accidental mid-sentence
+  line breaks before generating; they produce audible stutters/odd gaps.
+  Deliberate paragraph breaks between beats are GOOD — that's the pause control.
+- **One thought per line for hooks/CTAs** — a line break before the CTA gives it
+  its own beat.
+
+**Normalization — spell out what TTS mangles (fix in the script, don't hope):**
+
+| Written | Script should say |
+|---|---|
+| `$50` | "fifty dollars" |
+| `24/7` | "twenty-four seven" |
+| `2026-07-09` | "July ninth" (or as the brand says dates) |
+| `50%` | "fifty percent" |
+| `AI`, `FAQ` | keep if spelled letter-by-letter is wanted; else write it out ("A-I") |
+| URLs (`acme.com/shop`) | "acme dot com slash shop" — or cut it; URLs rarely belong in VO |
+| Brand/foreign names | phonetic respelling confirmed in Step 2 ("Acme" → "AK-mee") |
+
+**Tips:**
+- Test different voices for best fit; for dramatic effect use style 'excited' or 'serious'
+- Read the script aloud once yourself (or mentally) — anywhere YOU need a breath, the model does too
 
 ## Expressive delivery is the default (2026-07-05)
 
 Voiceovers now use gemini-3.1-flash-tts-preview: embed inline audio tags IN the
-script — "[excited] …", "[pause]", "[whispers]", "[dry chuckle]" (200+ tags) —
+script — "[excited] …", "[short pause]", "[long pause]", "[whispers]",
+"[dry chuckle]" (200+ tags; documented set in `gemini/types.ts` TTSAudioTag) —
 plus audioProfile as director's notes. Never ship a flat read: every script
 should carry 2-4 tags placed where the emotion turns. Old model available via
 ttsModel:"gemini-2.5-flash-preview-tts". ffprobe the duration — expressive reads

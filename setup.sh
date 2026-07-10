@@ -27,6 +27,22 @@ echo "=========================================="
 echo ""
 
 # ------------------------------------------------------------------
+# Step -1: Fail fast on Node < 18 (before any prompts or npm installs;
+# doctor re-checks this at the end, but by then setup already ran).
+# ------------------------------------------------------------------
+if ! command -v node &> /dev/null; then
+    echo -e "${RED}✗ Node.js not found. Install Node 18+ from https://nodejs.org, then re-run.${NC}"
+    exit 1
+fi
+NODE_MAJOR=$(node -p 'process.versions.node.split(".")[0]')
+if [ "$NODE_MAJOR" -lt 18 ]; then
+    echo -e "${RED}✗ Node.js $(node -v) is too old (need >= 18). Upgrade from https://nodejs.org, then re-run.${NC}"
+    exit 1
+fi
+echo -e "   ${GREEN}✓${NC} Node.js $(node -v)"
+echo ""
+
+# ------------------------------------------------------------------
 # Step 0: Choose your AI tool
 # ------------------------------------------------------------------
 echo -e "${BOLD}Which AI CLI are you using?${NC}"
@@ -197,6 +213,37 @@ else
     echo -e "     caption burn-in, and video QA won't run until installed:"
     echo -e "       macOS:  ${BLUE}brew install ffmpeg${NC}"
     echo -e "       Ubuntu: ${BLUE}sudo apt install ffmpeg${NC}"
+fi
+
+# edge-tts powers the free voiceover path (generateEdgeTTSVoiceover):
+# $0, no API key, incl. Burmese. Python package, best-effort install.
+if command -v python3 &> /dev/null; then
+    if python3 -c "import edge_tts" 2>/dev/null; then
+        echo -e "   ${GREEN}✓${NC} edge-tts found (free voiceover: generateEdgeTTSVoiceover)"
+    else
+        echo -e "   ${YELLOW}!${NC} edge-tts not found. Installing (free voiceover, \$0/no key)..."
+        if python3 -m pip install --quiet edge-tts 2>/dev/null \
+            || python3 -m pip install --quiet --user edge-tts 2>/dev/null; then
+            echo -e "   ${GREEN}✓${NC} edge-tts installed"
+        else
+            echo -e "   ${YELLOW}!${NC} edge-tts install failed — free voiceover won't run until:"
+            echo -e "       ${BLUE}python3 -m pip install edge-tts${NC}"
+        fi
+    fi
+else
+    echo -e "   ${YELLOW}!${NC} python3 not found — free Edge TTS voiceover won't run."
+    echo -e "     Install Python 3, then: ${BLUE}python3 -m pip install edge-tts${NC}"
+fi
+
+# rembg powers the text-behind-subject recipe (TEXT-OVERLAY-DESIGN-GUIDE § 6).
+# Optional + heavy (~200MB onnxruntime + model download) — check and hint only.
+if command -v python3 &> /dev/null; then
+    if python3 -c "import rembg, PIL" 2>/dev/null; then
+        echo -e "   ${GREEN}✓${NC} rembg found (text-behind-subject recipe)"
+    else
+        echo -e "   ${YELLOW}!${NC} rembg not installed — text-behind-subject recipe (optional) needs:"
+        echo -e "       ${BLUE}python3 -m pip install \"rembg[cpu]\" pillow${NC}"
+    fi
 fi
 echo ""
 

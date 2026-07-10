@@ -99,6 +99,9 @@ projects/
 # ===========================================
 /*.cjs
 /*.ts
+/*.js
+/*.mjs
+# (test-all-workflows.js predates this rule and stays tracked)
 
 # ===========================================
 # Generated Content Outputs (can be large)
@@ -115,6 +118,7 @@ examples/content-output/
 tests/results/
 test-output/
 gemini/output/
+downloads/
 
 # Generated media files (audio/video/image — often personal: faces, voices, footage)
 *.mp4
@@ -138,6 +142,10 @@ gemini/output/
 # Caption / transcript sidecars (hold spoken script text — treat as personal)
 *.srt
 *.vtt
+
+# EXCEPTION: public marketing-site media (docs/ deploys to GitHub Pages).
+# Only curated, publish-ready showcase assets go here — never raw project media.
+!docs/assets/**
 
 # Keep example images if needed (uncomment)
 # !examples/*.png
@@ -272,6 +280,16 @@ notes/
 # ===========================================
 # package-lock.json
 # yarn.lock
+
+# ===========================================
+# Desktop app (Tauri) — build artifacts stay local; icons ARE committed
+# ===========================================
+desktop/src-tauri/target/
+desktop/src-tauri/gen/
+# global *.png rule above would hide the app icons — keep them tracked
+!desktop/src-tauri/icons/*.png
+!desktop/src-tauri/icons/icon.ico
+!desktop/src-tauri/icons/icon.icns
 
 # ===========================================
 # Remotion working dirs (renders + staged media + per-run props)

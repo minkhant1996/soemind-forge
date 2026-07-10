@@ -82,13 +82,22 @@ commands**, reading each JSON result before the next — not one big script.
 
 **For ANY content plan or generation, follow this EXACT order:**
 
-### Step 0: CREATE PROJECT FOLDER
+### Step 0: PICK THE PROJECT (match before you make)
 ```bash
-# Check if exists
+# List ALL projects first — the request may belong to one that exists:
+ls projects/ 2>/dev/null
+```
+- Relates to an existing project (same business/product/brand — check its
+  `project.md`, not just the name)? → **ASK**: "Continue in projects/{existing}/?
+  You'll inherit its brand, assets, and style refs for consistency."
+- Needs a NEW project? → **ASK permission first** — never scaffold silently.
+
+```bash
+# Only after the user confirmed which project:
 ls projects/{name}/ 2>/dev/null
 
 # If NOT → create it NOW:
-mkdir -p projects/{name}/{templates,config,assets/{characters,products,logos,backgrounds,thumbnails,social/{profiles,covers,highlights},audio,icons,overlays},content-plans,output-contents}
+mkdir -p projects/{name}/{templates,config,assets/{characters,products,logos,backgrounds,thumbnails,style,social/{profiles,covers,highlights},audio,icons,overlays},content-plans,output-contents}
 
 # Copy ALL templates:
 cp templates/project.template.md projects/{name}/templates/project.md
@@ -166,7 +175,7 @@ projects/{name}/output-contents/{date}/
 | **Platform specs** | `workflows/PLATFORM-SPECS.md` | All sizes & ratios |
 | **Video** | `skills/generate-video/SKILL.md` | `workflows/VIDEO-PROMPT-GUIDE.md` |
 | **Analyze a reference video ("make something like that" + link)** | `skills/analyze-video/SKILL.md` | `workflows/WORKFLOWS.md` § Reference Video Analysis |
-| **Text overlay / typography (hero titles, kinetic reels, "text behind subject")** | `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` | `skills/generate-video/SKILL.md` § Kinetic-typography |
+| **Text on video — pick the route first: A normal captions ($0 Remotion) · B creative AI-designed overlays ($0 renderTextMotion) · C Omni-baked in-scene text (PAID ~$0.10/s)** | `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` §0-pre (route selector) + §8 (Omni rules) | `skills/generate-video/SKILL.md` § Text on video |
 | **Story / short film (multi-character)** | `workflows/recipes/story-short-film.md` | `workflows/VIDEO-PROMPT-GUIDE.md` §7b |
 | **Motion control (swap dancers/actors in a real video with characters)** | `workflows/VIDEO-PROMPT-GUIDE.md` § Playbook 7 | `skills/generate-video/SKILL.md` § Motion control |
 | **Lip-sync to provided audio / VO film from user WAVs** | `workflows/VIDEO-PROMPT-GUIDE.md` § Playbook 8 | `workflows/WORKFLOWS.md` § InfiniteTalk |
@@ -287,6 +296,13 @@ fields on the CLI commands. Rules of engagement:
 | **Camera moves** (`CAMERA_MOVES`) | `cameraMove` · `generateSilentVideo`, `generateVideoFromImage`, `generateOmniVideoClip` | 46 four-part blocks (Movement/Speed/Framing/End) | **PROPOSE 1-2 by intent** and confirm; one move per clip. Table: VIDEO-PROMPT-GUIDE §2b. |
 | **Product shots** (`PRODUCT_SHOTS`) | `productShot` · `generateImageVariation` | 26 e-commerce scenes (packshot, lifestyle, seasonal…) | Always on a REAL product photo; ask which channel; fidelity clause auto-appended. Guide: PRODUCT-SHOT-GUIDE.md. |
 
+**Series look — Style Block:** for a cinematic film, animated series, or
+product-shot campaign, lock ONE style block (`templates/style-block.template.md`
+→ `projects/{name}/templates/style-block.md`) and prepend it verbatim to every
+prompt of the series. The block owns the LOOK; `cameraMove` owns the MOVEMENT —
+and **every clip/scene gets a `cameraMove`** picked from VIDEO-PROMPT-GUIDE §2b
+(never static by omission).
+
 **Multi-reference consistency:** `generateVideoFromImage` takes
 `referenceImagePaths` (max 3 Veo asset refs — character sheet + environment +
 prop); `generateOmniVideoClip` takes up to 5 (`<IMG_REF_n>` tags);
@@ -306,6 +322,7 @@ projects/{name}/assets/
 ├── logos/          # logo-icon.png, logo-white.png
 ├── backgrounds/    # bg-studio-white.png
 ├── thumbnails/     # Reference thumbnails
+├── style/          # Style references (looks/copy the user likes) — registered as style_references
 ├── social/         # Profile pics, covers, highlights
 │   ├── profiles/
 │   ├── covers/

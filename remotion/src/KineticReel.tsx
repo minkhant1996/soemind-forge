@@ -18,6 +18,19 @@ export type KineticLine = {
   weight?: number;      // default 700
   font?: 'sora' | 'inter';
   delay?: number;       // seconds after scene start, default: staggered 0.55s per line
+  // ---- creative styling (all optional, backward compatible) ----
+  anim?: 'rise' | 'pop' | 'blur' | 'mask' | 'slideL' | 'slideR'; // entrance, default 'rise'
+  gradient?: string;    // CSS gradient for fill text, e.g. 'linear-gradient(135deg,#3b6bff,#c8a24a)'
+  stroke?: string;      // outline color (WebkitTextStroke)
+  strokeWidth?: number; // px, default 2
+  glow?: string;        // glow color (text-shadow)
+  glowSize?: number;    // px blur, default 24
+  italic?: boolean;
+  tracking?: number;    // letterSpacing px
+  rotate?: number;      // deg
+  highlight?: string;   // marker-pill background behind the word
+  uppercase?: boolean;
+  mediaFill?: string;   // image OR video path — shows THROUGH the letters (knockout / "video in text")
 };
 
 export type KineticScene = {
@@ -41,27 +54,109 @@ export type KineticReelProps = {
 
 const Line: React.FC<{ line: KineticLine; index: number }> = ({ line, index }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width } = useVideoConfig();
   const delayF = Math.round((line.delay ?? index * 0.55) * fps);
   const t = frame - delayF;
+  const started = t >= 0;
   const prog = spring({ frame: t, fps, config: { damping: 200, stiffness: 90 } });
-  const opacity = t < 0 ? 0 : prog;
-  const y = interpolate(prog, [0, 1], [46, 0]);
+  const anim = line.anim ?? 'rise';
+
+  // ---- entrance animation ----
+  let tx = 0, ty = 0, scale = 1, blur = 0;
+  let clipPath: string | undefined;
+  const opacity = started ? (anim === 'mask' ? 1 : prog) : 0;
+  if (anim === 'rise') ty = interpolate(prog, [0, 1], [46, 0]);
+  else if (anim === 'slideL') tx = interpolate(prog, [0, 1], [-110, 0]);
+  else if (anim === 'slideR') tx = interpolate(prog, [0, 1], [110, 0]);
+  else if (anim === 'blur') blur = interpolate(prog, [0, 1], [24, 0]);
+  else if (anim === 'mask') clipPath = `inset(0 ${interpolate(prog, [0, 1], [100, 0])}% 0 0)`;
+  else if (anim === 'pop') {
+    const pj = spring({ frame: t, fps, config: { damping: 10, stiffness: 130, mass: 0.7 } });
+    scale = started ? interpolate(pj, [0, 1], [0.5, 1]) : 0.5;
+  }
+  const rot = line.rotate ? ` rotate(${line.rotate}deg)` : '';
+
+  // ---- media-in-text (knockout): video/image shows THROUGH the letters ----
+  if (line.mediaFill) {
+    const boxW = width - 168;
+    const boxH = Math.round((line.size ?? 120) * 1.18);
+    const cid = `mf${index}s${line.size ?? 120}`;
+    const label = line.uppercase ? line.text.toUpperCase() : line.text;
+    const mediaStyle: React.CSSProperties = {
+      width: boxW, height: boxH, objectFit: 'cover',
+      clipPath: `url(#${cid})`, WebkitClipPath: `url(#${cid})`,
+    };
+    return (
+      <div style={{ opacity, transform: `translate(${tx}px, ${ty}px) scale(${scale})${rot}`, marginTop: 18 }}>
+        <div style={{ position: 'relative', width: boxW, height: boxH }}>
+          <svg width={boxW} height={boxH} viewBox={`0 0 ${boxW} ${boxH}`} style={{ position: 'absolute', inset: 0 }}>
+            <defs>
+              <clipPath id={cid}>
+                <text
+                  x={boxW / 2} y={boxH / 2} textAnchor="middle" dominantBaseline="central"
+                  style={{
+                    fontFamily: sora, fontWeight: line.weight ?? 800,
+                    fontSize: line.size ?? 120, letterSpacing: `${line.tracking ?? 0}px`,
+                  }}
+                >
+                  {label}
+                </text>
+              </clipPath>
+            </defs>
+          </svg>
+          {/\.(mp4|mov|webm|m4v)$/i.test(line.mediaFill) ? (
+            <OffthreadVideo src={src(line.mediaFill)} muted style={mediaStyle} />
+          ) : (
+            <Img src={src(line.mediaFill)} style={mediaStyle} />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ---- inner text styling ----
+  const inner: React.CSSProperties = {
+    display: 'inline-block',
+    fontFamily: line.font === 'inter' ? inter : sora,
+    fontWeight: line.weight ?? 700,
+    fontSize: line.size ?? 64,
+    lineHeight: 1.16,
+    fontStyle: line.italic ? 'italic' : undefined,
+    letterSpacing: line.tracking != null ? line.tracking : undefined,
+    textTransform: line.uppercase ? 'uppercase' : undefined,
+  };
+  if (line.gradient) {
+    inner.backgroundImage = line.gradient;
+    inner.WebkitBackgroundClip = 'text';
+    inner.backgroundClip = 'text';
+    inner.WebkitTextFillColor = 'transparent';
+    inner.color = 'transparent';
+  } else {
+    inner.color = line.color ?? '#0F172A';
+  }
+  if (line.stroke) inner.WebkitTextStroke = `${line.strokeWidth ?? 2}px ${line.stroke}`;
+  if (line.glow) inner.textShadow = `0 0 ${line.glowSize ?? 24}px ${line.glow}`;
+  if (line.highlight) {
+    inner.background = line.highlight;
+    inner.padding = '2px 22px';
+    inner.borderRadius = 14;
+    inner.WebkitBackgroundClip = 'border-box';
+    inner.backgroundClip = 'border-box';
+  }
+
   return (
     <div
       style={{
-        fontFamily: line.font === 'inter' ? inter : sora,
-        fontWeight: line.weight ?? 700,
-        fontSize: line.size ?? 64,
-        color: line.color ?? '#0F172A',
-        lineHeight: 1.22,
         opacity,
-        transform: `translateY(${y}px)`,
+        transform: `translate(${tx}px, ${ty}px) scale(${scale})${rot}`,
+        filter: blur ? `blur(${blur}px)` : undefined,
+        clipPath,
         textAlign: 'center',
         marginTop: 18,
+        maxWidth: '100%',
       }}
     >
-      {line.text}
+      <span style={inner}>{line.text}</span>
     </div>
   );
 };

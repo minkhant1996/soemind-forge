@@ -11,6 +11,10 @@
 <meta name="author" content="minkhant1996" />
 <link rel="canonical" href="https://soemind-forge.soemindai.com/" />
 <meta name="robots" content="index, follow" />
+<link rel="alternate" hreflang="en" href="https://soemind-forge.soemindai.com/" />
+<link rel="alternate" hreflang="my" href="https://soemind-forge.soemindai.com/index.my.html" />
+<link rel="alternate" hreflang="th" href="https://soemind-forge.soemindai.com/index.th.html" />
+<link rel="alternate" hreflang="x-default" href="https://soemind-forge.soemindai.com/" />
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website" />
@@ -18,7 +22,12 @@
 <meta property="og:description" content="Generate AI videos, images, voiceovers, music, and 30-day content calendars from plain English. Budget-aware, brand-consistent, upload-ready." />
 <meta property="og:url" content="https://soemind-forge.soemindai.com/" />
 <meta property="og:site_name" content="SoeMind Forge" />
+<meta property="og:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta property="og:image:alt" content="Prince Corin at the gates — a frame from Emberfell II, a papercraft short film made with SoeMind Forge" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
 <meta name="twitter:title" content="SoeMind Forge — AI Content Studio for AI coding agents" />
 <meta name="twitter:description" content="AI videos, images, voiceovers, music &amp; content calendars from plain English. Open source." />
 
@@ -74,24 +83,26 @@
 
 <style>
   :root {
-    --white: #ffffff;
-    --paper: #f6f9fe;          /* alt section background */
-    --ink: #0d1f42;            /* deep navy text */
-    --ink-soft: #4a5877;       /* muted text */
-    --blue: #1b4fd8;           /* primary blue */
-    --blue-deep: #0b2f8c;
-    --blue-tint: #eaf1ff;      /* soft blue fill */
-    --gold: #c8a24a;           /* gold coating */
-    --gold-deep: #a67c2e;
-    --gold-grad: linear-gradient(135deg, #d9b866 0%, #c8a24a 45%, #a67c2e 100%);
-    --line: #e2e8f4;
-    --shadow: 0 10px 30px rgba(13, 31, 66, 0.07);
+    --white: #ffffff;          /* card / surface */
+    --ground: #f6f3ec;         /* off-white page ground */
+    --paper: #efebe2;          /* alt section background (deeper off-white) */
+    --ink: #1a1c1f;            /* charcoal text */
+    --ink-soft: #50555d;       /* muted text */
+    --blue: #1b4fd8;           /* primary + single accent */
+    --blue-deep: #153fb0;
+    --blue-tint: #e9effe;      /* soft blue fill */
+    /* legacy accent names, now mapped to blue — the site uses charcoal/off-white/blue only */
+    --gold: #1b4fd8;
+    --gold-deep: #153fb0;
+    --gold-grad: linear-gradient(135deg, #3b6bff 0%, #1b4fd8 55%, #153fb0 100%);
+    --line: #e4e0d6;
+    --shadow: 0 10px 30px rgba(26, 28, 31, 0.07);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { max-width: 100%; overflow-x: hidden; }   /* safety net against horizontal scroll */
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--white);
+    background: var(--ground);
     color: var(--ink);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -103,11 +114,17 @@
   a:hover { text-decoration: underline; }
   .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
+  .langbar { position: fixed; top: 12px; right: 14px; z-index: 101; display: inline-flex; gap: 2px;
+    background: var(--white); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+  .langbar a { padding: 5px 9px; font-size: 12px; color: var(--ink-soft); font-weight: 600; text-decoration: none; }
+  .langbar a:hover { color: var(--ink); background: var(--blue-tint); text-decoration: none; }
+  .langbar a.on { background: var(--blue); color: #fff; }
+
   header { padding: 96px 0 44px; text-align: center; background:
     radial-gradient(1100px 380px at 50% -140px, var(--blue-tint) 0%, rgba(234,241,255,0) 70%); }
   .badge { display: inline-block; font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600;
-           color: var(--gold-deep); background: linear-gradient(180deg, #fdf8ec, #f7edd3);
-           border: 1px solid #e7d3a0; border-radius: 999px; padding: 6px 15px; margin-bottom: 26px; }
+           color: var(--blue); background: var(--blue-tint);
+           border: 1px solid #ccd9fb; border-radius: 999px; padding: 6px 15px; margin-bottom: 26px; }
   h1 { font-size: clamp(34px, 6vw, 56px); line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); }
   h1 .accent { color: var(--blue); }
   .tagline { font-size: clamp(17px, 2.4vw, 21px); color: var(--ink-soft); max-width: 680px; margin: 24px auto 0; }
@@ -115,8 +132,8 @@
   .btn { display: inline-block; padding: 13px 26px; border-radius: 10px; font-weight: 600; font-size: 15px; transition: all .18s ease; }
   .btn-primary { background: var(--blue); color: #fff; box-shadow: 0 6px 18px rgba(27,79,216,.28); }
   .btn-primary:hover { background: var(--blue-deep); text-decoration: none; transform: translateY(-1px); }
-  .btn-ghost { border: 1.5px solid var(--gold); color: var(--gold-deep); background: #fff; }
-  .btn-ghost:hover { background: #fdf8ec; text-decoration: none; }
+  .btn-ghost { border: 1.5px solid var(--blue); color: var(--blue); background: #fff; }
+  .btn-ghost:hover { background: var(--blue-tint); text-decoration: none; }
 
   .strip { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 30px; }
 
@@ -140,9 +157,9 @@
   ul.checks li b { color: var(--ink); }
   ul.checks li span { color: var(--ink-soft); }
 
-  pre { background: #0d1f42; border: 1px solid #16306a; border-radius: 12px; padding: 18px 20px;
-        overflow-x: auto; font-size: 14px; color: #d7e3ff; box-shadow: var(--shadow); }
-  pre code .g { color: #e6c877; }
+  pre { background: #1b1e22; border: 1px solid #2b2f35; border-radius: 12px; padding: 18px 20px;
+        overflow-x: auto; font-size: 14px; color: #e6e4de; box-shadow: var(--shadow); }
+  pre code .g { color: #8fb2ff; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
   table { width: 100%; border-collapse: collapse; font-size: 14.5px; background: var(--white);
@@ -171,7 +188,7 @@
   .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 42px; }
   .step { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px; position: relative; box-shadow: var(--shadow); }
   .step .n { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px;
-             background: var(--gold-grad); color: #3a2c07; font-size: 13px; font-weight: 800; margin-bottom: 10px; }
+             background: var(--gold-grad); color: #fff; font-size: 13px; font-weight: 800; margin-bottom: 10px; }
   .step h3 { font-size: 15px; margin-bottom: 5px; color: var(--ink); }
   .step p { color: var(--ink-soft); font-size: 13.5px; }
 
@@ -210,6 +227,8 @@
 </head>
 <body>
 
+<div class="langbar"><a href="./index.html" class="on">EN</a><a href="./index.my.html">မြန်မာ</a><a href="./index.th.html">ไทย</a></div>
+
 <header>
   <div class="wrap">
     <span class="badge">Open Source · Free Toolkit</span>
@@ -218,7 +237,8 @@
       30-day content calendars from plain English — inside Claude Code, Codex CLI, or Gemini CLI.
       Budget-aware, brand-consistent, upload-ready.</p>
     <div class="cta">
-      <a class="btn btn-primary" href="https://github.com/minkhant1996/soemind-forge">View on GitHub</a>
+      <a class="btn btn-primary" href="./showcase.html">See what it makes</a>
+      <a class="btn btn-ghost" href="https://github.com/minkhant1996/soemind-forge">View on GitHub</a>
       <a class="btn btn-ghost" href="https://github.com/minkhant1996/soemind-forge/blob/main/GETTING-STARTED.md">Get Started in 10 min</a>
     </div>
     <p class="strip">Cinematic Films · Kinetic Text Reels · Videos · Carousels · Voiceover · Music · 30-Day Calendars</p>
@@ -335,7 +355,7 @@ claude              # loads project context automatically
 <footer>
   <div class="wrap">
     <p><b>SoeMind Forge</b> — open-source AI content studio for Claude Code, Codex CLI &amp; Gemini CLI.</p>
-    <p style="margin-top:8px;"><a href="https://github.com/minkhant1996/soemind-forge">GitHub</a> · <a href="https://github.com/minkhant1996/soemind-forge/blob/main/GETTING-STARTED.md">Getting Started</a> · MIT License</p>
+    <p style="margin-top:8px;"><a href="./showcase.html">What it makes</a> · <a href="https://github.com/minkhant1996/soemind-forge">GitHub</a> · <a href="https://github.com/minkhant1996/soemind-forge/blob/main/GETTING-STARTED.md">Getting Started</a> · MIT License</p>
   </div>
 </footer>
 

@@ -157,6 +157,60 @@ export interface RenderKineticReelOutput {
   cost: CostInfo;              // always $0 — local render
 }
 
+export interface TextMotionElementInput {
+  text: string;
+  x?: number | string; y?: number | string;
+  anchor?: string; align?: 'left' | 'center' | 'right';
+  maxWidth?: number | string; rotate?: number;
+  start?: number; end?: number; inDuration?: number; outDuration?: number;
+  in?: string; out?: string; loop?: string;
+  easing?: string | number[];
+  stagger?: 'none' | 'word' | 'letter'; staggerStep?: number;
+  font?: 'sora' | 'inter' | 'caveat' | 'bebas'; size?: number; weight?: number;
+  color?: string; gradient?: string; stroke?: string; strokeWidth?: number;
+  glow?: string; glowSize?: number; italic?: boolean; uppercase?: boolean;
+  tracking?: number; lineHeight?: number; highlight?: string; highlightPad?: number[];
+  shadow?: string; mediaFill?: string; opacity?: number;
+  scrim?: boolean; scrimColor?: string;
+  behind?: boolean; bleed?: boolean; badge?: boolean;
+  accentColor?: string; boldWeight?: number;
+  perLetter?: { stepY?: number; stepRotate?: number; skew?: number };
+  parts?: Array<{ text: string; dx?: number; dy?: number; scale?: number; color?: string }>;
+}
+
+export interface TextMotionBackgroundInput {
+  kind?: 'image' | 'video' | 'color'; path?: string; color?: string;
+  fit?: 'cover' | 'contain'; kenBurns?: boolean; dim?: number;
+  playbackRate?: number;   // <1 slows the source video to stretch it over a longer scene
+}
+
+export interface TextMotionSubjectInput {
+  source: string;                            // image/video whose foreground occludes behind-text
+  model?: string; maxSeconds?: number; fps?: number; feather?: number;
+}
+
+export interface RenderTextMotionInput {
+  elements: TextMotionElementInput[];
+  outputPath: string;                        // .mp4
+  background?: TextMotionBackgroundInput;
+  subject?: TextMotionSubjectInput;          // for elements with behind:true
+  audioPath?: string; musicPath?: string; musicVolume?: number;
+  width?: number; height?: number; fps?: number;   // default 1080x1920@30
+  durationSeconds?: number;                  // default: max element end, min 6
+}
+
+export interface RenderTextMotionOutput {
+  videoPath: string;
+  width: number; height: number; fps: number;
+  durationSeconds: number; frameCount: number;
+  elements: Array<{
+    text: string; start: number; end: number;
+    in?: string; out?: string; loop?: string;
+    resolvedBox: { x: number; y: number; w: number; h: number };
+  }>;
+  cost: CostInfo;                            // always $0 — local render
+}
+
 export interface RenderSlideStillInput {
   /** Real path to a TEXT-FREE background image. */
   backgroundPath: string;
@@ -239,7 +293,11 @@ export async function renderKineticReel(
       scenes: input.scenes.map((s) => ({
         bg: stager!.stage(s.backgroundPath, 'backgroundPath'),
         seconds: s.seconds,
-        lines: s.lines,
+        lines: (s.lines || []).map((l: any) =>
+          l && l.mediaFill
+            ? { ...l, mediaFill: stager!.stage(l.mediaFill, 'mediaFill') }
+            : l
+        ),
         logo: stager!.stage(s.logoPath, 'logoPath'),
         align: (() => {
           const a = String(s.align || '').trim().toLowerCase();
@@ -269,6 +327,121 @@ export async function renderKineticReel(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error(`[Workflow] renderKineticReel failed: ${message}`);
+    return errorResult('GENERATION_FAILED', message);
+  } finally {
+    stager?.cleanup();
+    if (propsFile) fs.rmSync(propsFile, { force: true });
+  }
+}
+
+// =============================================================================
+// WORKFLOW: RENDER TEXT MOTION (Remotion, local, $0) — full animation engine
+// =============================================================================
+
+const resolveFrac = (v: number | string | undefined, total: number, dflt: number): number => {
+  if (v == null) return dflt;
+  if (typeof v === 'string') {
+    if (v.trim().endsWith('%')) return (parseFloat(v) / 100) * total;
+    const n = parseFloat(v); return isNaN(n) ? dflt : (n <= 1 ? n * total : n);
+  }
+  return v <= 1 ? v * total : v;
+};
+
+export async function renderTextMotion(
+  input: RenderTextMotionInput
+): Promise<WorkflowResult<RenderTextMotionOutput>> {
+  if (!input.elements?.length) return errorResult('INVALID_INPUT', 'elements[] is required');
+  if (!input.outputPath) return errorResult('INVALID_INPUT', 'outputPath is required (.mp4)');
+  for (const [i, e] of input.elements.entries()) {
+    if (!e.text && !e.mediaFill) return errorResult('INVALID_INPUT', `elements[${i}].text is required`);
+  }
+
+  const remotionDir = findRemotionDir();
+  if (!remotionDir) return errorResult('FILE_NOT_FOUND', 'remotion/ module not found in project');
+
+  const width = input.width ?? 1080;
+  const height = input.height ?? 1920;
+  const fps = input.fps ?? 30;
+  const durationSeconds =
+    input.durationSeconds ?? Math.max(6, ...input.elements.map((e) => e.end ?? (e.start ?? 0) + 4));
+
+  let stager: ReturnType<typeof makeStager> | null = null;
+  let propsFile = '';
+  try {
+    assertRemotionReady(remotionDir);
+    ensureDir(path.dirname(path.resolve(input.outputPath)));
+    stager = makeStager(remotionDir);
+
+    const background = input.background
+      ? { ...input.background, path: input.background.path ? stager.stage(input.background.path, 'bgPath') : undefined }
+      : undefined;
+
+    const elements = input.elements.map((e) =>
+      e.mediaFill ? { ...e, mediaFill: stager!.stage(e.mediaFill, 'mediaFill') } : e
+    );
+
+    // Behind-subject: matte the subject (rembg) and layer its cutout over behind:true text.
+    let subjectCutout: { path: string; kind: 'image' | 'video' } | undefined;
+    const needsSubject = input.elements.some((e) => e.behind) && input.subject?.source;
+    if (needsSubject) {
+      const { subjectMatte } = await import('./subject-matte.js');
+      const matte = await subjectMatte({
+        source: input.subject!.source, model: input.subject!.model,
+        maxSeconds: input.subject!.maxSeconds, fps: input.subject!.fps, feather: input.subject!.feather,
+      });
+      if (!matte.success) return errorResult('GENERATION_FAILED', `subject matte failed: ${matte.error.message}`);
+      subjectCutout = { path: stager.stage(matte.data.cutoutPath, 'subjectCutout')!, kind: matte.data.kind };
+    }
+
+    const props = {
+      elements,
+      background,
+      subjectCutout,
+      audio: stager.stage(input.audioPath, 'audioPath'),
+      music: stager.stage(input.musicPath, 'musicPath'),
+      musicVolume: input.musicVolume,
+      width, height, fps, durationSeconds,
+    };
+
+    propsFile = path.join(remotionDir, `.props-${Date.now()}.json`);
+    fs.writeFileSync(propsFile, JSON.stringify(props));
+
+    const outAbs = path.resolve(input.outputPath);
+    console.error('[Workflow] Rendering text motion (Remotion, local)...');
+    runRemotion(
+      remotionDir,
+      `npx remotion render src/index.ts TextMotion "${outAbs}" --props="${propsFile}"`
+    );
+
+    if (!fs.existsSync(outAbs)) {
+      return errorResult('FILE_WRITE_ERROR', 'Render completed but output file is missing');
+    }
+    console.error(`[Workflow] Text motion saved: ${input.outputPath}`);
+
+    const els = input.elements.map((e) => ({
+      text: e.text,
+      start: e.start ?? 0,
+      end: e.end ?? durationSeconds,
+      in: e.in, out: e.out, loop: e.loop,
+      resolvedBox: {
+        x: Math.round(resolveFrac(e.x, width, width / 2)),
+        y: Math.round(resolveFrac(e.y, height, height / 2)),
+        w: Math.round(resolveFrac(e.maxWidth, width, width - 168)),
+        h: Math.round((e.size ?? 72) * 1.2),
+      },
+    }));
+
+    return {
+      success: true,
+      data: {
+        videoPath: input.outputPath, width, height, fps,
+        durationSeconds, frameCount: Math.round(durationSeconds * fps),
+        elements: els, cost: ZERO_COST,
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[Workflow] renderTextMotion failed: ${message}`);
     return errorResult('GENERATION_FAILED', message);
   } finally {
     stager?.cleanup();

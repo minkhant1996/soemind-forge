@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>What SoeMind Forge Makes — AI Video, Captions, Voiceover &amp; How It Works</title>
+<meta name="description" content="A plain-English tour of what SoeMind Forge produces — Omni AI video, Burmese-safe captions (normal &amp; creative modes), free and expressive voiceover, talking avatars, images and music — and the professional, budget-safe workflow behind each." />
+<meta name="author" content="minkhant1996" />
+<link rel="canonical" href="https://soemind-forge.soemindai.com/showcase.html" />
+<meta name="robots" content="index, follow" />
+<link rel="alternate" hreflang="en" href="https://soemind-forge.soemindai.com/showcase.html" />
+<link rel="alternate" hreflang="my" href="https://soemind-forge.soemindai.com/showcase.my.html" />
+<link rel="alternate" hreflang="th" href="https://soemind-forge.soemindai.com/showcase.th.html" />
+<link rel="alternate" hreflang="x-default" href="https://soemind-forge.soemindai.com/showcase.html" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="What SoeMind Forge Makes — and how" />
+<meta property="og:description" content="Omni AI video, captions, voiceover, talking avatars, images and music from plain English — with real parameters and honest costs." />
+<meta property="og:url" content="https://soemind-forge.soemindai.com/showcase.html" />
+<meta property="og:site_name" content="SoeMind Forge" />
+<meta property="og:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta property="og:image:alt" content="Prince Corin at the gates — a frame from Emberfell II, a papercraft short film made with SoeMind Forge" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://soemind-forge.soemindai.com/assets/case/emberfell.jpg" />
+<meta name="twitter:title" content="What SoeMind Forge Makes — and how" />
+<meta name="twitter:description" content="A plain-English tour of the AI content studio: video, captions, voiceover, talking avatars, and costs." />
+
+<style>
+  :root {
+    --white: #ffffff;
+    --ground: #f6f3ec;         /* off-white page ground */
+    --paper: #efebe2;          /* deeper off-white for alt sections */
+    --ink: #1a1c1f;            /* charcoal */
+    --ink-soft: #50555d;
+    --ink-faint: #7c818a;
+    --blue: #1b4fd8;           /* single accent */
+    --blue-deep: #153fb0;
+    --blue-tint: #e9effe;
+    --blue-grad: linear-gradient(135deg, #3b6bff 0%, #1b4fd8 55%, #153fb0 100%);
+    --free: #0e875a;
+    --free-tint: #e2f2ea;
+    --line: #e4e0d6;
+    --line-strong: #d6d1c4;
+    --code-bg: #1b1e22; --code-ink: #e6e4de; --code-dim: #8b929c; --code-blue: #8fb2ff; --code-free: #5fd3a0;
+    --shadow: 0 10px 30px rgba(26, 28, 31, 0.07);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body { font-family: var(--sans); background: var(--ground); color: var(--ink);
+    line-height: 1.6; -webkit-font-smoothing: antialiased; font-size: 17px; }
+  body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: 4px; background: var(--blue-grad); z-index: 100; }
+  h1, h2, h3, h4 { line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; }
+  h1, h2, h3, p, li { overflow-wrap: break-word; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--blue); }
+
+  /* top nav */
+  header.bar { position: sticky; top: 0; z-index: 20; background: rgba(246,243,236,.86);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; align-items: center; gap: 20px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+  .brand .mark { width: 26px; height: 26px; border-radius: 8px; background: var(--blue-grad);
+    display: grid; place-items: center; color: #fff; font-size: 14px; }
+  nav.top { margin-left: auto; display: flex; gap: 20px; font-size: 14px; font-weight: 500; }
+  nav.top a { color: var(--ink-soft); }
+  nav.top a:hover { color: var(--ink); text-decoration: none; }
+  nav.top .lang { display: inline-flex; gap: 2px; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; }
+  nav.top .lang a { padding: 5px 9px; font-size: 12.5px; color: var(--ink-faint); font-weight: 600; }
+  nav.top .lang a:hover { color: var(--ink); text-decoration: none; background: var(--paper); }
+  nav.top .lang a.on { background: var(--blue); color: #fff; }
+  @media (max-width: 760px) { nav.top a.hide-sm { display: none; } }
+
+  /* hero */
+  .hero { padding: 70px 0 12px; }
+  .hero h1 { font-size: clamp(34px, 5.6vw, 56px); font-weight: 800; max-width: 17ch; }
+  .hero .lead { margin-top: 20px; font-size: clamp(17px, 2.3vw, 21px); color: var(--ink-soft); max-width: 62ch; }
+  .say { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .say .chip { background: var(--white); border: 1px solid var(--line-strong); border-radius: 999px;
+    padding: 8px 15px; font-size: 14.5px; color: var(--ink-soft); box-shadow: var(--shadow); }
+  .say .chip b { color: var(--ink); font-weight: 600; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .sec-head { max-width: 72ch; margin-bottom: 32px; }
+  .sec-head h2 { font-size: clamp(25px, 3.5vw, 34px); font-weight: 800; margin-top: 10px; padding-bottom: 12px; position: relative; }
+  .sec-head h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 46px; height: 3px; border-radius: 3px; background: var(--blue-grad); }
+  .sec-head p { margin-top: 16px; color: var(--ink-soft); font-size: 18px; }
+
+  /* four-step spine */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 460px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--white); border: 1px solid var(--line); border-radius: 15px; padding: 21px; box-shadow: var(--shadow); }
+  .step .n { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--blue); }
+  .step h3 { font-size: 17px; font-weight: 700; margin-top: 9px; }
+  .step p { margin-top: 8px; font-size: 14px; color: var(--ink-soft); }
+
+  /* capability cards */
+  .cap { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .cap + .cap { margin-top: 20px; }
+  .cap-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .cap-top h3 { font-size: 22px; font-weight: 800; }
+  .cap-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 30px; margin-top: 20px; }
+  @media (max-width: 780px) { .cap-grid { grid-template-columns: 1fr; gap: 22px; } }
+  .outcome { font-size: 16.5px; color: var(--ink-soft); margin-top: 12px; }
+  .outcome b { color: var(--ink); font-weight: 600; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin: 20px 0 12px; }
+
+  ol.flow { list-style: none; counter-reset: s; }
+  ol.flow li { position: relative; padding: 0 0 13px 34px; counter-increment: s; font-size: 15px; color: var(--ink-soft); }
+  ol.flow li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 23px; height: 23px; border-radius: 50%;
+    background: var(--blue-tint); color: var(--blue-deep); font-size: 12.5px; font-weight: 700; display: grid; place-items: center; font-family: var(--mono); }
+  ol.flow li:last-child { padding-bottom: 0; }
+  ol.flow li b { color: var(--ink); font-weight: 600; }
+
+  .knobs { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .knobs .row { display: grid; grid-template-columns: 122px 1fr; gap: 14px; padding: 11px 15px; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .knobs .row:last-child { border-bottom: 0; }
+  .knobs .row:nth-child(even) { background: var(--paper); }
+  .knobs .k { color: var(--ink-faint); font-weight: 600; font-family: var(--mono); font-size: 12.5px; padding-top: 2px; }
+  .knobs .v { color: var(--ink-soft); }
+  .knobs .v b { color: var(--ink); font-weight: 600; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill { font-size: 12.5px; font-family: var(--mono); background: var(--paper); border: 1px solid var(--line-strong); color: var(--ink-soft); border-radius: 7px; padding: 4px 9px; }
+  .pill.on { background: var(--blue-tint); border-color: transparent; color: var(--blue-deep); }
+
+  table.voices { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  table.voices th, table.voices td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+  table.voices th { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; }
+  table.voices td:first-child { font-weight: 600; color: var(--ink); }
+  table.voices td:nth-child(2) { color: var(--ink-faint); }
+  .scroller { overflow-x: auto; }
+
+  .cmd { background: var(--code-bg); border-radius: 12px; padding: 15px 17px; margin-top: 14px; font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--code-ink); overflow-x: auto; }
+  .cmd .c-note { color: var(--code-dim); }
+  .cmd .c-cmd { color: var(--code-blue); }
+  .cmd .c-free { color: var(--code-free); }
+  .cmd-cap { font-size: 12.5px; color: var(--ink-faint); margin-top: 9px; }
+
+  /* the plain-English instruction you give the agent */
+  .ask { display: flex; gap: 13px; align-items: flex-start; background: var(--blue-tint);
+    border: 1px solid #ccd9fb; border-radius: 13px; padding: 14px 17px; margin-top: 18px; }
+  .ask .who { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue-deep); white-space: nowrap; padding-top: 3px; flex: none; }
+  .ask .q { font-size: 16.5px; color: var(--ink); }
+  .ask .q b { font-weight: 600; }
+
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .badge.free { background: var(--free-tint); color: var(--free); }
+  .badge.core { background: var(--blue-tint); color: var(--blue-deep); }
+  .badge.opt { background: var(--paper); color: var(--ink-faint); border: 1px solid var(--line-strong); }
+  .cost { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--ink-faint); font-weight: 600; white-space: nowrap; }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .modes { grid-template-columns: 1fr; } }
+  .mode { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--paper); }
+  .mode.creative { border-color: #b9caf7; }
+  .mode h4 { font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+  .mode .sub { font-size: 13px; color: var(--ink-faint); margin-bottom: 12px; }
+  .mode ul { padding-left: 18px; font-size: 14px; color: var(--ink-soft); }
+  .mode ul li { margin: 5px 0; }
+
+  /* case studies */
+  .case { background: var(--white); border: 1px solid var(--line); border-radius: 18px; padding: 28px; box-shadow: var(--shadow); }
+  .case + .case { margin-top: 20px; }
+  /* click-to-open project cards */
+  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 820px) { .case-grid { grid-template-columns: 1fr; } }
+  details.case { padding: 0; overflow: hidden; }
+  details.case + details.case { margin-top: 0; }
+  details.case[open] { grid-column: 1 / -1; }
+  details.case > summary { list-style: none; cursor: pointer; display: block; }
+  details.case > summary::-webkit-details-marker { display: none; }
+  .cover { position: relative; aspect-ratio: 16 / 9; background: #0d0f12; overflow: hidden; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+  details.case:not([open]) > summary:hover .cover img { transform: scale(1.035); }
+  .cover .veil { position: absolute; inset: auto 0 0 0; height: 55%;
+    background: linear-gradient(to top, rgba(10,12,15,.86), rgba(10,12,15,0)); }
+  .cover .on-cover { position: absolute; left: 20px; right: 20px; bottom: 15px; color: #fff; }
+  .cover .on-cover h3 { font-size: 21px; font-weight: 800; }
+  .card-body { padding: 20px 22px 22px; }
+  .usecase { display: flex; gap: 11px; align-items: flex-start; font-size: 14.5px; color: var(--ink-soft); }
+  .usecase .uk { flex: none; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--blue); background: var(--blue-tint); border-radius: 999px; padding: 4px 9px; margin-top: 1px; }
+  .usecase b { color: var(--ink); font-weight: 600; }
+  .opener { margin-top: 15px; font-size: 13.5px; font-weight: 600; color: var(--blue); display: flex; align-items: center; gap: 7px; }
+  .opener::after { content: "▾"; font-size: 11px; transition: transform .25s ease; }
+  details.case[open] .opener::after { transform: rotate(180deg); }
+  details.case:not([open]) .opener .lbl-shut { display: none; }
+  details.case[open] .opener .lbl-open { display: none; }
+  .case-detail { padding: 0 28px 28px; border-top: 1px solid var(--line); margin-top: 4px; }
+  .case-detail > .case-media { margin-top: 24px; }
+  .case-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  .case-head h3 { font-size: 24px; font-weight: 800; margin-top: 5px; }
+  .case-meta { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+  .case-body { display: grid; grid-template-columns: 1.12fr 1fr; gap: 30px; margin-top: 22px; }
+  @media (max-width: 820px) { .case-body { grid-template-columns: 1fr; gap: 22px; } }
+  .statrow { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; }
+  .stat .v { font-size: 21px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 11px; color: var(--ink-faint); margin-top: 2px; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
+  .note { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 12px 15px;
+    background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; font-size: 13.5px; color: var(--ink-soft); }
+  .note b { color: var(--ink); font-weight: 600; }
+  .case-media { margin: 20px 0 4px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #000; aspect-ratio: 16 / 9; box-shadow: var(--shadow); }
+  .case-media video { width: 100%; height: 100%; display: block; object-fit: cover; background: #000; }
+  .char-strip { display: flex; gap: 12px; flex-wrap: wrap; margin: 4px 0 2px; }
+  .char-card { width: 104px; margin: 0; }
+  .char-card img { width: 104px; height: 104px; object-fit: cover; display: block; border-radius: 12px; border: 1px solid var(--line); background: #f4efe6; }
+  .char-card figcaption { font-size: 11px; color: var(--ink-faint); margin-top: 5px; text-align: center; line-height: 1.3; }
+  .sheet-strip { display: grid; gap: 14px; margin: 4px 0 2px; }
+  .sheet-card { margin: 0; }
+  .sheet-card img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line); background: #f4efe6; }
+  .sheet-card figcaption { font-size: 11.5px; color: var(--ink-faint); margin-top: 6px; line-height: 1.4; }
+  .decrow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 640px) { .decrow { grid-template-columns: 1fr; } }
+  .input { background: var(--blue-tint); border: 1px solid #ccd9fb; border-radius: 12px; padding: 16px 18px; }
+  .input h4 { font-size: 14px; font-weight: 800; color: var(--blue-deep); margin-bottom: 6px; }
+  .input p { font-size: 14px; color: var(--ink-soft); }
+  .decgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 780px) { .decgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .decgrid { grid-template-columns: 1fr; } }
+  .dec { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .dec h4 { font-size: 15px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .dec h4 .d { width: 8px; height: 8px; border-radius: 2px; background: var(--blue); flex: none; }
+  .dec p { font-size: 13.5px; color: var(--ink-soft); }
+  .dec p b { color: var(--ink); font-weight: 600; }
+
+  .costgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 820px) { .costgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 440px) { .costgrid { grid-template-columns: 1fr; } }
+  .costcard { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+  .costcard .amt { font-size: 25px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .costcard .amt.zero { color: var(--free); }
+  .costcard .what { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .costcard .who { font-size: 12px; color: var(--ink-faint); margin-top: 8px; font-family: var(--mono); }
+
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 720px) { .trust { grid-template-columns: 1fr; } }
+  .trust .t h3 { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 9px; }
+  .trust .t p { margin-top: 8px; font-size: 14.5px; color: var(--ink-soft); }
+  .tk { width: 9px; height: 9px; border-radius: 2px; background: var(--blue); flex: none; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 64px; color: var(--ink-faint); font-size: 14px; background: var(--paper); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { color: var(--blue); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cap, .step, .costcard { transition: transform .18s ease; }
+    .cap:hover, .costcard:hover { transform: translateY(-2px); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 18px; }
+    .hero { padding: 48px 0 8px; }
+    .cap { padding: 20px; }
+    section { padding: 44px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="./index.html" style="color:var(--ink)"><span class="mark">◆</span> SoeMind&nbsp;Forge</a>
+    <nav class="top">
+      <a href="#flow" class="hide-sm">How it works</a>
+      <a href="#projects">Projects</a>
+      <a href="#video" class="hide-sm">Video</a>
+      <a href="#captions" class="hide-sm">Captions</a>
+      <a href="#voice">Voiceover</a>
+      <a href="#cost" class="hide-sm">Cost</a>
+      <a href="./index.html">Home</a>
+      <span class="lang"><a href="./showcase.html" class="on">EN</a><a href="./showcase.my.html">မြန်မာ</a><a href="./showcase.th.html">ไทย</a></span>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" style="border-top:0">
+    <div class="eyebrow">AI content studio</div>
+    <h1>Describe it in plain English. Get studio-grade content.</h1>
+    <p class="lead">Videos, captions, voiceovers, images and music — planned, priced, produced,
+      and packaged ready to post. You talk to it like a person; behind the scenes it runs a
+      disciplined, repeatable production process.</p>
+    <div class="say">
+      <span class="chip">“Make a <b>TikTok ad</b> for my coffee brand.”</span>
+      <span class="chip">“Add <b>captions</b> in Burmese.”</span>
+      <span class="chip">“Record a <b>warm voiceover</b>.”</span>
+      <span class="chip">“Turn it into a <b>claymation</b> explainer.”</span>
+    </div>
+  </section>
+
+  <section id="flow">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">The professional workflow</div>
+        <h2>Every job runs the same four steps</h2>
+        <p>No guesswork, no surprise bills, no “new stranger’s face every scene.” This spine sits under
+          everything below — it’s what makes the output consistent and safe to hand to a client.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Set the brand</h3>
+          <p>Your name, audience, colours, tone and the things you never want said are captured once and reused everywhere.</p></div>
+        <div class="step"><div class="n">02</div><h3>Agree the cost</h3>
+          <p>You see the estimate <em>before</em> anything is made. A budget cap is enforced in code — it can’t overspend.</p></div>
+        <div class="step"><div class="n">03</div><h3>Preview, then produce</h3>
+          <p>Cheap previews first; you pick the direction; only then does it spend on the finished render.</p></div>
+        <div class="step"><div class="n">04</div><h3>Package to post</h3>
+          <p>Correctly sized per platform, with captions, hashtags and alt text — plus a record of exactly how it was made.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Real projects · step by step</div>
+        <h2>Two films actually built with it</h2>
+        <p>Not mock-ups — real short films produced end-to-end, with the real pipeline, the real output
+          counts, and the real cost from the project ledger. Two different ways in: <b>talk through a story</b>,
+          or <b>hand it a video to study</b>. Pick a film to see exactly how it was made.</p>
+      </div>
+
+      <div class="case-grid">
+
+      <!-- CASE 1 -->
+      <details class="case">
+        <summary>
+          <div class="cover">
+            <img loading="lazy" src="./assets/case/cover-emberfell.jpg" alt="Emberfell II key art — the papercraft prince stands small before enormous closed gates as ash falls" />
+            <div class="veil"></div>
+            <div class="on-cover">
+              <div class="eyebrow" style="color:#9fc0ff">Case study · Papercraft homage</div>
+              <h3>Emberfell II: The Gates</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="case-meta">
+              <span class="badge core">3D papercraft</span>
+              <span class="badge opt">16:9 · YouTube</span>
+              <span class="badge opt">104s · 12 scenes</span>
+            </div>
+            <div class="usecase" style="margin-top:14px">
+              <span class="uk">Use case</span>
+              <span><b>Just talk to the agent about a storyline.</b> No prompts, no shot list — a conversation
+                about Arthas and the Culling of Stratholme, and it wrote the script, cast the characters,
+                picked the right model for each shot, and shot the film.</span>
+            </div>
+            <div class="opener"><span class="lbl-open">See how it was built</span><span class="lbl-shut">Hide the breakdown</span></div>
+          </div>
+        </summary>
+
+        <div class="case-detail">
+        <div class="case-media"><video poster="./assets/case/emberfell.jpg" controls preload="none" playsinline><source src="./assets/case/emberfell.mp4" type="video/mp4"></video></div>
+        <p class="outcome"><b>Goal:</b> a ~105-second papercraft homage to the hardest scene in
+          <b>Warcraft III: Reign of Chaos</b> — the Culling of Stratholme, where Arthas orders a plagued
+          city killed while it is still human. Reimagined in cut-paper with original characters and original
+          dialogue: a prince who must close the gates on his own people, the mentor who begs him not to, and
+          the healer who walks away. It references the scenario; it isn’t a copy.</p>
+        <div class="ask"><span class="who">You told the agent</span>
+          <span class="q">“Tell me about Arthas from Warcraft III — what story would attract attention? Make it as a <b>papercraft short</b>, under 2 minutes. Use <b>Omni Flash</b> for the acting, and <b>Veo 3.1 lite</b> for the quiet scenes.”</span></div>
+
+        <div class="label">Transparency — the actual generated character model sheets</div>
+        <div class="sheet-strip">
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-corin-sheet.jpg" alt="Prince Corin papercraft model sheet — full-body turnaround, face close-up, half-body and costume detail crops" /><figcaption><b>Prince Corin</b> — one sheet: full-body turnaround (front / ¾ / side / back), face close-up, half-body, and detail crops of the sun-crest, sword and boots.</figcaption></figure>
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-veyron-sheet.jpg" alt="Marshal Veyron papercraft model sheet — turnaround and detail crops" /><figcaption><b>Marshal Veyron</b> — the mentor who begs him to find another way. Created from text alone, no reference image.</figcaption></figure>
+          <figure class="sheet-card"><img loading="lazy" src="./assets/case/chars/emberfell-sera-sheet.jpg" alt="Sera the healer papercraft model sheet — turnaround and detail crops" /><figcaption><b>Sera</b> — the healer who finds the plague, and leaves. Her personality line is printed on the sheet: it drives her acting in every clip.</figcaption></figure>
+        </div>
+        <div class="note"><span>One image per character, not one per angle — so a whole identity travels in a single reference slot. Every keyframe that contains a character cites these sheets (Corin’s in 7 of them), which is why the faces hold across the film.</span></div>
+
+        <div class="case-body">
+          <div>
+            <div class="label">How it was built — the real pipeline</div>
+            <ol class="flow">
+              <li><b>Lock the cast</b> — Corin carried over from the first film; Veyron and Sera generated as new model sheets from text and saved to the registry.</li>
+              <li><b>Generate 12 keyframes</b> — one approved still per scene, each citing the locked sheets. <em>Approved before paying for any video.</em></li>
+              <li><b>Cast the model to the shot</b> — 8 acted scenes to Omni <code>3d-papercraft</code> (faces, dialogue, lip-sync); 4 quiet scenes to <b>Veo 3.1 lite</b> at $0.03/s — ashfall, a spinning pinwheel, the silent aftermath.</li>
+              <li><b>Let the clips speak</b> — Omni generates its own dialogue and sound in the same pass. No separate voiceover; a 106-second score sits underneath.</li>
+              <li><b>Assemble</b> — 12 scenes stitched with the native audio at full level and the music bed at 14%.</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">What came out</div>
+            <div class="statrow">
+              <div class="stat"><div class="v">104.0s</div><div class="l">Final film</div></div>
+              <div class="stat"><div class="v">12</div><div class="l">Clips / scenes</div></div>
+              <div class="stat"><div class="v">$11.93</div><div class="l">Total spent</div></div>
+              <div class="stat"><div class="v">$25</div><div class="l">Budget cap</div></div>
+            </div>
+            <div class="pills">
+              <span class="pill">2 new model sheets</span><span class="pill">12 keyframes</span>
+              <span class="pill">8 Omni clips</span><span class="pill">4 Veo-lite clips</span>
+              <span class="pill">1 music bed</span><span class="pill">1 final film (104s)</span>
+            </div>
+            <div class="note"><span>Two scenes were refused by the safety filter and one was re-staged three times before the blocking read correctly — every retry is logged in the folder’s <code>prompts.txt</code>, and the cheap keyframe was always approved before the ~$1/clip video spend.</span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      <!-- CASE 2 -->
+      <details class="case">
+        <summary>
+          <div class="cover">
+            <img loading="lazy" src="./assets/case/cover-a-second-either-way.jpg" alt="A Second Either Way key art — the same street corner twice: on the left they meet, on the right they miss" />
+            <div class="veil"></div>
+            <div class="on-cover">
+              <div class="eyebrow" style="color:#9fc0ff">Case study · Reference-video remake</div>
+              <h3>A Second Either Way</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="case-meta">
+              <span class="badge core">3D papercraft</span>
+              <span class="badge opt">16:9 · YouTube</span>
+              <span class="badge opt">92s · 11 scenes</span>
+            </div>
+            <div class="usecase" style="margin-top:14px">
+              <span class="uk">Use case</span>
+              <span><b>Paste a YouTube link and name your style.</b> “Analyse this video, make something like it
+                in papercraft, under 2 minutes.” It watched the 5:18 original, broke it into 70 scenes, and
+                rebuilt the structure with original characters.</span>
+            </div>
+            <div class="opener"><span class="lbl-open">See how it was built</span><span class="lbl-shut">Hide the breakdown</span></div>
+          </div>
+        </summary>
+
+        <div class="case-detail">
+        <div class="case-media"><video poster="./assets/case/a-second-either-way.jpg" controls preload="none" playsinline><source src="./assets/case/a-second-either-way.mp4" type="video/mp4"></video></div>
+        <p class="outcome"><b>Goal:</b> recreate the <em>structure and pacing</em> of an existing short film
+          (“ONE SECOND LATE”) as a papercraft “sliding-doors” romance — with entirely original characters and
+          paraphrased dialogue, no footage or likenesses copied, and <b>compressed from 5:18 to under 2 minutes</b>.</p>
+        <div class="ask"><span class="who">You told the agent</span>
+          <span class="q">“[a YouTube link] — <b>analyse this video</b>, I want to create something like that but in <b>papercraft style</b>. No more than 2 min.”</span></div>
+
+        <div class="label">Transparency — the actual generated character sheets (step 2 output)</div>
+        <div class="char-strip">
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-front.jpg" alt="Eli character sheet — front view, papercraft" /><figcaption>Eli · front</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-three_quarter.jpg" alt="Eli character sheet — three-quarter view" /><figcaption>Eli · ¾ view</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-eli-full_body.jpg" alt="Eli character sheet — full body" /><figcaption>Eli · full body</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-front.jpg" alt="Nora character sheet — front view, with her red scarf" /><figcaption>Nora · front</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-three_quarter.jpg" alt="Nora character sheet — three-quarter view" /><figcaption>Nora · ¾ view</figcaption></figure>
+          <figure class="char-card"><img loading="lazy" src="./assets/case/chars/asew-nora-full_body.jpg" alt="Nora character sheet — full body" /><figcaption>Nora · full body</figcaption></figure>
+        </div>
+        <div class="note"><span>Nora’s red scarf — the reinvented meet-cute prop — is locked in the sheet itself, so it survives every scene without being re-described.</span></div>
+
+        <div class="case-body">
+          <div>
+            <div class="label">How it was built — the real pipeline</div>
+            <ol class="flow">
+              <li><b>Analyse the reference</b> — the agent watched the 5:18 original and produced a <b>70-scene</b> breakdown of its structure, pacing and style, plus a recreation plan. <em>(~$0.17)</em></li>
+              <li><b>Lock 2 original characters</b> — Eli, and Nora with her signature red scarf (the original film’s meet-cute prop, reinvented) — character sheets to the registry.</li>
+              <li><b>Generate 11 keyframes</b> — approved stills referencing the locked characters.</li>
+              <li><b>Animate to 11 clips</b> — Omni <code>3d-papercraft</code>, image-to-video, per-clip camera moves (8–10s each).</li>
+              <li><b>Voice &amp; music — then a judgement call</b> — voiceover was generated across 3 voices, but on playback the clips’ own Omni audio was better, so the TTS was dropped and the native audio kept.</li>
+              <li><b>Assemble</b> — stitched into the 92-second final cut with the parallel-timeline structure intact.</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">What came out</div>
+            <div class="statrow">
+              <div class="stat"><div class="v">92.0s</div><div class="l">Final film</div></div>
+              <div class="stat"><div class="v">70→11</div><div class="l">Ref scenes → clips</div></div>
+              <div class="stat"><div class="v">$10.85</div><div class="l">Total spent</div></div>
+              <div class="stat"><div class="v">$25</div><div class="l">Budget cap</div></div>
+            </div>
+            <div class="pills">
+              <span class="pill">2 character sheets</span><span class="pill">11 keyframes</span>
+              <span class="pill">11 clips</span><span class="pill">5 voiceovers (native audio kept)</span>
+              <span class="pill">1 music bed</span><span class="pill">1 final film (32MB)</span>
+            </div>
+            <div class="note"><span>The music step <b>failed mid-run</b> (a model returned a 404). The pipeline caught it, re-ran on a fallback and re-assembled — reusing the already-made voiceovers, for $0.08. <b>Nothing was lost or double-charged.</b></span></div>
+          </div>
+        </div>
+        </div>
+      </details>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="video">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Capability</div>
+        <h2>Video generation</h2>
+        <p>From a single sentence, a start image, or an existing clip — with real, native audio in the same pass.</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>Omni video</h3>
+          <span class="badge core">Gemini · core</span>
+          <span class="cost">~$1.03 / 10-second clip</span>
+        </div>
+        <p class="outcome"><b>What you get:</b> a short, finished video clip (up to ~10 seconds) with motion
+          <b>and</b> sound generated together — a product sizzle, a talking explainer, or a scene in a chosen
+          art style. It can also <b>edit a clip you already have</b>: add on-screen text, sound effects, or
+          restyle it, without regenerating from scratch.</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“Make a <b>10-second claymation explainer</b> of my coffee bag, warm morning light, slow push-in.”</span></div>
+        <div class="cap-grid">
+          <div>
+            <div class="label">How your studio makes it</div>
+            <ol class="flow">
+              <li>Pick the <b>starting point</b> — a text prompt, one keyframe image, up to five reference images, or an existing video to edit.</li>
+              <li>Choose an <b>art style</b> (or keep it photoreal). This is always your call — never picked silently.</li>
+              <li>Propose a <b>camera move</b> from 46 tested presets — one clean move per clip.</li>
+              <li>Estimate the cost, confirm, and render. The prompt is saved so the exact clip can be reproduced.</li>
+            </ol>
+            <div class="cmd">
+              <span class="c-note"># behind the scenes, one command runs the clip</span><br>
+              <span class="c-cmd">generateOmniVideoClip</span> '{<br>
+              &nbsp;&nbsp;"prompt": "Founder holds the bag to camera, warm light",<br>
+              &nbsp;&nbsp;"artStyle": "claymation", "cameraMove": "slow-push-in",<br>
+              &nbsp;&nbsp;"outputPath": "…/clip-01.mp4" }'
+            </div>
+            <div class="cmd-cap">One call in, one finished clip out — with audio.</div>
+          </div>
+          <div>
+            <div class="label">The five starting points</div>
+            <div class="knobs">
+              <div class="row"><div class="k">text</div><div class="v"><b>Prompt only</b> — explainers, sizzle reels</div></div>
+              <div class="row"><div class="k">image</div><div class="v"><b>One keyframe</b> — animate an approved still</div></div>
+              <div class="row"><div class="k">references</div><div class="v"><b>2–5 images</b> — lock a character + product + set</div></div>
+              <div class="row"><div class="k">edit</div><div class="v"><b>Fix a clip</b> — add text / SFX / restyle</div></div>
+              <div class="row"><div class="k">extend</div><div class="v"><b>Continue</b> a scene onward</div></div>
+            </div>
+            <div class="label">10 art styles — you choose</div>
+            <div class="pills">
+              <span class="pill">claymation</span><span class="pill">pixel-art</span>
+              <span class="pill">whiteboard-doodle</span><span class="pill">fluffy-toy</span>
+              <span class="pill">3d-papercraft</span><span class="pill">low-poly</span>
+              <span class="pill">2d-illustration</span><span class="pill">isometric-flat-vector</span>
+              <span class="pill">mixed-media</span><span class="pill">3d-mix</span>
+            </div>
+            <p class="outcome" style="font-size:13.5px;color:var(--ink-faint)">
+              Need cinematic B-roll or exact first-and-last-frame reveals instead? A higher-fidelity film
+              engine (Veo) handles those — priced by the second.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="captions">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Capability</div>
+        <h2>Adding text &amp; captions</h2>
+        <p>Text is rendered locally with real fonts — pixel-sharp, Burmese-safe, and <b>free</b>. AI paints
+          beautiful scenes but garbles typography, so the words never touch the AI.</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>Captions</h3>
+          <span class="badge free">$0 · rendered locally</span>
+          <span class="cost">Myanmar / Thai / Latin — all shaped correctly</span>
+        </div>
+        <p class="outcome"><b>What you get:</b> timed captions burned onto the finished video, with timing taken
+          from the actual audio. You choose the <b>method by the video’s job</b> — not one blunt default.</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“<b>Add Burmese captions</b> to this video and highlight the product name.”</span></div>
+
+        <div class="label">Two ways to caption — pick by the video</div>
+        <div class="modes">
+          <div class="mode">
+            <h4>Normal mode</h4>
+            <div class="sub">The safe, always-legible default</div>
+            <ul>
+              <li>Clean lower-third <b>pill transcript</b>, one line at a time</li>
+              <li>Sits in the safe zone, clear of platform buttons</li>
+              <li>Perfect for talking-head, tutorials, straightforward explainers</li>
+              <li>One key word can glow in your accent colour</li>
+            </ul>
+          </div>
+          <div class="mode creative">
+            <h4>Creative mode</h4>
+            <div class="sub">Editorial punch, chosen deliberately (once per clip)</div>
+            <ul>
+              <li><b>Hero punch-ins</b> — one big word per beat for hooks &amp; hype</li>
+              <li><b>Keyword accent</b> — highlight the 1–2 words that matter</li>
+              <li><b>Location / label stamps</b> at the top for travel &amp; multi-scene</li>
+              <li><b>Text behind the subject</b> — the word sits <em>behind</em> the person as they move</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cap-grid" style="margin-top:24px">
+          <div>
+            <div class="label">How your studio makes it</div>
+            <ol class="flow">
+              <li>Transcribe the audio for exact timings (any language, Burmese included).</li>
+              <li>Pick the method above that fits the video’s shape and goal.</li>
+              <li>Set size, height off the bottom, and the accent colour; mark the words to emphasise.</li>
+              <li>Burn it in locally — no cost, audio untouched, and a matching subtitle file saved too.</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">The knobs</div>
+            <div class="knobs">
+              <div class="row"><div class="k">style</div><div class="v"><b>pill</b> (transcript) or <b>hero</b> (big open word)</div></div>
+              <div class="row"><div class="k">pos</div><div class="v">lower · mid · <b>upper</b> (stamps)</div></div>
+              <div class="row"><div class="k">size</div><div class="v">per-line size override</div></div>
+              <div class="row"><div class="k">accent</div><div class="v">colour for the <b>**highlighted**</b> word</div></div>
+              <div class="row"><div class="k">marginBottom</div><div class="v">height above the platform UI</div></div>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-note"># timings come from the transcript, then:</span><br>
+              <span class="c-cmd">renderCaptionedVideo</span> '{ "videoPath":"final.mp4",<br>
+              &nbsp;&nbsp;"cues":[{"start":0,"end":2,"text":"the **VoxCPM** way"}],<br>
+              &nbsp;&nbsp;"accentColor":"#1b4fd8", "outputPath":"final-cc.mp4" }'
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="text-ai">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Under the hood</div>
+        <h2>Captions that read the frame first</h2>
+        <p>Text isn’t dropped in a fixed spot and hoped for. Before rendering, the agent inspects the actual
+          video frames and the audio, then decides every attribute so the words fit the shot — legible,
+          on-brand, and never covering a face.</p>
+      </div>
+      <div class="cap">
+        <div class="decrow">
+          <div class="input"><h4>It reads the frames</h4><p>Where the empty space is, whether the background is
+            bright, dark or busy, and where the subject’s face sits — found by analysing the frames.</p></div>
+          <div class="input"><h4>It reads the audio</h4><p>Exact word-by-word timings from the transcript, and
+            which words carry the emphasis — so captions land on the beat.</p></div>
+        </div>
+        <div class="label">Then it decides — per shot</div>
+        <div class="decgrid">
+          <div class="dec"><h4><span class="d"></span>Position</h4><p>Placed in the <b>emptiest region</b> (sky, wall, water) — not blind-centre — and kept clear of the face and the platform’s button zone.</p></div>
+          <div class="dec"><h4><span class="d"></span>Size</h4><p>A <b>hook word</b> goes big (it can bleed off the frame edge); a transcript line stays modest. Size tracks how much the word matters.</p></div>
+          <div class="dec"><h4><span class="d"></span>Colour</h4><p>Sampled against the background — <b>light on dark, dark on light</b> — with the 1–2 key words switched to your brand accent.</p></div>
+          <div class="dec"><h4><span class="d"></span>Legibility</h4><p>On a busy or textured background it adds a <b>frosted scrim or pill</b> behind the text so it never gets lost.</p></div>
+          <div class="dec"><h4><span class="d"></span>Style</h4><p>Chosen by shot: <b>pill transcript</b>, <b>hero punch-in</b>, an <b>upper location stamp</b>, or the signature <b>text-behind-subject</b>.</p></div>
+          <div class="dec"><h4><span class="d"></span>Animation</h4><p>A <b>spring entrance</b>, one line at a time, <b>timed to the audio beats</b> — readable, never a wall of text.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="voice">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Capability</div>
+        <h2>Voiceover</h2>
+        <p>Two routes: a <b>free</b> plain narrator, or an <b>expressive, directed</b> voice you tune line by line.</p>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>Free narration — Microsoft Edge voices</h3>
+          <span class="badge free">$0 · no API key</span>
+          <span class="cost">includes Burmese (male &amp; female)</span>
+        </div>
+        <p class="outcome"><b>What you get:</b> clean, clear narration at no cost — ideal for drafts, high volume,
+          or when a plain read is all you need. You can nudge the <b>speed, volume and pitch</b>, but there’s no
+          acting or emotion.</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“Give me a <b>free Burmese voiceover</b> of this script.”</span></div>
+        <div class="cap-grid">
+          <div>
+            <div class="label">How your studio makes it</div>
+            <ol class="flow">
+              <li>Give the script and pick a voice (e.g. Burmese <b>my-female</b> / <b>my-male</b>).</li>
+              <li>Optionally adjust rate, volume, pitch.</li>
+              <li>Render — free, instantly, saved as a ready audio file.</li>
+            </ol>
+          </div>
+          <div>
+            <div class="label">The knobs</div>
+            <div class="knobs">
+              <div class="row"><div class="k">voice</div><div class="v"><b>my-female</b>, my-male, + many global voices</div></div>
+              <div class="row"><div class="k">rate</div><div class="v">faster / slower</div></div>
+              <div class="row"><div class="k">volume</div><div class="v">louder / softer</div></div>
+              <div class="row"><div class="k">pitch</div><div class="v">higher / lower</div></div>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-free"># free — no key, not billed</span><br>
+              <span class="c-cmd">generateEdgeTTSVoiceover</span> '{ "script":"…",<br>
+              &nbsp;&nbsp;"voice":"my-female", "outputPath":"vo.wav" }'
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top">
+          <h3>Expressive narration — Gemini voices</h3>
+          <span class="badge core">Gemini · directed</span>
+          <span class="cost">~$0.001 / sentence</span>
+        </div>
+        <p class="outcome"><b>What you get:</b> a voice that <b>acts</b>. You choose the character, the style,
+          the pace and accent — and you can direct emotion right inside the script with cues like
+          <b>[excited]</b>, <b>[pause]</b> or <b>[whispers]</b>. Never a flat read.</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“Record a <b>warm, professional voiceover</b> — sound excited on the first line.”</span></div>
+
+        <div class="label">Choose the voice</div>
+        <div class="scroller">
+          <table class="voices">
+            <thead><tr><th>Voice</th><th>Gender</th><th>Best for</th></tr></thead>
+            <tbody>
+              <tr><td>Kore</td><td>Female</td><td>Professional, clear</td></tr>
+              <tr><td>Aoede</td><td>Female</td><td>Warm, friendly, approachable</td></tr>
+              <tr><td>Leda</td><td>Female</td><td>Soft, gentle</td></tr>
+              <tr><td>Zephyr</td><td>Male</td><td>Professional, calm narration</td></tr>
+              <tr><td>Puck</td><td>Male</td><td>Energetic, casual, youthful</td></tr>
+              <tr><td>Charon</td><td>Male</td><td>Deep, authoritative</td></tr>
+              <tr><td>Fenrir</td><td>Male</td><td>Strong, dramatic</td></tr>
+              <tr><td>Orus</td><td>Male</td><td>Mature, wise, trustworthy</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cap-grid" style="margin-top:22px">
+          <div>
+            <div class="label">Set the parameters</div>
+            <div class="knobs">
+              <div class="row"><div class="k">style</div><div class="v">neutral · professional · casual · energetic · calm · excited · serious</div></div>
+              <div class="row"><div class="k">pace</div><div class="v">natural · slow · fast</div></div>
+              <div class="row"><div class="k">accent</div><div class="v">american · british · australian · indian</div></div>
+              <div class="row"><div class="k">audioProfile</div><div class="v">free-text director’s note — <b>“warm radio host, slight smile”</b></div></div>
+              <div class="row"><div class="k">multi-speaker</div><div class="v">a different voice per speaker (podcasts, dialogue)</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="label">Direct emotion inside the script</div>
+            <div class="pills">
+              <span class="pill on">[excited]</span><span class="pill on">[pause]</span>
+              <span class="pill on">[whispers]</span><span class="pill on">[dry chuckle]</span>
+              <span class="pill">200+ more tags</span>
+            </div>
+            <div class="cmd" style="margin-top:16px">
+              <span class="c-cmd">generateVoiceover</span> '{<br>
+              &nbsp;&nbsp;"script":"[excited] This changes everything. [pause] Really.",<br>
+              &nbsp;&nbsp;"voiceName":"Kore",<br>
+              &nbsp;&nbsp;"voiceStyle":{"style":"professional","pace":"natural",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;"accent":"american_general","audioProfile":"warm, confident"},<br>
+              &nbsp;&nbsp;"outputPath":"vo.wav" }'
+            </div>
+            <div class="cmd-cap">The chosen voice is locked to the project, so every video sounds like the same brand.</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="outcome" style="font-size:14.5px;color:var(--ink-faint)">
+        Want the character to <b>speak on screen</b> in their own voice? That’s a talking avatar — next.</p>
+    </div>
+  </section>
+
+  <section id="more">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">And more</div>
+        <h2>Talking avatars, images &amp; music</h2>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>Talking avatar — a character that speaks</h3></div>
+        <p class="outcome">Three ways to make a face speak, chosen by <b>whose voice</b> you want on the mouth:</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“<b>Make my founder photo talk</b> in Burmese, using my own voice recording.”</span></div>
+        <div class="knobs" style="margin-top:16px">
+          <div class="row"><div class="k">Gemini</div><div class="v"><b>Gemini’s own generated voice</b> — best for non-English &amp; Myanmar pronunciation</div></div>
+          <div class="row"><div class="k">Seedance</div><div class="v"><b>A custom voice you provide</b> — lip-synced to your audio, short clips <span class="badge opt">optional</span></div></div>
+          <div class="row"><div class="k">InfiniteTalk</div><div class="v"><b>Your own recorded voice</b> — no length limit (best kept ≤60s) <span class="badge opt">optional</span></div></div>
+        </div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>Images &amp; slides</h3><span class="cost">from ~$0.03 per image</span></div>
+        <p class="outcome">Thumbnails, carousels, product shots (26 e-commerce presets from one real photo), logos
+          and social covers — with pixel-perfect text laid over them locally, for free.</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“Turn my product photo into a <b>lifestyle thumbnail</b> for Instagram.”</span></div>
+      </div>
+
+      <div class="cap">
+        <div class="cap-top"><h3>Music</h3><span class="cost">~$0.04 per 30 seconds</span></div>
+        <p class="outcome">Background beds, jingles and intros — that duck automatically under your voiceover in the final mix.</p>
+        <div class="ask"><span class="who">You tell the agent</span>
+          <span class="q">“Add an <b>upbeat 30-second music bed</b> under the voiceover.”</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cost">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">No surprises</div>
+        <h2>What things cost</h2>
+        <p>You only pay the AI providers, per generation — and the studio shows the estimate and enforces a cap
+          before it spends a cent. Local text, captions and free voices cost <b>nothing</b>.</p>
+      </div>
+      <div class="costgrid">
+        <div class="costcard"><div class="amt zero tnum">$0</div><div class="what">Free narration (Edge TTS)</div><div class="who">no key, not billed</div></div>
+        <div class="costcard"><div class="amt zero tnum">$0</div><div class="what">Captions &amp; on-screen text</div><div class="who">rendered locally</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.001</div><div class="what">Expressive voiceover / sentence</div><div class="who">Gemini TTS</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.03</div><div class="what">A quality image</div><div class="who">Gemini · Nano Banana</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.04</div><div class="what">30s of music</div><div class="who">Gemini · Lyria</div></div>
+        <div class="costcard"><div class="amt tnum">~$1.03</div><div class="what">A 10s Omni video clip</div><div class="who">Gemini · with audio</div></div>
+        <div class="costcard"><div class="amt tnum">~$0.80</div><div class="what">An 8s cinematic clip</div><div class="who">Veo · per-second</div></div>
+        <div class="costcard"><div class="amt tnum">~$3.65</div><div class="what">A full 32s brand film</div><div class="who">character + 4 clips + VO</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trust">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Why it’s safe to sell</div>
+        <h2>Built like a studio, not a toy</h2>
+      </div>
+      <div class="trust">
+        <div class="t"><h3><span class="tk"></span> Money moves only with consent</h3>
+          <p>Every project has a budget cap and a spend ledger. The estimate shows first; the cap is enforced in code, so it physically can’t overspend.</p></div>
+        <div class="t"><h3><span class="tk"></span> Consistency is engineered</h3>
+          <p>Characters, products, logos and voices are made once and locked. The same face and voice carry across a whole campaign.</p></div>
+        <div class="t"><h3><span class="tk"></span> Proof stays real</h3>
+          <p>The studio is hard-blocked from inventing testimonials, stats or press. Your numbers, verbatim — or nothing. Every job keeps a record of exactly how it was made.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b style="color:var(--ink)">SoeMind Forge</b> — describe it in plain English, get content ready to post.
+      &nbsp;<a href="./index.html">Home</a> · <a href="https://github.com/minkhant1996/soemind-forge">GitHub</a></div>
+    <div>Optimised for Google Gemini · optional OpenRouter &amp; RunPod add-ons</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -17,10 +17,32 @@ allowed-tools: Bash Read Write Edit Glob Grep
 □ Step 3: If a locked character asset exists → TELL user you will reuse its ref files
 □ Step 4: READ project.md and brand.md templates
 □ Step 5: ASK user to confirm workflow selection
+□ Step 5b: Any character SPEAKS? → WRITE THE EXACT LINES in the prompt, and add NO voiceover
 □ Step 6: THEN generate using workflow function
 ```
 
 **DO NOT skip to code. DO NOT assume. SHOW each step.**
+
+---
+
+## 🔴 SPEAKING CHARACTERS: QUOTE THE DIALOGUE, SKIP THE VOICEOVER
+
+Applies to **all** Omni modes (`text_to_video`, `image_to_video`,
+`reference_to_video`) and to Veo/Seedance speaking clips.
+
+**The model always generates the speech. If you don't write the lines, it invents
+them** — and its invention can reverse your story. Never write "speaks a short
+reassurance" or "mouth moving in natural speech". Write `says: <exact words>`.
+
+**Then do NOT layer a TTS voiceover on that scene.** The clip already carries its
+dialogue. Voiceover (`generateVoiceover`) is for **narration only** — a narrator
+over visuals with no on-screen speaker.
+
+In `assembleStoryFilm`: speaking scenes keep `ambientVolume: 1.0` and pass **no**
+`voPath`. Only narration scenes get a `voPath`.
+
+Full rules + the production incident that produced them:
+`workflows/VIDEO-PROMPT-GUIDE.md` §4e / §4e-vo.
 
 ---
 
@@ -74,6 +96,13 @@ signatures there document the args — translate them into a `cli.cjs` call.
 2. **If yes, ask:**
    - Do you have a character reference image in assets?
    - Should the character speak or be silent?
+
+3. **Reference material?** (ask once, before writing any video prompt)
+   - *"Is there a video you want this to feel like — yours or anyone's? (link/file,
+     or 'none')"* → if given, run the `analyze-video` skill FIRST and build from its
+     recreation blueprint instead of improvising prompts.
+   - Check `style_references` in the registry (`resolveAsset`) — registered look
+     refs feed keyframe prompts and `referenceImagePaths` ("style only, not subject").
 
 ### Step 2: Look Up Assets in the Registry (REQUIRED) - SHOW RESULTS TO USER
 
@@ -206,10 +235,14 @@ cat workflows/WORKFLOWS.md
    choice in `projects/{name}/templates/brand.md` so the whole series stays
    in one style. Never silently pick a style for the user.
 
-7. **Camera movement — PROPOSE from the preset library, then confirm:**
-   Don't improvise camera language. Pick 1-2 preset ids from
-   `VIDEO-PROMPT-GUIDE.md §2b` that fit the content intent, tell the user
-   which you chose and why, and confirm. One move per clip.
+7. **Camera movement — REQUIRED for EVERY clip/scene. Check the guide, don't improvise:**
+   A clip with no camera direction renders as a locked-off static shot — dead
+   energy. For EVERY clip in the piece, READ `VIDEO-PROMPT-GUIDE.md §2b` (46
+   presets) and pick 1-2 ids that fit that clip's intent, tell the user which
+   you chose and why, and confirm. One move per clip; vary moves across
+   consecutive clips (two identical moves back-to-back reads as a loop).
+   `static` is itself a deliberate preset — allowed only when the user
+   explicitly wants a locked-off look, never as a default by omission.
 
    | Intent | Propose |
    |---|---|
@@ -226,6 +259,16 @@ cat workflows/WORKFLOWS.md
    Movement/Speed/Framing/End block is prepended automatically. For
    scene-array workflows (voiceover scenes, speaking video, Seedance), paste
    the block text from the guide at the head of each scene prompt instead.
+
+8. **Series/film/campaign? → Style Block (one locked look on every prompt):**
+   For a cinematic film, animated series, or product-shot campaign, write
+   `projects/{name}/templates/style-block.md` ONCE with the user (template +
+   variants: `templates/style-block.template.md`), register it locked
+   (`style_references`), then **prepend the block verbatim to every clip,
+   keyframe, and image prompt of that series** — note "style-block: v1" in
+   prompts.txt. The block owns the LOOK (medium, lighting, color, lens);
+   `cameraMove` owns the MOVEMENT (question 7) — never put camera movement
+   inside the block. Skip for one-off clips; brand.md aesthetic is enough there.
 
 ---
 
@@ -384,6 +427,22 @@ node workflows/cli.cjs assembleFinal '{"clipPaths":["…/clip-01.mp4","…/clip-
 
 For audio-only mixing (single clip + VO/music, no concat/captions) use `mixVideoAudio()`.
 
+### Text on video — THE THREE ROUTES (name the route before planning)
+
+| Route | Cost | Command | Use for |
+|---|---|---|---|
+| **A — Normal captions** | $0 | `renderCaptionedVideo` / TextMotion `scrim:true` | transcript pills, white-on-dark at y=0.75, accent keywords — every VO video |
+| **B — Creative text, AI-designed** | $0 | `renderTextMotion` (+ rembg behind-subject) | hero/kinetic words the AGENT designs: frame-grab → place in the SUBJECT's negative space (close 9:16 talking head → band above the head, y≈0.09 — never on a face) → words from the video's own transcript → per-word style/motion → frame-grab verify BEFORE assembly |
+| **C — Creative text, Omni-baked** | **PAID ≈$0.10/sec** | `generateOmniVideoClip` task `edit` | text drawn/painted INTO the scene. Timestamped beats (`00:02 — {…}`) work; keep prompts minimal; behind-subject occlusion works ONLY at head height; output silent → `mixVideoAudio`; 10s cap → split+concat+setpts. Full rules: TEXT-OVERLAY-DESIGN-GUIDE.md §8. Confirm spend first. |
+
+**⚠️ For CREATIVE text, ASK the user first — "free (Remotion, agent-designed) or
+paid with Gemini Omni (~$0.10/sec, in-scene drawn look)?" — recommend free, never
+route to Omni silently. If they pick Omni, CALCULATE the job's total (count every
+≤10s call the scenes need × ~$0.10/sec, e.g. 18s scene = 2 calls ≈ $1.90), state
+it with the budget position, and `checkBudget` before the first call.**
+
+Full route selector + house styles + the ask script: `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` §0-pre.
+
 ### Creative captions — pick the method by the video, don't default blindly
 
 `assembleFinal`'s `captionsSrtPath` burns a plain SRT. For anything more expressive, run
@@ -426,13 +485,20 @@ Save to: `projects/{name}/output-contents/{date}/`
 | YouTube Shorts | 9:16 | 15-60s |
 | YouTube | 16:9 | 60s+ |
 
-## Kinetic-typography reels → renderKineticReel (Remotion, $0)
+## Kinetic-typography reels → renderTextMotion / renderKineticReel (Remotion, $0)
 
 For word-driven reels (quotes, stats, hooks over brand backgrounds), skip Veo:
 generate text-free backgrounds + voiceover, then one call renders staggered
 animated typography (per-line size/color emphasis, gold #C8A24A for THE phrase):
 `node workflows/cli.cjs renderKineticReel '{"scenes":[…],"audioPath":"vo.wav","outputPath":"reel.mp4"}'`
 Args in WORKFLOWS.md § Remotion. Use Veo only when you need real motion/footage.
+
+For per-element creative control over ANY footage (Route B above) use
+**`renderTextMotion`**: per-word font/size/color/gradient/stroke/glow/badge,
+20+ entrances, loops (float/pulse/wave/neon/wiggle…), letter/word stagger,
+`mediaFill` (video-inside-letters), `behind:true` (rembg subject matte),
+`scrim:true` caption pills, `background.playbackRate` to stretch a short
+background. Design rules + verification steps: TEXT-OVERLAY-DESIGN-GUIDE.md §0-pre.
 
 **Before planning ANY hero title / kinetic reel / "text behind subject" /
 meme-style overlay copy**, read `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` —

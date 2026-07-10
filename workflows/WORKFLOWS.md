@@ -508,6 +508,114 @@ default staggered 0.55s per line). Scene fields: `backgroundPath`, `seconds`,
 project files — staged into remotion/public/ automatically. Total duration = sum
 of scene seconds; match it to the voiceover length (~2.5 words/sec).
 
+### renderTextMotion — full text-animation engine (positioned, timed, in/out/loop) · $0
+
+The superset of `renderKineticReel`: a timeline of independently **positioned**
+(`x`,`y`,`anchor`) and independently **timed** (`start`,`end`) text elements, each
+with a CapCut-style entrance/exit/loop animation. Use this (not KineticReel) for
+anything needing real placement, exits, loops, per-word/letter reveals, or
+video-in-text. Local render, always $0. Structured output returns each element's
+`resolvedBox` + timing.
+
+```bash
+node workflows/cli.cjs renderTextMotion @clip.textmotion.json
+```
+```jsonc
+{
+  "width": 1080, "height": 1920, "fps": 30, "durationSeconds": 10.2,
+  "background": { "kind": "image", "path": "…/bg.png", "kenBurns": true, "dim": 0.1 },
+  "audioPath": "…/vo.wav", "musicPath": "…/music.wav",
+  "elements": [
+    { "text": "NO $2,000 GPU", "x": 0.5, "y": 0.28, "anchor": "top-center",
+      "in": "pop", "out": "sink", "loop": "float", "start": 0.5, "end": 9.8,
+      "inDuration": 0.6, "outDuration": 0.4, "size": 96, "weight": 800,
+      "gradient": "linear-gradient(135deg,#3b6bff,#1b4fd8,#c8a24a)" },
+    { "text": "one number decides", "x": 0.5, "y": 0.42, "in": "wordByWord",
+      "stagger": "word", "staggerStep": 0.06, "size": 40, "color": "#1a1c1f" },
+    { "text": "LOCAL AI", "x": 0.5, "y": 0.7, "in": "fadeIn", "size": 150,
+      "uppercase": true, "mediaFill": "…/broll.mp4" }
+  ],
+  "outputPath": "…/clip.mp4"
+}
+```
+
+**Position** (`x`,`y`): fraction 0..1 of canvas, px if >1, or `"50%"`. `anchor` =
+which point of the box lands at (x,y): `center|top|bottom|left|right|top-left|…`.
+`maxWidth` (wrap), `align`, `rotate`.
+**Timing** (seconds): `start`,`end`,`inDuration`,`outDuration`.
+**Animation** — `in` / `out` / `loop` tokens (`easing`: spring|easeOut|easeInOut|
+linear|backOut|bounce|elastic or `[x1,y1,x2,y2]`; `stagger`: none|word|letter +
+`staggerStep`):
+- **IN**: fadeIn fadeUp fadeDown fadeLeft fadeRight rise pop bounceIn zoomIn spinIn
+  flipUp wipeRight wipeLeft revealUp blurIn elastic glitchIn inkReveal shakeIn roll
+  expandTracking lightSweep typewriter wordByWord letterByLetter waveIn
+- **OUT**: fadeOut sink slideOutL slideOutR slideOutU slideOutD zoomOut popOut
+  blurOut wipeOut spinOut shrinkOut glitchOut dissolve
+- **LOOP**: none float pulse breathe shake wiggle blink flicker wave bounceLoop
+  rotateLoop sway heartbeat jelly neon hueShift
+**Style**: `font`(sora|inter) `size` `weight` `color` `gradient` `stroke`/`strokeWidth`
+`glow`/`glowSize` `italic` `uppercase` `tracking` `lineHeight` `highlight`/`highlightPad`
+`shadow` `opacity`, and `mediaFill` (image OR video shown THROUGH the letters).
+**Background**: `{ kind:"image|video|color", path, color, fit, kenBurns, dim }`.
+**Creative extensions** (elements): `behind:true` (render UNDER the subject cutout —
+needs top-level `subject:{source,model,maxSeconds,fps,feather}`, rembg-matted) ·
+`bleed` (no-wrap hero overflow) · `badge` (chip/pill) · inline markup in `text`:
+`**bold**` `==accent==`(→`accentColor`) `//italic//` · `perLetter:{stepY,stepRotate,skew}`
+(cascade) · `parts:[{text,dx,dy,scale,color}]` (dominant+satellites) · fonts
+`sora|inter|caveat(script)|bebas(display)`.
+Design guidance (which anim/style when): `TEXT-OVERLAY-DESIGN-GUIDE.md`.
+
+### suggestTextDesign — recommend placement + style + animation from a frame · ~$0.0004
+
+Superset of `suggestTextPlacement`: same vision pass also classifies the scene and
+returns the recommended creative **style + in/out/loop + font** (scene→style table:
+cinematic-broll→behind-subject, flat-graphic→gradient-hero, talking-head→lower-third,
+before-after→chips, celebratory→script-accent…). Lets the agent decide the *whole*
+treatment per frame, then override anything.
+```bash
+node workflows/cli.cjs suggestTextDesign '{"framePath":"…/frame.png","text":"NO $2,000 GPU","intent":"hook"}'
+# → { placement, style, in, out, loop, font, sceneType, emphasis, region, subject, reasoning, cost }
+```
+
+### subjectMatte — rembg cutout for text-behind-subject · $0 (slow)
+
+Cuts out the foreground subject → RGBA PNG (image) or VP9/webm-alpha (video), cached
+by source hash. Usually called for you by `renderTextMotion` when an element has
+`behind:true` + `subject.source`; call directly to pre-warm/cache.
+```bash
+node workflows/cli.cjs subjectMatte '{"source":"…/clip.mp4","model":"u2netp","maxSeconds":15,"fps":25}'
+# → { cutoutPath, kind:"image|video", cached, frames }
+```
+Models: `u2net` (default, best) · `u2netp` (fast) · `isnet-general-use`. Video ~1s/frame.
+
+### suggestTextPlacement — frame-aware text placement (decide like a human) · ~$0.0004
+
+Reads a frame and returns where/how big/what color to place text — so an agent
+places captions the way a human art director would (negative space, away from the
+subject, contrasting color) instead of hard-coding numbers. Vision (`analyzeImage`)
+finds the empty region + subject; `sharp` samples that region's luminance/variance
+for a guaranteed-contrast color and a scrim decision. Output drops straight into a
+`renderTextMotion` element.
+
+```bash
+node workflows/cli.cjs suggestTextPlacement '{"framePath":"…/frame.png","text":"NO $2,000 GPU","intent":"hook headline"}'
+# → { placement:{x,y,anchor,maxWidth,size,color,scrim}, region, subject, brightness, busy, reasoning, cost }
+```
+`framePath` (image or video — a frame is extracted) · `text` · `intent` · optional
+`canvasWidth/Height`, `avoid` (normalized regions already used), `maxSizePx/minSizePx`.
+Then: spread `data.placement` into a `renderTextMotion` element.
+
+### transcriptToElements — transcript cues → timed renderTextMotion elements · $0
+
+Turns `transcribeAudio` cues into ready-to-render text elements, each timed to when
+it's spoken. Agent then optionally emphasizes keywords.
+
+```bash
+node workflows/cli.cjs transcriptToElements '{"cues":[{"start":0,"end":1.5,"text":"Run AI locally"}],"mode":"caption"}'
+# mode: "caption" (lower-third) | "hero" (center big). → { elements:[…], count }
+```
+Feed `data.elements` as `renderTextMotion.elements` (override position/style per cue as needed).
+
 ### generateOmniVideoClip — Gemini Omni Flash video (experimental)
 
 The instruction-precision alternative to Veo (~10s cap, 720p native,
@@ -570,6 +678,25 @@ node workflows/cli.cjs generateOmniVideoClip '{
   "inputVideoPath": "projects/my-brand/output-contents/x/skate.mp4",
   "outputPath": "projects/my-brand/output-contents/x/skate-fx.mp4"
 }'
+
+# edit as CREATIVE BAKED TEXT (Route C — PAID ≈$0.10/sec; the FREE routes are
+# renderCaptionedVideo / renderTextMotion — TEXT-OVERLAY-DESIGN-GUIDE §0-pre).
+# Timestamped beats in ONE prompt land multiple timed graphics reliably —
+# key each timestamp to the VO transcript so graphics hit the spoken words:
+node workflows/cli.cjs generateOmniVideoClip '{
+  "prompt": "Keep everything the same — same people, same motion, same camera, same timing, same lighting. Only add bright-yellow hand-drawn marker doodles: 00:02 — a hand-lettered word position sketches itself upper left inside a loose marker oval. 00:05 — a giant doodle checkmark draws itself with sparkle rays and holds. (no subtitles)",
+  "inputVideoPath": "projects/my-brand/output-contents/x/broll-8s.mp4",
+  "outputPath": "projects/my-brand/output-contents/x/broll-doodled.mp4"
+}'
+# Baked-text rules (production-tested 2026-07, each cost real money to learn):
+#  · keep prompts MINIMAL — verbose edit prompts (+char ref) → 400 Input blocked
+#    ($0); drop the ref image when the person isn't being changed
+#  · behind-subject words occlude ONLY at HEAD/SHOULDER height (3/3); words
+#    crossing the torso paint IN FRONT (0/3) — torso-level = use rembg (free)
+#  · baked words ≤2-3 short English words; frame-grab verify (can truncate)
+#  · duration is a STRING '4s'..'10s' (number → 400 at response_format);
+#    edit tasks: don't pass duration/aspect at all
+#  · >10s scene: split base ≤10s, edit each, concat, setpts stretch ≤~7%, remux
 
 # edit as MOTION CONTROL — swap performers in a real video with your characters.
 # Prompt stays MINIMAL (refs carry all identity/outfit detail — descriptive
@@ -1214,7 +1341,7 @@ natural excitement, engaging energy
 | 13 | `text-to-voiceover` | Text | Voiceover audio (.wav) | `generateVoiceover()` |
 | 14 | `text-to-dialogue` | Text | Multi-speaker audio (.wav) | `generateMultiSpeakerVoiceover()` |
 | 15 | `text-to-music` | Text | Music track (.wav) | `generateMusicTrack()` |
-| 16 | `character-sheet` | Text | Multi-angle character refs | `generateCharacterSheet()` |
+| 16 | `character-sheet` | Text | ONE model-sheet image (turnaround + face close-up + half-body + detail crops, labeled); `layout:'per-angle'` for legacy separate files | `generateCharacterSheet()` |
 | 17 | `mix-audio` | Video + VO/music | Video with mixed audio | `mixVideoAudio()` |
 | 18 | `captions` | Script/cues | Subtitle file (.srt) | `generateCaptions()` |
 | 19 | `assemble-final` | Clips + VO + music + captions (+ optional xfade transitions) | Final video | `assembleFinal()` |

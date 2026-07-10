@@ -51,7 +51,7 @@ projects/{name}/
 │   │   ├── thumb-template-face.png
 │   │   └── thumb-template-product.png
 │   │
-│   ├── style-refs/          # Visual style references, mood boards
+│   ├── style/          # Visual style references, mood boards
 │   │   ├── style-brand-moodboard.png
 │   │   ├── style-color-palette.png
 │   │   └── style-typography.png
@@ -317,7 +317,7 @@ thumb-product-hero-template.png
 
 ---
 
-### 6. Style References (`assets/style-refs/`)
+### 6. Style References (`assets/style/`)
 
 **What to store:**
 - Mood boards

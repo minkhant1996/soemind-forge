@@ -19,6 +19,23 @@ set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
 set "SRC_SKILLS=%SCRIPT_DIR%\skills"
 
 REM ------------------------------------------------------------------
+REM Step -1: Fail fast on Node ^< 18 (before any prompts or npm installs;
+REM doctor re-checks this at the end, but by then setup already ran).
+REM ------------------------------------------------------------------
+where node >nul 2>nul
+if %ERRORLEVEL% neq 0 (
+    echo [ERROR] Node.js not found. Install Node 18+ from https://nodejs.org, then re-run.
+    exit /b 1
+)
+for /f %%v in ('node -p "process.versions.node.split('.')[0]"') do set "NODE_MAJOR=%%v"
+if %NODE_MAJOR% lss 18 (
+    for /f %%v in ('node -v') do echo [ERROR] Node.js %%v is too old (need ^>= 18^). Upgrade from https://nodejs.org, then re-run.
+    exit /b 1
+)
+for /f %%v in ('node -v') do echo    [OK] Node.js %%v
+echo.
+
+REM ------------------------------------------------------------------
 REM Step 0: Choose your AI tool
 REM ------------------------------------------------------------------
 echo Which AI CLI are you using?
@@ -172,6 +189,42 @@ if %errorlevel% equ 0 (
     echo    [!] ffmpeg not found - video assembly, transitions, caption
     echo        burn-in, and video QA won't run until installed:
     echo        winget install ffmpeg   (or: choco install ffmpeg)
+)
+
+REM edge-tts powers the free voiceover path (generateEdgeTTSVoiceover):
+REM $0, no API key, incl. Burmese. Python package, best-effort install.
+where python >nul 2>nul
+if %errorlevel% equ 0 (
+    python -c "import edge_tts" >nul 2>nul
+    if !errorlevel! equ 0 (
+        echo    [OK] edge-tts found (free voiceover: generateEdgeTTSVoiceover)
+    ) else (
+        echo    [!] edge-tts not found. Installing (free voiceover, $0/no key)...
+        python -m pip install --quiet edge-tts >nul 2>nul
+        python -c "import edge_tts" >nul 2>nul
+        if !errorlevel! equ 0 (
+            echo    [OK] edge-tts installed
+        ) else (
+            echo    [!] edge-tts install failed - free voiceover won't run until:
+            echo        python -m pip install edge-tts
+        )
+    )
+) else (
+    echo    [!] python not found - free Edge TTS voiceover won't run.
+    echo        Install Python 3, then: python -m pip install edge-tts
+)
+
+REM rembg powers the text-behind-subject recipe (TEXT-OVERLAY-DESIGN-GUIDE § 6).
+REM Optional + heavy (~200MB onnxruntime + model download) - check and hint only.
+where python >nul 2>nul
+if %errorlevel% equ 0 (
+    python -c "import rembg, PIL" >nul 2>nul
+    if !errorlevel! equ 0 (
+        echo    [OK] rembg found (text-behind-subject recipe)
+    ) else (
+        echo    [!] rembg not installed - text-behind-subject recipe (optional) needs:
+        echo        python -m pip install "rembg[cpu]" pillow
+    )
 )
 echo.
 
