@@ -1,6 +1,6 @@
 ---
 name: generate-music
-description: Generate music using Gemini Lyria. Use for background music, jingles, intros, soundtracks, full songs.
+description: Generate music using Gemini Lyria. Use for background music, jingles, intros, soundtracks, and complete songs WITH sung vocals — Lyria 3 sings your exact lyrics (8 languages, rap/sung delivery).
 allowed-tools: Bash Read Write Edit
 ---
 
@@ -90,12 +90,65 @@ From `projects/{name}/templates/brand.md`:
    - Medium
    - Fast
 
+5. **Vocals or instrumental?** (Lyria 3 generates vocals BY DEFAULT)
+   - Instrumental → say so EXPLICITLY in the prompt ("Fully instrumental, no vocals")
+   - Sung vocals → see "Vocals & Lyrics" below; ask if the user has exact lyrics
+
 ## Step 3: Choose Model
 
 | Model | Duration | Cost | Use For |
 |-------|----------|------|---------|
 | `lyria-3` | ≤30 seconds | $0.04 | Intros, outros, short clips, jingles |
-| `lyria-3-pro` | ≤3 minutes | $0.08 | Full songs, longer background music |
+| `lyria-3-pro` | ≤3 minutes | $0.08 | Full songs (incl. sung vocals + your lyrics), longer background music |
+
+## Step 3b: Vocals & Lyrics (Lyria 3 can sing — complete songs)
+
+**Lyria 3 generates vocals and lyrics BY DEFAULT.** It can sing your EXACT lyrics,
+including rap delivery, backing vocals, and structured arrangements. Everything goes in
+the `prompt` string — there is no separate lyrics parameter.
+
+**How to provide exact lyrics** — prefix the lines with `Lyrics:` inside the prompt:
+
+```
+...style/instrumentation description... A confident male vocalist performs the verses
+with a rhythmic rapping delivery. Structure: intro; verse one; INSTRUMENTAL chorus;
+verse two; outro spoken line. Only the lines below are sung.
+
+Lyrics (verse one, rapped):
+<exact lines>
+
+Lyrics (verse two, rapped):
+<exact lines>
+```
+
+**Steer the voice**: gender, timbre/range ("smooth baritone", "breathy soprano"),
+delivery ("rapping", "spoken"), and language. Mention where backing vocals should
+echo the lead if wanted.
+
+**Supported vocal languages (8)**: English, German, Spanish, French, Hindi, Japanese,
+Korean, Portuguese. **Burmese/Myanmar is NOT officially supported — output is a
+retry lottery**: one production run sang near-real Burmese (transcribed back as actual
+Burmese script, close to the target lyrics), another gave pure vocalese/gibberish.
+If the user wants MM vocals, attempts are cheap ($0.08) — generate, verify with
+`transcribeAudio` + a native listen, retry if garbled. The guaranteed route is still:
+generate MM sections INSTRUMENTAL (state it explicitly per section: "a fuller
+INSTRUMENTAL chorus with no vocals where piano and strings carry the melody") and
+overlay a real recording later.
+
+**Instrumental-only tracks**: because vocals are the default, ALWAYS end background-music
+prompts with "Fully instrumental, no vocals."
+
+**Production-tested gotchas** (cost real money if missed):
+1. **Genre labels trip the copyright filter** ("cinematic hip-hop", "boom-bap" →
+   finishReason OTHER, surfaced as generic "No music was generated"). Describe
+   instrumentation + mood + BPM instead; add "an original composition".
+2. **`quality:"standard"` may 404** on some keys — use `quality:"pro"` (auto-falls back
+   to `lyria-3-pro-preview`, same price).
+3. **Output is mp3-in-a-fake-WAV-header** (malformed .wav, wrong ffprobe duration).
+   Remux after every generation:
+   `ffmpeg -f mp3 -i out.wav -c:a pcm_s16le fixed.wav`
+4. **Verify vocals landed**: run `transcribeAudio` on the result (~$0.01) and diff
+   against the locked lyrics before calling it done.
 
 ## Step 4: Build the Prompt (Apply Brand Context)
 
@@ -224,3 +277,6 @@ Save to: `projects/{name}/output-contents/` or current directory
 - Describe the energy arc (building, steady, fading)
 - For video, match music length to video duration
 - Generate multiple versions and pick the best
+- Vocals are ON by default — end background-music prompts with "Fully instrumental, no vocals"
+- For complete songs, put exact lyrics in the prompt as `Lyrics:` blocks (Step 3b)
+- Avoid genre labels (copyright filter); describe instrumentation + mood + BPM instead

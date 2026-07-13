@@ -24,6 +24,7 @@
 9. [Content Review](#content-review)
 10. [Cost Reference](#cost-reference)
 11. [Troubleshooting](#troubleshooting)
+12. [Responsible & Legal Use](#responsible--legal-use)
 
 ---
 
@@ -631,6 +632,46 @@ node workflows/cli.cjs doctor
 - Never include text in image prompts
 - Add text in post-production
 - Use overlays instead
+
+---
+
+## Responsible & Legal Use
+
+This kit is for content for **your own brand**, or work you're **authorized and
+consented** to do. The AI agents here are bound by [RULES.md](./RULES.md) Rule 10
+and will **ask for confirmation or decline** when a request crosses these lines.
+
+### The rules the agent enforces
+
+| Principle | What it means for you |
+|-----------|-----------------------|
+| **Own it or be licensed** | You may only edit/dub/restyle/republish content you created or have written permission to use **and modify**. |
+| **Reseller ≠ rights** | Selling a product does **not** give you rights to the brand's official videos/images — those are separate copyrighted works. |
+| **Respect real people** | No cloning a real person's face/voice or making them "say" things without consent. No impersonation. |
+| **Privacy & data** | No processing someone's private images, likeness, or personal data without a lawful basis/consent. |
+| **No deception** | No fake endorsements, reviews, testimonials, or misleading claims. Disclose AI media where required. |
+| **You publish, you're responsible** | The kit hands you files; rights-clearance and publishing risk are yours. |
+
+### If you do this for clients (dubbing, editing others' footage, etc.)
+
+Protect yourself before you start:
+
+1. **Get a written warranty of rights.** The client confirms — in writing — they
+   own or are licensed to use *and modify* every source file they hand you. Even
+   a one-line message ("Confirming you have the rights to use and edit these
+   videos — yes?") + their "yes" helps.
+2. **Get an indemnity.** The client agrees to cover any legal claim arising from
+   materials they supplied.
+3. **Deliver, don't publish.** Hand over the file; let the client do the posting
+   (the public act) on their own channels.
+4. **Keep your own copies & records.** Contract, the client's "yes," and the
+   delivered file.
+5. **Keep a red line.** Decline jobs that are obviously ripping a brand's ad or
+   involve a real person's likeness/voice without consent.
+
+> This is practical guidance, **not legal advice.** Laws differ by country and
+> cross-border work (e.g. sourcing from one country, publishing in another) adds
+> risk — get local legal review for anything high-stakes.
 
 ---
 

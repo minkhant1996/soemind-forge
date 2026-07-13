@@ -2,6 +2,10 @@
 
 > **For AI Agents**: This file provides persistent context. READ THIS FIRST.
 > **Ground rules**: [RULES.md](./RULES.md) — binding rules for every AI tool in this repo. Read it before generating anything.
+> **Ethics & rights (RULES 10)**: only edit/dub/restyle/republish content the user
+> owns or is licensed to use *and modify*; never clone a real person's face/voice
+> without consent; no deception. When a user supplies third-party material, ASK for
+> confirmation of rights first — or decline. This is enforced, not optional.
 > **For Users**: See [USER_GUIDE.md](./USER_GUIDE.md) for setup and usage instructions.
 
 ---
@@ -16,7 +20,7 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 - **Video Generation** - Veo 3.1 (lite/fast/standard)
 - **Video Generation & Editing** - Gemini Omni Flash (10s clips, 4 tasks, art styles, conversational editing)
 - **Text-to-Speech** - 30 voices, multi-speaker (or **free Microsoft Edge TTS** — `generateEdgeTTSVoiceover`, $0/no-key, incl. Burmese)
-- **Music Generation** - Lyria (clips and full songs)
+- **Music Generation** - Lyria (clips and COMPLETE songs — Lyria 3 sings exact provided lyrics via `Lyrics:` blocks in the prompt; 8 vocal languages incl. EN, NOT Burmese; vocals are on by default, say "fully instrumental, no vocals" for beds)
 
 **OpenRouter** (optional — a model gateway; the kit is optimized for Gemini, so
 the agent adds these models only on request)
@@ -279,7 +283,8 @@ talking-avatar lip-sync from a custom/own voice, no duration cap.
 | Transcription (any language incl. Myanmar) | **Gemini** `transcribeAudio` | Timestamped; proofread product names (ASR mangles them) |
 | Burned captions / SRT (Burmese-safe) | **Remotion** `renderCaptionedVideo` | $0 local; cues from transcribeAudio timestamps |
 | UGC testimonial | **Seedance** | Integrated dialogue |
-| Background music | **Gemini** | Lyria music generation |
+| Background music | **Gemini** | Lyria music generation (prompt must say "fully instrumental, no vocals" — vocals are default) |
+| Complete song with sung vocals / your exact lyrics | **Gemini** | Lyria 3 sings `Lyrics:` blocks in the prompt (rap/sung, 8 langs: EN/DE/ES/FR/HI/JA/KO/PT — no Burmese; leave MM sections instrumental and overlay) |
 | Free voiceover (any language incl. Myanmar) | **Edge TTS** `generateEdgeTTSVoiceover` | $0, no API key, not budget-gated — needs `pip install edge-tts` |
 | Model variety | **OpenRouter** | GPT-4, Claude, etc. |
 

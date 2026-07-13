@@ -101,5 +101,10 @@ builds your real project. From there, useful things to try:
 $0.04 · videos ≈ $0.08–0.20 per second. The agent asks before anything
 expensive, and your per-project budget cap stops overspending.
 
+**Use it responsibly:** this kit is for your own brand or work you're authorized
+to do. Only edit/dub/republish content you own or are licensed to use — and never
+clone a real person's face or voice without consent. See **Responsible & Legal
+Use** in [USER_GUIDE.md](./USER_GUIDE.md#responsible--legal-use).
+
 More depth: [USER_GUIDE.md](./USER_GUIDE.md) · platform specs and prompt
 guides in [`workflows/`](./workflows/PROMPT-GUIDES-INDEX.md)

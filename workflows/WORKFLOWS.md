@@ -883,7 +883,8 @@ console.log(comparison.reason);         // 'Seedance has native lip-sync support
 | Speaking character | Seedance | Native lip-sync support |
 | UGC testimonial | Seedance | Integrated dialogue + natural speech |
 | Video with SFX + music | Seedance | Native audio integration |
-| Background music | Gemini | Lyria music generation |
+| Background music | Gemini | Lyria music generation (say "fully instrumental, no vocals" — vocals are default) |
+| Complete song with sung vocals / exact lyrics | Gemini | Lyria 3 sings `Lyrics:` blocks in the prompt (8 langs, no Burmese — see skills/generate-music Step 3b) |
 | Model variety (GPT-4, Claude) | OpenRouter | Access to 100+ text models |
 
 ### Environment Variables
@@ -1340,7 +1341,7 @@ natural excitement, engaging energy
 | 12 | `image-to-video-voiceover` | Text + Image | Video + TTS | `generateVideoFromImageWithVoiceover()` |
 | 13 | `text-to-voiceover` | Text | Voiceover audio (.wav) | `generateVoiceover()` |
 | 14 | `text-to-dialogue` | Text | Multi-speaker audio (.wav) | `generateMultiSpeakerVoiceover()` |
-| 15 | `text-to-music` | Text | Music track (.wav) | `generateMusicTrack()` |
+| 15 | `text-to-music` | Text (incl. optional `Lyrics:` blocks for sung vocals) | Music track / complete song (.wav) | `generateMusicTrack()` |
 | 16 | `character-sheet` | Text | ONE model-sheet image (turnaround + face close-up + half-body + detail crops, labeled); `layout:'per-angle'` for legacy separate files | `generateCharacterSheet()` |
 | 17 | `mix-audio` | Video + VO/music | Video with mixed audio | `mixVideoAudio()` |
 | 18 | `captions` | Script/cues | Subtitle file (.srt) | `generateCaptions()` |

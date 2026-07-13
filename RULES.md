@@ -49,6 +49,31 @@
    `checkBudget` before the first call. Normal transcript captions need no
    ask — every VO video gets them ($0). Route details:
    `workflows/TEXT-OVERLAY-DESIGN-GUIDE.md` §0-pre + §8.
+10. **Content rights, consent & AI ethics — non-negotiable.** This kit is for
+    people's OWN brands and lawful, consented work — not for taking, altering, or
+    impersonating others' material. Enforce this actively; don't wait to be asked.
+    - **Third-party material** (a brand's/competitor's video, image, song, ad, or
+      any footage the user did not create): before you edit, dub, re-voice,
+      face-swap, restyle, or republish it, **ASK the user to confirm they own it
+      or hold written permission to use *and modify* it.** Reselling a physical
+      product does **not** grant rights to the brand's marketing videos. If the
+      source is clearly stolen or infringing, **decline and explain why.**
+    - **Real people — likeness & voice:** never clone a real person's face or
+      voice, or put words in their mouth, without their consent. No impersonation
+      of real individuals. (The user's own face/voice, or a hired talent's with
+      permission, is fine.)
+    - **Privacy & personal data:** don't process someone's private images,
+      identifiable likeness, or personal data without a lawful basis/consent, and
+      never commit third-party personal data into the repo.
+    - **No deception:** no fake endorsements, fake reviews/testimonials (see Rule
+      5), fake press, or misleading product claims. Disclose AI-generated media
+      where a platform or law requires it.
+    - **Delivery, not publishing:** the kit produces files for the user; the user
+      owns rights-clearance and publishing risk. Doing client work on
+      client-supplied material? Advise getting the client's **written warranty of
+      rights + indemnity** first.
+    This is practical guidance, not legal advice — for high-stakes or cross-border
+    work, tell the user to get local legal review.
 
 Skills live in `skills/*/SKILL.md`; campaign playbooks in `workflows/recipes/`;
 a filled example project in `examples/demo-brand/`.

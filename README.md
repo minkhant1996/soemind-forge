@@ -362,6 +362,35 @@ See `templates/ASSETS-GUIDE.md` for complete guide.
 
 ---
 
+## Responsible & Legal Use
+
+This kit is built for creating content for **your own brand**, or work you're
+**authorized and consented** to do — not for taking or altering other people's
+material. The AI agents in this repo are instructed (see [RULES.md](./RULES.md)
+Rule 10) to **enforce** the following, and will ask or decline when a request
+crosses these lines:
+
+- **Use only content you own or are licensed to use.** Editing, dubbing,
+  re-voicing, restyling, or republishing a video/image/song you didn't create
+  requires the rights-holder's permission — *to use **and** to modify* it.
+  ⚠️ Reselling a product does **not** give you rights to that brand's marketing
+  videos; those are separate, copyrighted works.
+- **Respect real people.** No cloning a real person's face or voice, and no
+  putting words in their mouth, without their consent. No impersonation.
+- **Respect privacy & personal data.** Don't process someone's private images,
+  likeness, or personal data without a lawful basis/consent.
+- **No deception.** No fake endorsements, reviews, testimonials, or misleading
+  claims. Disclose AI-generated media where required.
+- **You are responsible for what you publish.** The kit delivers files to you;
+  rights-clearance and publishing are yours. Doing this **for a client** on
+  their material? Get their **written warranty of rights + indemnity** first,
+  and deliver the file rather than publishing it yourself.
+
+This is practical guidance, **not legal advice** — for high-stakes or
+cross-border work, get local legal review.
+
+---
+
 ## License
 
 MIT © [Min Khant Soe](https://github.com/minkhant1996) — Senior AI Developer,

@@ -1945,10 +1945,10 @@ export async function generateOmniVideo(input: {
         // 'audio' alongside 'video' lets edit tasks carry the input soundtrack
         // through and text_to_video return its native VO/SFX in the same mp4.
         response_modalities: ['video', 'audio'],
-        // Edit task: duration/aspect are inherited from the input video — the API
-        // rejects them in response_format.
+        // Edit/extend tasks: duration/aspect are inherited from the input video —
+        // the API rejects them in response_format.
         response_format:
-          task === 'edit'
+          task === 'edit' || task === 'extend'
             ? { type: 'video' }
             : {
                 type: 'video',

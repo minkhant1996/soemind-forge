@@ -166,8 +166,16 @@ node workflows/cli.cjs resolveAsset '["{name}","style-main"]'   # or any style_r
 
 Scan `content-requirements.md §5` and handle anything that applies. The high-value ones:
 
+- **Third-party source material** (RULES 10) → if the user hands you a video,
+  image, song, or ad they did **not** create — to edit, dub, re-voice, face-swap,
+  restyle, or republish — **ASK them to confirm they own it or have written
+  permission to use AND modify it** before generating. Reselling a product ≠ owning
+  its marketing videos. If it's clearly stolen/infringing, **decline and say why.**
+  Client work? Advise a written warranty-of-rights + indemnity, and deliver the
+  file rather than publishing it.
 - **Real person / public figure / minors** → consent + `person_generation` policy;
-  refuse celebrity/competitor likeness.
+  refuse celebrity/competitor likeness; never clone a real face/voice or put words
+  in their mouth without consent.
 - **Pre-launch product with no photo** → mockup, marked `source: mockup`.
 - **Sensitive claims** (health/finance/legal) → enforce `restrictions`, no
   "guaranteed/cure/risk-free".
