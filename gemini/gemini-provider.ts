@@ -396,7 +396,28 @@ export { apiKeyManager, ApiKeyManager };
  *
  * @see https://ai.google.dev/gemini-api/docs/quickstart
  */
+/**
+ * Vertex AI mode: set GEMINI_USE_VERTEX=true (+ GOOGLE_CLOUD_PROJECT, optional
+ * GOOGLE_CLOUD_LOCATION, default 'global') to bill via the GCP project instead
+ * of AI Studio API keys. Auth comes from Application Default Credentials
+ * (gcloud auth application-default login). API keys are ignored in this mode.
+ */
+const useVertex = (): boolean => process.env.GEMINI_USE_VERTEX === 'true';
+
+const getVertexClient = (): GoogleGenAI => {
+  const project = process.env.GOOGLE_CLOUD_PROJECT;
+  if (!project) {
+    throw new Error('GEMINI_USE_VERTEX=true requires GOOGLE_CLOUD_PROJECT to be set');
+  }
+  return new GoogleGenAI({
+    vertexai: true,
+    project,
+    location: process.env.GOOGLE_CLOUD_LOCATION || 'global',
+  });
+};
+
 const getClient = (): GoogleGenAI => {
+  if (useVertex()) return getVertexClient();
   const apiKey = apiKeyManager.getKey();
   return new GoogleGenAI({ apiKey });
 };
@@ -406,6 +427,7 @@ const getClient = (): GoogleGenAI => {
  * Used internally for retry logic
  */
 const getClientWithKey = (apiKey: string): GoogleGenAI => {
+  if (useVertex()) return getVertexClient();
   return new GoogleGenAI({ apiKey });
 };
 

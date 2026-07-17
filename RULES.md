@@ -26,7 +26,13 @@
    retries with a one-line RESULT note. The manifest is the machine log;
    prompts.txt is the human one. No exceptions.
 6. If anything errors unexpectedly, run `node workflows/cli.cjs doctor` and
-   apply its fixes before retrying.
+   apply its fixes before retrying. Special case: a Gemini
+   `RESOURCE_EXHAUSTED` / "monthly spending cap" error is an AI Studio
+   billing-account cap (key rotation will NOT help) — either the user raises
+   the cap at https://ai.studio/billing, or set `GEMINI_USE_VERTEX=true` +
+   `GOOGLE_CLOUD_PROJECT=<id>` to bill via Vertex AI instead (needs
+   `gcloud auth application-default login`; see AGENT-GUIDE § Provider
+   Selection).
 7. **Pipeline-first, ALWAYS.** Before generating ANY content (video, image,
    audio, even a single call), author `<content-id>.pipeline.json` IN the
    content folder — nodes = CLI commands, `{{node.data.field}}` refs wire

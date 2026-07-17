@@ -59,6 +59,10 @@ echo "GEMINI_API_KEY=your-api-key-here" > .env
 
 # Option B: Export directly
 export GEMINI_API_KEY="your-api-key-here"
+
+# Optional: Vertex AI mode (bills your GCP project, bypasses AI Studio caps):
+# export GEMINI_USE_VERTEX=true
+# export GOOGLE_CLOUD_PROJECT=your-gcp-project-id   # + gcloud auth application-default login
 ```
 
 **Get your API key**: https://aistudio.google.com/app/apikey

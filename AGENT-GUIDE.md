@@ -267,6 +267,16 @@ from a custom voice audio file), Whisper, and GPT-4/Claude text models
 (agent-added on request); `RUNPOD_API_KEY` (optional) unlocks InfiniteTalk
 talking-avatar lip-sync from a custom/own voice, no duration cap.
 
+> **Vertex AI mode (billing fallback):** if Gemini calls fail with
+> `RESOURCE_EXHAUSTED` / "monthly spending cap" (an AI Studio billing-account
+> cap that no amount of key rotation escapes), set `GEMINI_USE_VERTEX=true` and
+> `GOOGLE_CLOUD_PROJECT=<gcp-project-id>` (optional `GOOGLE_CLOUD_LOCATION`,
+> default `global`). All Gemini-family commands then bill through the GCP
+> project via Vertex AI instead of AI Studio keys. Auth = Application Default
+> Credentials (`gcloud auth application-default login`); API keys are ignored
+> in this mode. Verified working: text, transcription, image generation. If a
+> specific model 404s on Vertex, unset the flag and fall back to API keys.
+
 ### When to Use Each Provider
 
 | Use Case | Recommended | Reason |

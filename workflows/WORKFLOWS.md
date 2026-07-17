@@ -834,6 +834,14 @@ For thumbnail guidelines, see **THUMBNAIL-GUIDE.md**.
 > **Note:** these helpers are library exports only (no CLI commands) — informational;
 > from the CLI, check provider availability with `node workflows/cli.cjs doctor` instead.
 
+> **Vertex AI mode:** every Gemini-backed command also runs against Vertex AI
+> (bills the GCP project, bypasses AI Studio spending caps). Set
+> `GEMINI_USE_VERTEX=true` + `GOOGLE_CLOUD_PROJECT=<gcp-project-id>` (optional
+> `GOOGLE_CLOUD_LOCATION`, default `global`) as env vars or in `.env`. Auth is
+> Application Default Credentials (`gcloud auth application-default login`);
+> API keys are ignored while the flag is on. Verified: text, transcription,
+> image generation. If a model 404s on Vertex, unset the flag to fall back.
+
 Before generating, check which AI providers are available. The system supports two
 providers with different capabilities:
 

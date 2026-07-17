@@ -99,6 +99,9 @@ cp .env.example .env
 # Edit .env and add:
 #   GEMINI_API_KEY=...      (Google AI Studio)
 #   OPENROUTER_API_KEY=...  (OpenRouter - optional)
+# Optional: GEMINI_USE_VERTEX=true + GOOGLE_CLOUD_PROJECT=... routes Gemini
+# through Vertex AI (GCP billing; bypasses AI Studio spend caps; needs
+# `gcloud auth application-default login`)
 
 # 3. Start your AI agent (setup.sh installed the skills for your tool)
 claude   # loads CLAUDE.md context automatically

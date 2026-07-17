@@ -134,6 +134,12 @@ OPENROUTER_API_KEY=sk-or-v1-your-key
 # Option 3: Both (recommended)
 GEMINI_API_KEY=your-gemini-key
 OPENROUTER_API_KEY=sk-or-v1-your-key
+
+# Optional: route Gemini through Vertex AI (bills your GCP project; useful when
+# the AI Studio monthly spending cap is hit). Needs
+# `gcloud auth application-default login` first.
+GEMINI_USE_VERTEX=true
+GOOGLE_CLOUD_PROJECT=your-gcp-project-id
 ```
 
 ---

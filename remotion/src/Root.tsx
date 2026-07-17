@@ -87,8 +87,8 @@ export const Root: React.FC = () => {
       <Composition
         id="CaptionedVideo"
         component={CaptionedVideo}
-        width={1080}
-        height={1920}
+        width={input.width ?? 1080}
+        height={input.height ?? 1920}
         fps={FPS}
         durationInFrames={Math.max(1, Math.round(captionedSeconds * FPS))}
         defaultProps={defaultCaptioned}

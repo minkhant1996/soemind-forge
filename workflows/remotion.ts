@@ -555,6 +555,12 @@ export async function renderCaptionedVideo(
       return errorResult('GENERATION_FAILED', 'Could not read video duration via ffprobe');
     }
 
+    // Match output dimensions to the source video (composition defaults to 1080x1920 otherwise)
+    const [srcW, srcH] = execSync(
+      `ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "${path.resolve(input.videoPath)}"`,
+      { encoding: 'utf8' }
+    ).trim().split('\n')[0].split(',').map(Number);
+
     stager = makeStager(remotionDir);
     const props = {
       video: stager.stage(input.videoPath, 'videoPath'),
@@ -563,6 +569,8 @@ export async function renderCaptionedVideo(
       fontSize: input.fontSize,
       marginBottom: input.marginBottom,
       accentColor: input.accentColor,
+      width: Number.isFinite(srcW) && srcW > 0 ? srcW : undefined,
+      height: Number.isFinite(srcH) && srcH > 0 ? srcH : undefined,
     };
     propsFile = path.join(remotionDir, `.props-${Date.now()}.json`);
     fs.writeFileSync(propsFile, JSON.stringify(props));
