@@ -146,36 +146,61 @@ if %ERRORLEVEL% neq 0 (
 )
 
 REM Install root dependencies
-call npm install --silent 2>nul
+call npm install
+if %errorlevel% neq 0 (
+    echo    [ERROR] Root dependency install failed. Check your network/proxy, then re-run.
+    exit /b 1
+)
 echo    [OK] Root dependencies installed
 
-REM Build gemini module
+REM Build gemini module.
+REM NOTE: use pushd/popd (not plain `cd`) so this works even when cmd was
+REM launched from a different drive than the repo - plain `cd D:\...` from a
+REM C:\ prompt silently does NOTHING, so npm would install in the wrong folder.
 if exist "%SCRIPT_DIR%\gemini" (
-    cd "%SCRIPT_DIR%\gemini"
-    call npm install --silent
+    pushd "%SCRIPT_DIR%\gemini"
+    call npm install
+    if !errorlevel! neq 0 (
+        echo    [ERROR] Gemini dependency install failed. Check your network/proxy, then re-run.
+        popd
+        exit /b 1
+    )
     echo    [OK] Gemini dependencies installed
 
-    call npm run build 2>nul
+    call npm run build
+    popd
     if exist "%SCRIPT_DIR%\gemini\dist" (
         echo    [OK] Gemini module built
+    ) else (
+        echo    [ERROR] Gemini build failed - see the tsc output above.
+        exit /b 1
     )
-    cd "%SCRIPT_DIR%"
 ) else (
     echo    [ERROR] gemini/ folder not found
     exit /b 1
 )
 
-REM Build workflows module
+REM Build workflows module. Its OWN deps (e.g. 'yaml') must be installed FIRST -
+REM the build (tsc) fails with "Cannot find module 'yaml'" if this npm install
+REM was skipped or ran in the wrong directory.
 if exist "%SCRIPT_DIR%\workflows" (
-    cd "%SCRIPT_DIR%\workflows"
-    call npm install --silent
-    call npm run build 2>nul
+    pushd "%SCRIPT_DIR%\workflows"
+    call npm install
+    if !errorlevel! neq 0 (
+        echo    [ERROR] Workflows dependency install failed ^(e.g. 'yaml'^). Check network/proxy, then re-run.
+        popd
+        exit /b 1
+    )
+    call npm run build
+    popd
     if exist "%SCRIPT_DIR%\workflows\dist\workflows\index.js" (
         echo    [OK] Workflows module built
     ) else (
-        echo    [ERROR] Workflows build failed
+        echo    [ERROR] Workflows build failed - see the tsc output above.
+        echo           Most common cause: workflows deps missing. Fix manually:
+        echo             cd /d "%SCRIPT_DIR%\workflows" ^&^& npm install ^&^& npm run build
+        exit /b 1
     )
-    cd "%SCRIPT_DIR%"
 ) else (
     echo    [!] workflows/ folder not found - skipping
 )

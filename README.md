@@ -88,12 +88,33 @@ setup.bat
 ```
 
 ### Manual Setup
-```bash
-# 1. Install dependencies
-npm install
-cd gemini && npm install && cd ..
-cd workflows && npm install && npm run build && cd ..
 
+If `setup.sh` / `setup.bat` fails (or you just want the dependency install without
+the skill-installer prompts), run the cross-platform npm script — it installs the
+root, `gemini`, `workflows`, and `remotion` packages and builds both modules, with
+no `cd` (so it can't break on a wrong drive):
+
+```bash
+# 1. Install ALL dependencies + build (root + gemini + workflows + remotion)
+npm run setup
+
+# verify everything is wired up (also available as: npm run doctor)
+node workflows/cli.cjs doctor
+```
+
+<details>
+<summary>Or install each package by hand</summary>
+
+```bash
+npm install
+npm --prefix gemini install
+npm --prefix workflows install   # installs 'yaml' etc. — required, or the build fails
+npm --prefix remotion install
+npm run build                    # builds gemini + workflows
+```
+</details>
+
+```bash
 # 2. Set API keys
 cp .env.example .env
 # Edit .env and add:

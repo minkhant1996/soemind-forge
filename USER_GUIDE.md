@@ -66,14 +66,24 @@ duration cap, $0.25–0.50/request)
 setup.bat
 ```
 
-**Manual setup:**
+**Manual setup** (if `setup.sh` / `setup.bat` fails, or you want just the build):
 ```bash
-npm install
-cd gemini && npm install && cd ..
-cd workflows && npm install && npm run build && cd ..
+# Installs root + gemini + workflows + remotion, then builds both modules.
+# Uses npm --prefix internally, so it works from any drive/shell (no cd).
+npm run setup
+
 cp .env.example .env
 # Edit .env and add your API key(s)
+
+# Confirm it worked:
+node workflows/cli.cjs doctor
 ```
+
+> If `npm run setup` isn't available (older checkout), install each package by
+> hand: `npm install && npm --prefix gemini install && npm --prefix workflows
+> install && npm --prefix remotion install && npm run build`. The
+> `npm --prefix workflows install` step is what pulls in `yaml` — skip it and the
+> build fails with `Cannot find module 'yaml'`.
 
 ### Step 3: Start Your AI Agent
 

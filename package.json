@@ -30,8 +30,11 @@
     "agent-skills"
   ],
   "scripts": {
-    "build": "cd gemini && npm run build && cd ../workflows && npm run build",
-    "test": "cd gemini && npm test"
+    "setup": "npm run install:all && npm run build",
+    "install:all": "npm install && npm --prefix gemini install && npm --prefix workflows install && npm --prefix remotion install",
+    "build": "npm --prefix gemini run build && npm --prefix workflows run build",
+    "doctor": "node workflows/cli.cjs doctor",
+    "test": "npm --prefix gemini test"
   },
   "dependencies": {
     "@google/genai": "^2.15.0",

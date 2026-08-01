@@ -176,15 +176,23 @@ if command -v npm &> /dev/null; then
         exit 1
     fi
 
-    # Install and build workflows module (skills import from workflows/dist)
+    # Install and build workflows module (skills import from workflows/dist).
+    # The workflows package has its OWN deps (e.g. 'yaml') — install them FIRST,
+    # or tsc fails with "Cannot find module 'yaml'". Don't hide build errors
+    # (no 2>/dev/null on the build) so the real cause is visible.
     if [ -d "$SCRIPT_DIR/workflows" ]; then
         cd "$SCRIPT_DIR/workflows"
-        npm install --silent
-        npm run build 2>/dev/null || echo -e "   ${YELLOW}!${NC} Workflows build had warnings"
+        if ! npm install --silent; then
+            echo -e "   ${RED}✗${NC} Workflows dependency install failed (e.g. 'yaml'). Check network/proxy, then re-run."
+            cd "$SCRIPT_DIR"
+            exit 1
+        fi
+        npm run build || true
         if [ -f "$SCRIPT_DIR/workflows/dist/workflows/index.js" ]; then
             echo -e "   ${GREEN}✓${NC} Workflows module built"
         else
-            echo -e "   ${RED}✗${NC} Workflows build failed (video/image workflows won't run)"
+            echo -e "   ${RED}✗${NC} Workflows build failed (see tsc output above; video/image workflows won't run)"
+            echo -e "      Fix manually: cd \"$SCRIPT_DIR/workflows\" && npm install && npm run build"
         fi
         cd "$SCRIPT_DIR"
     else
