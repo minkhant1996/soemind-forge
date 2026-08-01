@@ -6981,7 +6981,18 @@ export async function generateOmniVideoClip(
       : input.prompt;
     const prompt = applyCameraMove(styledPrompt, input.cameraMove);
 
-    console.log(`[Workflow] Generating Omni video (task: ${task}, ${input.duration || '8s'}, ${input.aspectRatio || '16:9'}, experimental)...`);
+    // Omni's response_format.duration must be a string like '6s'. Accept a bare
+    // number (6) or numeric string ("6") for parity with the other video
+    // commands and normalize — passing a raw number makes the API 400 at
+    // 'response_format'.
+    const duration =
+      input.duration == null
+        ? undefined
+        : /^\d+$/.test(String(input.duration))
+          ? `${input.duration}s`
+          : String(input.duration);
+
+    console.log(`[Workflow] Generating Omni video (task: ${task}, ${duration || '8s'}, ${input.aspectRatio || '16:9'}, experimental)...`);
 
     const result = await withRetry(
       () => generateOmniVideo({
@@ -6991,7 +7002,7 @@ export async function generateOmniVideoClip(
         videoMimeType: input.inputVideoPath ? getMimeType(input.inputVideoPath) : undefined,
         task,
         aspectRatio: input.aspectRatio,
-        duration: input.duration,
+        duration,
         thinkingLevel: input.thinkingLevel,
       }),
       { maxRetries: 2 },

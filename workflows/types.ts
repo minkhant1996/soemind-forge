@@ -1129,8 +1129,9 @@ export interface OmniVideoClipInput {
   /** Preset camera move — its four-part block is prepended to the prompt. */
   cameraMove?: CameraMove;
   outputPath: string;              // .mp4
-  /** '4s'…'10s' (Omni Flash caps ~10s/turn). Default '8s'. */
-  duration?: string;
+  /** '4s'…'10s' (Omni Flash caps ~10s/turn). Default '8s'. A bare
+   *  number (e.g. 6) or numeric string ("6") is normalized to '6s'. */
+  duration?: string | number;
   thinkingLevel?: 'low' | 'medium' | 'high';
 }
 

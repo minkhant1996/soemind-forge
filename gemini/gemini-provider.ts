@@ -404,6 +404,14 @@ export { apiKeyManager, ApiKeyManager };
  */
 const useVertex = (): boolean => process.env.GEMINI_USE_VERTEX === 'true';
 
+// Disable the SDK's own HTTP retry (default 5 attempts, retries on 429). On a
+// body-carrying request (e.g. Omni interactions) its retry does
+// `new Request(cloned)` after the body was consumed, which undici rejects with
+// `TypeError: unusable`. We own rotation/retry via apiKeyManager (fresh request
+// per attempt), so a single SDK attempt is correct — a 429 then surfaces cleanly
+// to our loop instead of blowing up on the clone.
+const NO_SDK_RETRY = { retryOptions: { attempts: 1 } } as const;
+
 const getVertexClient = (): GoogleGenAI => {
   const project = process.env.GOOGLE_CLOUD_PROJECT;
   if (!project) {
@@ -413,13 +421,17 @@ const getVertexClient = (): GoogleGenAI => {
     vertexai: true,
     project,
     location: process.env.GOOGLE_CLOUD_LOCATION || 'global',
+    // Api-Revision pins the API surface that serves the Omni interactions
+    // endpoint on Vertex — without it the model 404s/400s. retryOptions:1 keeps
+    // our apiKeyManager as the sole retry owner (avoids the SDK body-clone bug).
+    httpOptions: { headers: { 'Api-Revision': '2026-05-20' }, retryOptions: { attempts: 1 } },
   });
 };
 
 const getClient = (): GoogleGenAI => {
   if (useVertex()) return getVertexClient();
   const apiKey = apiKeyManager.getKey();
-  return new GoogleGenAI({ apiKey });
+  return new GoogleGenAI({ apiKey, httpOptions: NO_SDK_RETRY });
 };
 
 /**
@@ -428,7 +440,7 @@ const getClient = (): GoogleGenAI => {
  */
 const getClientWithKey = (apiKey: string): GoogleGenAI => {
   if (useVertex()) return getVertexClient();
-  return new GoogleGenAI({ apiKey });
+  return new GoogleGenAI({ apiKey, httpOptions: NO_SDK_RETRY });
 };
 
 /**
@@ -1942,9 +1954,11 @@ export async function generateOmniVideo(input: {
       for (const img of images) {
         mediaParts.push({ type: 'image', data: img.base64, mime_type: img.mimeType || 'image/png' });
       }
-      const interactionInput: unknown = mediaParts.length
+      // Vertex requires `input` as an array of typed parts — a bare string
+      // 400s ("invalid argument"). Always wrap, media or not.
+      const interactionInput: unknown[] = mediaParts.length
         ? [...mediaParts, { type: 'text', text: input.prompt }]
-        : input.prompt;
+        : [{ type: 'text', text: input.prompt }];
 
       const task =
         input.task ||
@@ -1956,17 +1970,16 @@ export async function generateOmniVideo(input: {
               ? 'image_to_video'
               : 'text_to_video');
 
+      // Request shape verified working on Vertex (soemind-forge backend, 2026-07):
+      //  - bare model id ('models/…' prefix → 400 "Unsupported model interaction")
+      //  - minimal generation_config; max_output_tokens / thinking_level /
+      //    response_modalities are extra fields Vertex rejects (400 invalid argument).
+      //    Audio (native VO/SFX, and input soundtrack on edits) still comes back
+      //    embedded in the mp4 by default.
       const interaction: any = await (ai as any).interactions.create({
-        model: `models/${model}`,
+        model,
         input: interactionInput,
-        generation_config: {
-          max_output_tokens: 65536,
-          thinking_level: input.thinkingLevel || 'high',
-          video_config: { task },
-        },
-        // 'audio' alongside 'video' lets edit tasks carry the input soundtrack
-        // through and text_to_video return its native VO/SFX in the same mp4.
-        response_modalities: ['video', 'audio'],
+        generation_config: { video_config: { task } },
         // Edit/extend tasks: duration/aspect are inherited from the input video —
         // the API rejects them in response_format.
         response_format:

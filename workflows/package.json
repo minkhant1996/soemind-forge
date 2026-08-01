@@ -7,8 +7,8 @@
   "types": "dist/workflows/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc && npm run fix-paths",
-    "fix-paths": "find dist/workflows -type f \\( -name '*.js' -o -name '*.d.ts' \\) -exec sed -i.bak \"s|'\\.\\./gemini/dist/index\\.js'|'../../../gemini/dist/index.js'|g\" {} + && find dist/workflows -name '*.bak' -delete",
-    "clean": "rm -rf dist"
+    "fix-paths": "node scripts/fix-paths.mjs",
+    "clean": "node scripts/clean.mjs"
   },
   "keywords": [
     "gemini",
