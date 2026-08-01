@@ -126,7 +126,7 @@ if exist "%SCRIPT_DIR%\.env" (
     if exist "%SCRIPT_DIR%\.env.example" (
         echo    [!] .env not found. Creating from .env.example...
         copy "%SCRIPT_DIR%\.env.example" "%SCRIPT_DIR%\.env" >nul
-        echo    [!] Please edit .env and add your API key(s)
+        echo    [!] Please edit .env and add your API key^(s^)
     ) else (
         echo    [ERROR] .env.example not found
     )
@@ -209,11 +209,11 @@ REM ffmpeg powers all $0 local steps: clip assembly, crossfade transitions,
 REM audio mixing, caption burn-in, video QA frame sampling (ffprobe).
 where ffmpeg >nul 2>nul
 if %errorlevel% equ 0 (
-    echo    [OK] ffmpeg found (assembly, transitions, captions, video QA)
+    echo    [OK] ffmpeg found ^(assembly, transitions, captions, video QA^)
 ) else (
     echo    [!] ffmpeg not found - video assembly, transitions, caption
     echo        burn-in, and video QA won't run until installed:
-    echo        winget install ffmpeg   (or: choco install ffmpeg)
+    echo        winget install ffmpeg   ^(or: choco install ffmpeg^)
 )
 
 REM edge-tts powers the free voiceover path (generateEdgeTTSVoiceover):
@@ -222,9 +222,9 @@ where python >nul 2>nul
 if %errorlevel% equ 0 (
     python -c "import edge_tts" >nul 2>nul
     if !errorlevel! equ 0 (
-        echo    [OK] edge-tts found (free voiceover: generateEdgeTTSVoiceover)
+        echo    [OK] edge-tts found ^(free voiceover: generateEdgeTTSVoiceover^)
     ) else (
-        echo    [!] edge-tts not found. Installing (free voiceover, $0/no key)...
+        echo    [!] edge-tts not found. Installing ^(free voiceover, $0/no key^)...
         python -m pip install --quiet edge-tts >nul 2>nul
         python -c "import edge_tts" >nul 2>nul
         if !errorlevel! equ 0 (
@@ -245,9 +245,9 @@ where python >nul 2>nul
 if %errorlevel% equ 0 (
     python -c "import rembg, PIL" >nul 2>nul
     if !errorlevel! equ 0 (
-        echo    [OK] rembg found (text-behind-subject recipe)
+        echo    [OK] rembg found ^(text-behind-subject recipe^)
     ) else (
-        echo    [!] rembg not installed - text-behind-subject recipe (optional) needs:
+        echo    [!] rembg not installed - text-behind-subject recipe ^(optional^) needs:
         echo        python -m pip install "rembg[cpu]" pillow
     )
 )
@@ -268,7 +268,7 @@ if /I "%SKILLS_DEST%"=="%SRC_SKILLS%" (
     for /d %%d in ("%SRC_SKILLS%\*") do (
         if exist "%%d\SKILL.md" set /a SKILL_COUNT+=1
     )
-    echo    [OK] %SKILL_COUNT% skills read in place from %SKILLS_DEST%
+    echo    [OK] !SKILL_COUNT! skills read in place from %SKILLS_DEST%
 ) else (
     REM The skill files reference the gemini + workflows builds via RELATIVE
     REM paths - climbs of two or more ../ - which only resolve at one specific
@@ -287,7 +287,7 @@ if /I "%SKILLS_DEST%"=="%SRC_SKILLS%" (
             )
         )
     )
-    echo    [OK] %SKILL_COUNT% skills installed to %SKILLS_DEST%
+    echo    [OK] !SKILL_COUNT! skills installed to %SKILLS_DEST%
 )
 
 
