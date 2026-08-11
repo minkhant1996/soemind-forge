@@ -34,6 +34,8 @@
     "install:all": "npm install && npm --prefix gemini install && npm --prefix workflows install && npm --prefix remotion install",
     "build": "npm --prefix gemini run build && npm --prefix workflows run build",
     "doctor": "node workflows/cli.cjs doctor",
+    "sync:pricing": "node openrouter/scripts/sync-pricing.mjs",
+    "sync:pricing:check": "node openrouter/scripts/sync-pricing.mjs --check",
     "test": "npm --prefix gemini test"
   },
   "dependencies": {

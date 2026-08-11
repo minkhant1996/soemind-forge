@@ -9,21 +9,22 @@
  *
  * Access 100+ AI models through a unified API.
  *
- * Capabilities:
- * - Text generation (GPT-4, Claude, Gemini, Llama, etc.)
- * - Image generation (FLUX, DALL-E, Seedream, Gemini)
- * - Video generation (Seedance)
- * - TTS - Text-to-Speech (Kokoro, ElevenLabs, OpenAI, etc.)
- * - STT - Speech-to-Text (Whisper, Chirp, Parakeet)
+ * Capabilities (model ids verified against the live catalog — regenerate with
+ * `node openrouter/scripts/sync-pricing.mjs`):
+ * - Text generation (GPT-5.x, Claude, Gemini, Llama, DeepSeek, …)
+ * - Image generation (Seedream, Nano Banana, Qwen Image, GPT Image, Grok)
+ * - Video generation (Veo 3.1, Seedance, Kling, Wan, Hailuo, FLUX.3, Runway)
+ * - Speech + music (GPT Audio, Lyria 3) via chat completions
+ * - Transcription — any chat model that accepts audio input
  *
  * @example
  * ```typescript
  * import {
- *   gpt4o,        // Text
- *   fluxSchnell,  // Image (cheapest)
- *   seedance20,   // Video
- *   kokoro,       // TTS
- *   whisperSTT    // STT
+ *   gpt4o,          // Text
+ *   seedream,       // Image ($0.04 flat)
+ *   veo31Fast,      // Video
+ *   gptAudioMini,   // Speech
+ *   geminiSTT       // Transcription
  * } from './openrouter';
  * ```
  */
@@ -52,10 +53,10 @@ export {
   gpt41Nano,
   o3,
   o3Mini,
+  gpt56Luna,
   // Anthropic text models
   claudeSonnet4,
   claudeOpus4,
-  claudeHaiku35,
   // Google text models
   gemini25Flash,
   gemini25Pro,
@@ -65,9 +66,9 @@ export {
   // DeepSeek text models
   deepseekR1,
   deepseekChat,
+  deepseekV4Flash,
   // Mistral text models
   mistralLarge,
-  mistralSmall,
   // Qwen text models
   qwen25_72b,
   // MiniMax text models
@@ -77,25 +78,36 @@ export {
   seedream,
   geminiProImage,
   geminiFlashImage,
-  fluxPro,
-  fluxSchnell,
-  dalle3,
-  sdxl,
+  geminiFlashLiteImage,
+  qwenImage3Pro,
+  gptImage2,
+  grokImage,
   // Video models
+  veo31,
+  veo31Fast,
+  veo31Lite,
+  seedance25,
   seedance20,
   seedance20Fast,
+  klingV3Pro,
+  klingV3Std,
+  klingVideoO1,
+  hailuo3,
   hailuo,
-  // TTS models
-  kokoro,
-  grokTTS,
-  geminiTTS,
-  openaiTTS,
-  openaiTTSHD,
-  elevenLabsTTS,
-  // STT models
-  parakeetSTT,
-  chirpSTT,
-  whisperSTT,
+  wan27,
+  wan26,
+  flux3Video,
+  aleph2,
+  happyhorse11,
+  happyhorse10,
+  // Audio (speech / music) models
+  gptAudio,
+  gptAudioMini,
+  lyria3Pro,
+  lyria3Clip,
+  // Transcription
+  gptAudioMiniSTT,
+  geminiSTT,
 } from './openrouter-provider.js';
 
 // Types
@@ -133,15 +145,27 @@ export type {
   AudioInputFormat,
   ImageResolution,
   ImageAspectRatio,
+  VideoResolution,
+  VideoAspectRatio,
+  VideoFrameImage,
+  CostCalculation,
+  ModelInfo,
+  ModelPricing,
+  PricingData,
+  VideoPricingFamily,
 } from './openrouter-provider.js';
 
 // Cost calculator
 export {
   calculateTextCost,
   calculateVideoCost,
+  calculateAudioCost,
   calculateTTSCost,
   calculateSTTCost,
   calculateImageCost,
+  costFromApi,
+  validateVideoRequest,
+  validateImageRequest,
   getModelPricing,
   getAvailableModels,
   getTextModels,
@@ -149,9 +173,17 @@ export {
   getTTSModels,
   getSTTModels,
   getImageModels,
+  getPricingMetadata,
   estimateCost,
+  estimateAudioCost,
   estimateVideoCost,
   estimateSTTCost,
   estimateImageCost,
   formatCost,
+} from './cost-calculator.js';
+
+export type {
+  ImageCostOptions,
+  VideoCostOptions,
+  ValidationIssue,
 } from './cost-calculator.js';

@@ -99,6 +99,9 @@ const COMMANDS = {
   Pipeline: [
     'runPipeline',
   ],
+  'OpenRouter catalog (local reads, $0)': [
+    'listOpenRouterModels', 'estimateOpenRouterCost',
+  ],
   Setup: [
     'doctor',
   ],

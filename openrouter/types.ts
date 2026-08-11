@@ -35,10 +35,11 @@ export type OpenRouterTextModel =
   | 'openai/o3'
   | 'openai/o3-mini'
   | 'openai/o4-mini'
+  | 'openai/gpt-5.6-luna'
+  | 'openai/gpt-5.6-luna-pro'
   // Anthropic
   | 'anthropic/claude-sonnet-4'
   | 'anthropic/claude-opus-4'
-  | 'anthropic/claude-haiku-3.5'
   // Google
   | 'google/gemini-2.5-flash'
   | 'google/gemini-2.5-pro'
@@ -49,9 +50,10 @@ export type OpenRouterTextModel =
   // DeepSeek
   | 'deepseek/deepseek-r1'
   | 'deepseek/deepseek-chat'
+  | 'deepseek/deepseek-v4-flash'
+  | 'deepseek/deepseek-v4-pro'
   // Mistral
   | 'mistralai/mistral-large'
-  | 'mistralai/mistral-small'
   // Qwen
   | 'qwen/qwen-2.5-72b-instruct'
   // MiniMax
@@ -61,46 +63,84 @@ export type OpenRouterTextModel =
   | (string & {});
 
 /**
- * Available video generation models on OpenRouter
+ * Video generation models on OpenRouter (POST /api/v1/videos).
+ *
+ * Verified against GET /api/v1/models?output_modalities=video — see
+ * pricing.json for each model's durations, resolutions and billing family.
  */
 export type OpenRouterVideoModel =
+  | 'bytedance/seedance-2.5'
   | 'bytedance/seedance-2.0'
   | 'bytedance/seedance-2.0-fast'
+  | 'bytedance/seedance-1-5-pro'
+  | 'black-forest-labs/flux-3-video'
+  | 'minimax/hailuo-3'
   | 'minimax/hailuo-2.3'
+  | 'runway/aleph-2'
+  | 'runway/gen-4.5'
+  | 'alibaba/happyhorse-1.1'
+  | 'alibaba/happyhorse-1.0'
+  | 'alibaba/wan-2.7'
+  | 'alibaba/wan-2.6'
+  | 'kwaivgi/kling-v3.0-pro'
+  | 'kwaivgi/kling-v3.0-std'
+  | 'kwaivgi/kling-video-o1'
+  | 'google/veo-3.1'
+  | 'google/veo-3.1-fast'
+  | 'google/veo-3.1-lite'
+  | 'openai/sora-2-pro'
+  | 'x-ai/grok-imagine-video'
+  | 'x-ai/grok-imagine-video-1.5'
   | (string & {});
 
 /**
- * Available TTS (Text-to-Speech) models on OpenRouter
+ * Audio-output models on OpenRouter.
+ *
+ * NOTE: OpenRouter has no /audio/speech endpoint. Speech is produced by chat
+ * models that list `audio` as an output modality, via POST /chat/completions
+ * with `modalities: ['text','audio']`.
  */
 export type OpenRouterTTSModel =
-  | 'hexgrad/kokoro-82m'
-  | 'x-ai/grok-voice-tts-1.0'
-  | 'google/gemini-3.1-flash-tts-preview'
-  | 'openai/tts-1'
-  | 'openai/tts-1-hd'
-  | 'elevenlabs/eleven-turbo-v2.5'
+  | 'openai/gpt-audio'
+  | 'openai/gpt-audio-mini'
+  | 'google/lyria-3-pro-preview'
+  | 'google/lyria-3-clip-preview'
   | (string & {});
 
 /**
- * Available STT (Speech-to-Text) models on OpenRouter
+ * Models that accept audio input, used for transcription.
+ *
+ * NOTE: OpenRouter has no /audio/transcriptions endpoint. Transcription is done
+ * by sending an `input_audio` content part to POST /chat/completions.
  */
 export type OpenRouterSTTModel =
-  | 'google/chirp-3'
-  | 'nvidia/parakeet-tdt-0.6b-v3'
-  | 'openai/whisper-large-v3'
+  | 'openai/gpt-audio'
+  | 'openai/gpt-audio-mini'
+  | 'google/gemini-3.5-flash'
+  | 'google/gemini-3.6-flash'
+  | 'google/gemini-3.1-flash-lite'
   | (string & {});
 
 /**
- * Available image generation models on OpenRouter
+ * Image generation models on OpenRouter (POST /api/v1/images).
  */
 export type OpenRouterImageModel =
   | 'bytedance-seed/seedream-4.5'
   | 'google/gemini-3-pro-image'
   | 'google/gemini-3.1-flash-image'
-  | 'openai/dall-e-3'
-  | 'black-forest-labs/flux-1.1-pro'
-  | 'black-forest-labs/flux-schnell'
-  | 'stability/sdxl'
+  | 'google/gemini-3.1-flash-lite-image'
+  | 'qwen/qwen-image-3'
+  | 'qwen/qwen-image-3-pro'
+  | 'openai/gpt-image-1'
+  | 'openai/gpt-image-1-mini'
+  | 'openai/gpt-image-2'
+  | 'x-ai/grok-imagine-image-quality'
+  | 'black-forest-labs/flux.2-pro'
+  | 'black-forest-labs/flux.2-max'
+  | 'microsoft/mai-image-2.5'
+  | 'microsoft/mai-image-2.5-pro'
+  | 'recraft/recraft-v4'
+  | 'recraft/recraft-v4-pro'
   | (string & {});
 
 /**
@@ -222,33 +262,105 @@ export interface OpenRouterChatInput {
 }
 
 /**
+ * Video resolution tiers accepted by POST /api/v1/videos.
+ * Per-model support is in pricing.json -> supportedResolutions.
+ */
+export type VideoResolution = '480p' | '720p' | '768p' | '1080p' | '1K' | '2K' | '4K';
+
+/**
+ * Video aspect ratios accepted by POST /api/v1/videos.
+ */
+export type VideoAspectRatio =
+  | '16:9' | '9:16' | '1:1' | '4:3' | '3:4' | '3:2' | '2:3' | '21:9' | '9:21';
+
+/**
+ * A keyframe supplied to an image-to-video model.
+ *
+ * `image` is a data: URL or a public https URL. Which slots a model accepts is
+ * in pricing.json -> supportedFrameImages.
+ */
+export interface VideoFrameImage {
+  image: string;
+  frameType: 'first_frame' | 'last_frame';
+}
+
+/**
  * Configuration for video generation
+ *
+ * Field names mirror POST /api/v1/videos; the provider converts camelCase to
+ * the snake_case the API expects.
  */
 export interface OpenRouterVideoConfig {
   /**
-   * Video duration in seconds
+   * Video duration in seconds. Must be one of the model's supported durations
+   * (pricing.json -> supportedDurations) or the API rejects the job.
    */
   durationSeconds?: number;
 
   /**
-   * Video aspect ratio
+   * Resolution tier. Mutually exclusive with `size`.
    */
-  aspectRatio?: '16:9' | '9:16' | '1:1';
+  resolution?: VideoResolution;
 
   /**
-   * First frame image (base64)
+   * Video aspect ratio. Mutually exclusive with `size`.
    */
-  firstFrameImage?: string;
+  aspectRatio?: VideoAspectRatio;
 
   /**
-   * Last frame image (base64)
+   * Explicit pixel dimensions as `WIDTHxHEIGHT`, e.g. '1280x720'.
+   * Alternative to resolution + aspectRatio.
    */
-  lastFrameImage?: string;
+  size?: string;
 
   /**
-   * Frequency penalty
+   * Keyframes for image-to-video (first and/or last frame).
    */
-  frequencyPenalty?: number;
+  frameImages?: VideoFrameImage[];
+
+  /**
+   * Reference images for style/subject guidance (reference-to-video).
+   */
+  inputReferences?: string[];
+
+  /**
+   * Generate an audio track. Defaults to true on models that support it —
+   * set false to cut cost on models with a cheaper silent SKU (e.g. Veo).
+   */
+  generateAudio?: boolean;
+
+  /**
+   * Seed for deterministic generation (models with supportsSeed).
+   */
+  seed?: number;
+
+  /**
+   * HTTPS webhook notified on completion, instead of polling.
+   */
+  callbackUrl?: string;
+
+  /**
+   * Provider-specific passthrough options. Only keys listed in
+   * pricing.json -> allowedPassthroughParameters are accepted.
+   */
+  provider?: Record<string, unknown>;
+
+  /**
+   * Stop polling after this many milliseconds.
+   * @default 900000 (15 minutes)
+   */
+  pollTimeoutMs?: number;
+
+  /**
+   * Delay between poll requests in milliseconds.
+   * @default 5000
+   */
+  pollIntervalMs?: number;
+
+  /**
+   * Called after each poll so callers can surface progress.
+   */
+  onPoll?: (status: string, elapsedMs: number) => void;
 }
 
 /**
@@ -270,44 +382,56 @@ export interface OpenRouterVideoInput {
  */
 export type TTSVoice =
   | 'alloy'
+  | 'ash'
+  | 'ballad'
+  | 'cedar'
+  | 'coral'
   | 'echo'
-  | 'fable'
-  | 'onyx'
-  | 'nova'
+  | 'marin'
+  | 'sage'
   | 'shimmer'
+  | 'verse'
   | (string & {});
 
 /**
- * Audio output format
+ * Audio output container supported by the chat audio API.
  */
-export type AudioFormat = 'mp3' | 'wav' | 'pcm' | 'opus' | 'flac';
+export type AudioFormat = 'wav' | 'mp3' | 'flac' | 'opus' | 'pcm16';
 
 /**
- * Configuration for TTS generation
+ * Configuration for audio generation.
+ *
+ * Audio is produced through POST /chat/completions with
+ * `modalities: ['text','audio']`, so chat parameters apply too.
  */
 export interface OpenRouterTTSConfig {
   /**
-   * Voice to use
+   * Voice to use. Ignored by models that do not take a voice (Lyria).
    * @default 'alloy'
    */
   voice?: TTSVoice;
 
   /**
-   * Output audio format
-   * @default 'mp3'
+   * Output audio container.
+   * @default 'wav'
    */
   responseFormat?: AudioFormat;
 
   /**
-   * Speaking speed (0.25 to 4.0)
-   * @default 1.0
+   * System prompt used to steer delivery (tone, pacing, accent) — the chat
+   * audio API has no `speed` parameter, so direct it in words instead.
    */
-  speed?: number;
+  systemPrompt?: string;
 
   /**
    * Temperature for variation
    */
   temperature?: number;
+
+  /**
+   * Cap on generated tokens (audio tokens count toward this).
+   */
+  maxTokens?: number;
 }
 
 /**
@@ -327,27 +451,42 @@ export interface OpenRouterTTSInput {
 /**
  * Audio input format for STT
  */
-export type AudioInputFormat = 'wav' | 'mp3' | 'flac' | 'ogg' | 'webm' | 'm4a';
+export type AudioInputFormat = 'wav' | 'mp3';
 
 /**
  * Configuration for STT transcription
  */
 export interface OpenRouterSTTConfig {
   /**
-   * Audio format
+   * Audio container of the supplied bytes. Only 'wav' and 'mp3' are accepted
+   * by the chat `input_audio` part; convert other formats first.
    * @default 'wav'
    */
   format?: AudioInputFormat;
 
   /**
-   * Language hint (ISO 639-1 code)
+   * Language hint, e.g. 'my' for Burmese. Folded into the instruction because
+   * chat completions has no `language` parameter.
    */
   language?: string;
+
+  /**
+   * Instruction sent alongside the audio.
+   * @default 'Transcribe this audio verbatim. Output only the transcript.'
+   */
+  prompt?: string;
 
   /**
    * Temperature for variation
    */
   temperature?: number;
+
+  /**
+   * Known audio duration in minutes. Supply it for an accurate cost figure —
+   * otherwise duration is inferred from the byte length, which is only a rough
+   * guess for compressed formats.
+   */
+  durationMinutes?: number;
 }
 
 /**
@@ -367,7 +506,7 @@ export interface OpenRouterSTTInput {
 /**
  * Image resolution options
  */
-export type ImageResolution = '1K' | '2K' | '4K';
+export type ImageResolution = '512' | '1K' | '2K' | '4K';
 
 /**
  * Image aspect ratio options
@@ -386,7 +525,8 @@ export type ImageAspectRatio =
  */
 export interface OpenRouterImageConfig {
   /**
-   * Image resolution
+   * Image resolution. Per-model support is in pricing.json -> resolutions;
+   * on per-image models it also selects the price variant (1k vs 2k).
    * @default '1K'
    */
   resolution?: ImageResolution;
@@ -398,20 +538,54 @@ export interface OpenRouterImageConfig {
   aspectRatio?: ImageAspectRatio;
 
   /**
-   * Number of images to generate (1-10)
+   * Explicit pixel dimensions as `WIDTHxHEIGHT`. Alternative to
+   * resolution + aspectRatio.
+   */
+  size?: string;
+
+  /**
+   * Number of images to generate. The ceiling is per-model
+   * (pricing.json -> maxImagesPerRequest); several models only allow 1.
    * @default 1
    */
   n?: number;
 
   /**
-   * Seed for reproducibility
+   * Seed for reproducibility (models with supportsSeed).
    */
   seed?: number;
 
   /**
-   * Reference images (base64)
+   * Reference images for editing or style guidance, as data: URLs or https
+   * URLs. Ceiling is pricing.json -> maxInputReferences.
    */
   inputReferences?: string[];
+
+  /**
+   * Render quality, where the model exposes it (e.g. gpt-image-2).
+   */
+  quality?: 'auto' | 'low' | 'medium' | 'high';
+
+  /**
+   * Background handling, where the model exposes it.
+   */
+  background?: 'auto' | 'opaque' | 'transparent';
+
+  /**
+   * Output encoding, where the model exposes it.
+   */
+  outputFormat?: 'png' | 'jpeg' | 'webp';
+
+  /**
+   * Compression level 0-100 for lossy output formats.
+   */
+  outputCompression?: number;
+
+  /**
+   * Provider-specific passthrough options. Only keys listed in
+   * pricing.json -> allowedPassthroughParameters are accepted.
+   */
+  provider?: Record<string, unknown>;
 }
 
 /**
@@ -461,6 +635,21 @@ export interface CostCalculation {
 
   /** Currency */
   currency: string;
+
+  /**
+   * Where the number came from:
+   * - `api`      OpenRouter billed this exactly (usage.cost) — authoritative
+   * - `computed` derived from pricing.json rates and the actual usage returned
+   * - `estimate` derived from pricing.json before generating
+   * - `unknown`  no published rate; totalCost is 0 and must not be trusted
+   */
+  source: 'api' | 'computed' | 'estimate' | 'unknown';
+
+  /** Which SKU or rate was applied, for audit trails */
+  basis?: string;
+
+  /** Set when the cost could not be determined; explains why */
+  note?: string;
 }
 
 /**
@@ -547,14 +736,20 @@ export interface VideoJobStatus {
   /** Job ID */
   id: string;
 
-  /** Status */
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  /**
+   * Job status. OpenRouter reports `in_progress`; `processing` and `queued`
+   * are tolerated as aliases so a server-side rename cannot hang the poller.
+   */
+  status: 'pending' | 'queued' | 'in_progress' | 'processing' | 'completed' | 'failed';
 
   /** Video URLs when completed */
   unsigned_urls?: string[];
 
+  /** Actual billed cost, present on the terminal poll */
+  usage?: { cost?: number; is_byok?: boolean };
+
   /** Error message if failed */
-  error?: string;
+  error?: string | { message?: string; code?: string | number };
 }
 
 /**
@@ -587,8 +782,14 @@ export interface OpenRouterTTSResponse {
   /** Response time in ms */
   latencyMs: number;
 
-  /** Generation ID from header */
+  /** Generation ID */
   generationId?: string;
+
+  /** Token usage (audio output is billed in tokens) */
+  usage?: TokenUsage;
+
+  /** The model's own transcript of the spoken audio, when it returns one */
+  transcript?: string;
 }
 
 /**
@@ -646,6 +847,12 @@ export interface OpenRouterImageResponse {
 
   /** Response time in ms */
   latencyMs: number;
+
+  /** Token usage, on models billed per token */
+  usage?: TokenUsage;
+
+  /** Any text the model returned alongside the images (refusals, captions) */
+  text?: string;
 }
 
 // =============================================================================
@@ -681,36 +888,76 @@ export type OpenRouterResult<T> =
  * Pricing information for a model
  */
 export interface ModelPricing {
-  /** Input token rate (per million) */
+  /** Prompt token rate (per million tokens) */
   input?: number;
 
-  /** Output token rate (per million) */
+  /** Completion token rate (per million tokens) */
   output?: number;
 
-  /** Video rate (per second) */
-  video_per_second?: number;
+  /** Audio input token rate (per million tokens) */
+  audio_input?: number;
 
-  /** Audio rate (per million characters) */
-  audio_per_million_chars?: number;
-
-  /** Audio output token rate (per million) */
+  /** Audio output token rate (per million tokens) */
   audio_output?: number;
 
-  /** STT rate (per minute of audio) */
-  stt_per_minute?: number;
+  /** Cached prompt read rate (per million tokens) */
+  cache_read?: number;
 
-  /** Image rate (per image) */
+  /** Cache write rate (per million tokens) */
+  cache_write?: number;
+
+  /** Internal reasoning token rate (per million tokens) */
+  reasoning?: number;
+
+  /** Flat rate per generated image, on models with one price for all sizes */
   image_per_image?: number;
 
-  /** Image rate for 1024px */
-  image_1024?: number;
+  /** Flat rate per generated image at 1K / 2K / 4K */
+  image_per_image_1k?: number;
+  image_per_image_2k?: number;
+  image_per_image_4k?: number;
 
-  /** Image rate for 1792px */
-  image_1792?: number;
+  /** Flat rate charged per supplied reference image */
+  input_image_per_image?: number;
+
+  /** Flat rate per supplied font / style reference, on models that bill them */
+  input_font_per_image?: number;
+  input_reference_per_image?: number;
+
+  /** Rate per megapixel of output (and input) area — the FLUX.2 family */
+  image_per_megapixel?: number;
+  input_image_per_megapixel?: number;
+
+  /** Flat rate per finished generation — Lyria bills per song / per clip */
+  audio_per_generation?: number;
+
+  /** Output image token rate (per million tokens) */
+  image_output_per_million_tokens?: number;
+
+  /** Input image / text token rate on image models (per million tokens) */
+  input_image_per_million_tokens?: number;
+  input_text_per_million_tokens?: number;
 }
 
 /**
- * Model information
+ * How a video model bills. The families are mutually incompatible, so the raw
+ * SKU map is kept verbatim and resolved at estimate time.
+ *
+ * - `usd_per_second`   keys like `duration_seconds`, `duration_seconds_720p`,
+ *                      `duration_seconds_with_audio`,
+ *                      `text_to_video_duration_seconds_1080p` — USD per second
+ * - `cents_per_second` keys like `cents_per_second_output_720p`,
+ *                      `cents_per_video_output_second_480p` — US cents per second
+ * - `video_tokens`     keys like `video_tokens`, `video_tokens_1080p` — USD per
+ *                      video token; the token count is unknowable before the
+ *                      render, so these cannot be estimated up front
+ */
+export type VideoPricingFamily = 'usd_per_second' | 'cents_per_second' | 'video_tokens' | 'unknown';
+
+/**
+ * Model information as stored in pricing.json.
+ *
+ * Generated by openrouter/scripts/sync-pricing.mjs — do not hand-edit.
  */
 export interface ModelInfo {
   /** Human-readable name */
@@ -719,8 +966,8 @@ export interface ModelInfo {
   /** Model type */
   type: OpenRouterModelType;
 
-  /** Pricing */
-  pricing: ModelPricing;
+  /** Token / per-image rates. Empty for video models — see pricingSkus. */
+  pricing?: ModelPricing;
 
   /** Currency */
   currency: string;
@@ -731,14 +978,57 @@ export interface ModelInfo {
   /** Context window */
   contextWindow?: number;
 
-  /** Max duration for video */
-  maxDurationSeconds?: number;
+  // --- video only ---
+  /** Which SKU family the calculator should resolve */
+  pricingFamily?: VideoPricingFamily;
+  /** Raw SKU map exactly as published by OpenRouter (values are strings) */
+  pricingSkus?: Record<string, string>;
+  /** False when cost is only knowable after generation (token-billed video) */
+  estimatable?: boolean;
+  supportedResolutions?: string[];
+  supportedAspectRatios?: string[];
+  supportedDurations?: number[];
+  supportedSizes?: string[] | null;
+  supportedFrameImages?: string[];
+  supportsAudio?: boolean;
+
+  // --- image only ---
+  resolutions?: string[];
+  aspectRatios?: string[];
+  qualities?: string[];
+  backgrounds?: string[];
+  outputFormats?: string[];
+  maxImagesPerRequest?: number;
+  maxInputReferences?: number;
+  supportsStreaming?: boolean;
+
+  // --- shared ---
+  supportsSeed?: boolean;
+  inputModalities?: string[];
+  outputModalities?: string[];
+  supportedParameters?: string[];
+  allowedPassthroughParameters?: string[];
+
+  /** True when OpenRouter publishes no rate; cost must come from usage.cost */
+  pricingUnavailable?: boolean;
+
+  /** Set when the rate was recovered from prose rather than a pricing field */
+  priceSource?: string;
 }
 
 /**
  * Complete pricing data structure
  */
 export interface PricingData {
+  /** Date the catalog was last pulled (YYYY-MM-DD) */
+  lastVerified?: string;
+
+  /** Which endpoints the data came from */
+  source?: string;
+
+  /** Model counts by type */
+  counts?: Record<string, number>;
+
   /** Map of model ID to model info */
   models: Record<string, ModelInfo>;
 }

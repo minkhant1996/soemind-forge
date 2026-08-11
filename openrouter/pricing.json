@@ -1,396 +1,527 @@
 {
-  "lastVerified": "2026-07-03",
+  "lastVerified": "2026-08-11",
+  "source": "https://openrouter.ai/api/v1 (models, models?output_modalities=image|video, videos/models, images/models/{id}/endpoints)",
+  "generatedBy": "openrouter/scripts/sync-pricing.mjs — do not hand-edit; re-run the script",
+  "counts": {
+    "total": 91,
+    "text": 25,
+    "audio": 4,
+    "image": 40,
+    "video": 22
+  },
   "models": {
-    "openai/gpt-4o": {
-      "name": "GPT-4o",
-      "type": "text",
-      "pricing": {
-        "input": 2.5,
-        "output": 10.0
-      },
+    "alibaba/happyhorse-1.0": {
+      "name": "Alibaba: HappyHorse 1.0",
+      "type": "video",
       "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 128000
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds_720p": "0.0988",
+        "duration_seconds_1080p": "0.1694"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4",
+        "21:9",
+        "9:21"
+      ],
+      "supportedDurations": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "720x720",
+        "960x720",
+        "720x960",
+        "1680x720",
+        "720x1680",
+        "1920x1080",
+        "1080x1920",
+        "1080x1080",
+        "1440x1080",
+        "1080x1440",
+        "2520x1080",
+        "1080x2520"
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "supportsSeed": true,
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     },
-    "openai/gpt-4o-mini": {
-      "name": "GPT-4o Mini",
-      "type": "text",
-      "pricing": {
-        "input": 0.15,
-        "output": 0.6
-      },
+    "alibaba/happyhorse-1.1": {
+      "name": "Alibaba: HappyHorse 1.1",
+      "type": "video",
       "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 128000
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds_720p": "0.0988",
+        "duration_seconds_1080p": "0.1278"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4",
+        "21:9",
+        "9:21"
+      ],
+      "supportedDurations": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "720x720",
+        "960x720",
+        "720x960",
+        "1680x720",
+        "720x1680",
+        "1920x1080",
+        "1080x1920",
+        "1080x1080",
+        "1440x1080",
+        "1080x1440",
+        "2520x1080",
+        "1080x2520"
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "supportsSeed": true,
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     },
-    "openai/gpt-4.1": {
-      "name": "GPT-4.1",
-      "type": "text",
-      "pricing": {
-        "input": 2.0,
-        "output": 8.0
-      },
+    "alibaba/wan-2.6": {
+      "name": "Alibaba: Wan 2.6",
+      "type": "video",
       "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "text_to_video_duration_seconds_480p": "0.04",
+        "text_to_video_duration_seconds_720p": "0.08",
+        "image_to_video_duration_seconds_720p": "0.10",
+        "text_to_video_duration_seconds_1080p": "0.12",
+        "image_to_video_duration_seconds_1080p": "0.15"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "supportedDurations": [
+        5,
+        10
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "1080x1920",
+        "720x1280",
+        "1920x1080"
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "negative_prompt",
+        "enable_prompt_expansion",
+        "shot_type",
+        "audio",
+        "size"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     },
-    "openai/gpt-4.1-mini": {
-      "name": "GPT-4.1 Mini",
-      "type": "text",
-      "pricing": {
-        "input": 0.4,
-        "output": 1.6
-      },
+    "alibaba/wan-2.7": {
+      "name": "Alibaba: Wan 2.7",
+      "type": "video",
       "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
-    },
-    "openai/gpt-4.1-nano": {
-      "name": "GPT-4.1 Nano",
-      "type": "text",
-      "pricing": {
-        "input": 0.1,
-        "output": 0.4
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds": "0.1"
       },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
-    },
-    "openai/o3": {
-      "name": "OpenAI o3",
-      "type": "text",
-      "pricing": {
-        "input": 10.0,
-        "output": 40.0
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 200000
-    },
-    "openai/o3-mini": {
-      "name": "OpenAI o3 Mini",
-      "type": "text",
-      "pricing": {
-        "input": 1.1,
-        "output": 4.4
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 200000
-    },
-    "openai/o4-mini": {
-      "name": "OpenAI o4 Mini",
-      "type": "text",
-      "pricing": {
-        "input": 1.1,
-        "output": 4.4
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 200000
-    },
-    "anthropic/claude-sonnet-4": {
-      "name": "Claude Sonnet 4",
-      "type": "text",
-      "pricing": {
-        "input": 3.0,
-        "output": 15.0
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 200000
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4"
+      ],
+      "supportedDurations": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920",
+        "720x720",
+        "1080x1080",
+        "960x720",
+        "720x960",
+        "1440x1080",
+        "1080x1440"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "negative_prompt",
+        "prompt_extend",
+        "audio",
+        "ratio",
+        "last_image",
+        "video",
+        "videos",
+        "images"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     },
     "anthropic/claude-opus-4": {
-      "name": "Claude Opus 4",
+      "name": "Anthropic: Claude Opus 4",
       "type": "text",
       "pricing": {
-        "input": 15.0,
-        "output": 75.0
+        "input": 15,
+        "output": 75,
+        "cache_read": 1.5,
+        "cache_write": 18.75
       },
       "currency": "USD",
       "unit": "per_million_tokens",
-      "contextWindow": 200000
-    },
-    "anthropic/claude-haiku-3.5": {
-      "name": "Claude 3.5 Haiku",
-      "type": "text",
-      "pricing": {
-        "input": 0.8,
-        "output": 4.0
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 200000
-    },
-    "google/gemini-2.5-flash": {
-      "name": "Gemini 2.5 Flash",
-      "type": "text",
-      "pricing": {
-        "input": 0.15,
-        "output": 0.6
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
-    },
-    "google/gemini-2.5-pro": {
-      "name": "Gemini 2.5 Pro",
-      "type": "text",
-      "pricing": {
-        "input": 1.25,
-        "output": 10.0
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
-    },
-    "meta-llama/llama-4-maverick": {
-      "name": "Llama 4 Maverick",
-      "type": "text",
-      "pricing": {
-        "input": 0.2,
-        "output": 0.6
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
-    },
-    "meta-llama/llama-4-scout": {
-      "name": "Llama 4 Scout",
-      "type": "text",
-      "pricing": {
-        "input": 0.11,
-        "output": 0.34
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 512000
-    },
-    "meta-llama/llama-3.3-70b-instruct": {
-      "name": "Llama 3.3 70B",
-      "type": "text",
-      "pricing": {
-        "input": 0.1,
-        "output": 0.3
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 131072
-    },
-    "deepseek/deepseek-r1": {
-      "name": "DeepSeek R1",
-      "type": "text",
-      "pricing": {
-        "input": 0.55,
-        "output": 2.19
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 64000
-    },
-    "deepseek/deepseek-chat": {
-      "name": "DeepSeek V3",
-      "type": "text",
-      "pricing": {
-        "input": 0.14,
-        "output": 0.28
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 64000
-    },
-    "mistralai/mistral-large": {
-      "name": "Mistral Large",
-      "type": "text",
-      "pricing": {
-        "input": 2.0,
-        "output": 6.0
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 128000
-    },
-    "mistralai/mistral-small": {
-      "name": "Mistral Small",
-      "type": "text",
-      "pricing": {
-        "input": 0.1,
-        "output": 0.3
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 32000
-    },
-    "qwen/qwen-2.5-72b-instruct": {
-      "name": "Qwen 2.5 72B",
-      "type": "text",
-      "pricing": {
-        "input": 0.15,
-        "output": 0.4
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 131072
-    },
-    "minimax/minimax-m3": {
-      "name": "MiniMax M3",
-      "type": "text",
-      "pricing": {
-        "input": 0.3,
-        "output": 1.2
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 1000000
-    },
-    "minimax/minimax-m2.7": {
-      "name": "MiniMax M2.7",
-      "type": "text",
-      "pricing": {
-        "input": 0.18,
-        "output": 0.72
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "contextWindow": 205000
-    },
-    "bytedance/seedance-2.0": {
-      "name": "Seedance 2.0",
-      "type": "video",
-      "pricing": {
-        "video_per_second": 0.06726
-      },
-      "currency": "USD",
-      "unit": "per_second",
-      "maxDurationSeconds": 10
-    },
-    "bytedance/seedance-2.0-fast": {
-      "name": "Seedance 2.0 Fast",
-      "type": "video",
-      "pricing": {
-        "video_per_second": 0.0538
-      },
-      "currency": "USD",
-      "unit": "per_second",
-      "maxDurationSeconds": 10
-    },
-    "minimax/hailuo-2.3": {
-      "name": "MiniMax Hailuo 2.3",
-      "type": "video",
-      "pricing": {
-        "video_per_second": 0.0817
-      },
-      "currency": "USD",
-      "unit": "per_second"
-    },
-    "hexgrad/kokoro-82m": {
-      "name": "Kokoro 82M",
-      "type": "audio",
-      "pricing": {
-        "audio_per_million_chars": 0.62
-      },
-      "currency": "USD",
-      "unit": "per_million_characters",
-      "languages": [
-        "en-US",
-        "en-GB",
-        "es",
-        "fr",
-        "hi",
-        "it",
-        "ja",
-        "pt",
-        "zh"
-      ]
-    },
-    "x-ai/grok-voice-tts-1.0": {
-      "name": "Grok Voice TTS",
-      "type": "audio",
-      "pricing": {
-        "audio_per_million_chars": 1.0
-      },
-      "currency": "USD",
-      "unit": "per_million_characters"
-    },
-    "google/gemini-3.1-flash-tts-preview": {
-      "name": "Gemini 3.1 Flash TTS",
-      "type": "audio",
-      "pricing": {
-        "input": 1.0,
-        "audio_output": 20.0
-      },
-      "currency": "USD",
-      "unit": "per_million_tokens",
-      "languages": [
-        "70+ languages"
+      "contextWindow": 200000,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
       ],
-      "contextWindow": 8000
-    },
-    "openai/tts-1": {
-      "name": "OpenAI TTS-1",
-      "type": "audio",
-      "pricing": {
-        "audio_per_million_chars": 15.0
-      },
-      "currency": "USD",
-      "unit": "per_million_characters"
-    },
-    "openai/tts-1-hd": {
-      "name": "OpenAI TTS-1 HD",
-      "type": "audio",
-      "pricing": {
-        "audio_per_million_chars": 30.0
-      },
-      "currency": "USD",
-      "unit": "per_million_characters"
-    },
-    "elevenlabs/eleven-turbo-v2.5": {
-      "name": "ElevenLabs Turbo v2.5",
-      "type": "audio",
-      "pricing": {
-        "audio_per_million_chars": 0.18
-      },
-      "currency": "USD",
-      "unit": "per_million_characters"
-    },
-    "google/chirp-3": {
-      "name": "Google Chirp 3",
-      "type": "stt",
-      "pricing": {
-        "stt_per_minute": 0.016
-      },
-      "currency": "USD",
-      "unit": "per_minute",
-      "languages": [
-        "24 GA + 77 preview languages"
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "stop",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
       ]
     },
-    "nvidia/parakeet-tdt-0.6b-v3": {
-      "name": "NVIDIA Parakeet TDT",
-      "type": "stt",
+    "anthropic/claude-sonnet-4": {
+      "name": "Anthropic: Claude Sonnet 4",
+      "type": "text",
       "pricing": {
-        "stt_per_minute": 0.0015
+        "input": 3,
+        "output": 15,
+        "cache_read": 0.3,
+        "cache_write": 3.75
       },
       "currency": "USD",
-      "unit": "per_minute",
-      "languages": [
-        "EU languages"
+      "unit": "per_million_tokens",
+      "contextWindow": 1000000,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "stop",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
       ]
     },
-    "openai/whisper-large-v3": {
-      "name": "OpenAI Whisper Large v3",
-      "type": "stt",
+    "black-forest-labs/flux-3-video": {
+      "name": "Black Forest Labs: FLUX.3 Video",
+      "type": "video",
+      "currency": "USD",
+      "unit": "cents_per_second",
+      "pricingFamily": "cents_per_second",
+      "pricingSkus": {
+        "cents_per_second_output": "17",
+        "cents_per_second_output_720p": "17",
+        "cents_per_second_output_1080p": "29",
+        "cents_per_second_video_continuation_720p": "41",
+        "cents_per_second_video_continuation_1080p": "53"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "21:9",
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16"
+      ],
+      "supportedDurations": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": false,
+      "allowedPassthroughParameters": [
+        "safety_tolerance",
+        "version"
+      ],
+      "inputModalities": [
+        "text",
+        "image",
+        "video"
+      ]
+    },
+    "black-forest-labs/flux.2-flex": {
+      "name": "Black Forest Labs: FLUX.2 Flex",
+      "type": "image",
       "pricing": {
-        "stt_per_minute": 0.006
+        "input_image_per_megapixel": 0.06,
+        "image_per_megapixel": 0.06
       },
       "currency": "USD",
-      "unit": "per_minute",
-      "languages": [
-        "100+ languages"
+      "unit": "per_megapixel",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "outputFormats": [
+        "png",
+        "jpeg"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 8,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "steps",
+        "guidance",
+        "safety_tolerance"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "black-forest-labs/flux.2-klein-4b": {
+      "name": "Black Forest Labs: FLUX.2 Klein 4B",
+      "type": "image",
+      "pricing": {
+        "image_per_megapixel": 0.014
+      },
+      "currency": "USD",
+      "unit": "per_megapixel",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "outputFormats": [
+        "png",
+        "jpeg"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 4,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "steps",
+        "guidance",
+        "safety_tolerance"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "black-forest-labs/flux.2-max": {
+      "name": "Black Forest Labs: FLUX.2 Max",
+      "type": "image",
+      "pricing": {
+        "image_per_megapixel": 0.07
+      },
+      "currency": "USD",
+      "unit": "per_megapixel",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "outputFormats": [
+        "png",
+        "jpeg"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 8,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "steps",
+        "guidance",
+        "safety_tolerance"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "black-forest-labs/flux.2-pro": {
+      "name": "Black Forest Labs: FLUX.2 Pro",
+      "type": "image",
+      "pricing": {
+        "image_per_megapixel": 0.03
+      },
+      "currency": "USD",
+      "unit": "per_megapixel",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "outputFormats": [
+        "png",
+        "jpeg"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 8,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "steps",
+        "guidance",
+        "safety_tolerance"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
       ]
     },
     "bytedance-seed/seedream-4.5": {
-      "name": "ByteDance Seedream 4.5",
+      "name": "ByteDance Seed: Seedream 4.5",
       "type": "image",
       "pricing": {
         "image_per_image": 0.04
@@ -413,19 +544,643 @@
         "4:5",
         "5:4",
         "9:16",
-        "16:9"
+        "16:9",
+        "9:19.5",
+        "19.5:9",
+        "9:20",
+        "20:9",
+        "9:21",
+        "21:9",
+        "auto"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 14,
+      "supportsSeed": true,
+      "inputModalities": [
+        "image",
+        "text"
+      ]
+    },
+    "bytedance/seedance-1-5-pro": {
+      "name": "ByteDance: Seedance 1.5 Pro",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_video_token",
+      "pricingFamily": "video_tokens",
+      "pricingSkus": {
+        "video_tokens": "0.0000024",
+        "video_tokens_without_audio": "0.0000012"
+      },
+      "estimatable": false,
+      "supportedResolutions": [
+        "480p",
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "1:1",
+        "3:4",
+        "9:16",
+        "9:21",
+        "4:3",
+        "16:9",
+        "21:9"
+      ],
+      "supportedDurations": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "supportedSizes": [
+        "480x480",
+        "480x640",
+        "480x854",
+        "480x1120",
+        "640x480",
+        "720x720",
+        "720x960",
+        "720x1280",
+        "720x1680",
+        "854x480",
+        "960x720",
+        "1080x1080",
+        "1080x1440",
+        "1080x1920",
+        "1080x2520",
+        "1120x480",
+        "1280x720",
+        "1440x1080",
+        "1680x720",
+        "1920x1080",
+        "2520x1080"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "watermark",
+        "req_key"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "bytedance/seedance-2.0": {
+      "name": "ByteDance: Seedance 2.0",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_video_token",
+      "pricingFamily": "video_tokens",
+      "pricingSkus": {
+        "video_tokens": "0.000007",
+        "video_tokens_4k": "0.000004",
+        "video_tokens_1080p": "0.0000077",
+        "video_tokens_without_audio": "0.000007",
+        "video_tokens_with_video_input": "0.0000043",
+        "video_tokens_4k_with_video_input": "0.0000024",
+        "video_tokens_1080p_with_video_input": "0.0000047"
+      },
+      "estimatable": false,
+      "supportedResolutions": [
+        "480p",
+        "720p",
+        "1080p",
+        "4K"
+      ],
+      "supportedAspectRatios": [
+        "1:1",
+        "3:4",
+        "9:16",
+        "4:3",
+        "16:9",
+        "21:9",
+        "9:21"
+      ],
+      "supportedDurations": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "480x480",
+        "480x640",
+        "480x854",
+        "640x480",
+        "854x480",
+        "1120x480",
+        "720x720",
+        "720x960",
+        "720x1280",
+        "720x1680",
+        "960x720",
+        "1280x720",
+        "1680x720",
+        "1080x1080",
+        "1080x1440",
+        "1080x1920",
+        "1440x1080",
+        "1920x1080",
+        "2520x1080",
+        "3840x2160",
+        "2160x3840",
+        "2160x2160",
+        "2880x2160",
+        "2160x2880",
+        "5040x2160"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "watermark",
+        "req_key"
+      ],
+      "inputModalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    "bytedance/seedance-2.0-fast": {
+      "name": "ByteDance: Seedance 2.0 Fast",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_video_token",
+      "pricingFamily": "video_tokens",
+      "pricingSkus": {
+        "video_tokens": "0.0000042",
+        "video_tokens_without_audio": "0.0000042",
+        "video_tokens_with_video_input": "0.000002475"
+      },
+      "estimatable": false,
+      "supportedResolutions": [
+        "480p",
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "1:1",
+        "3:4",
+        "9:16",
+        "4:3",
+        "16:9",
+        "21:9",
+        "9:21"
+      ],
+      "supportedDurations": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "480x480",
+        "480x640",
+        "480x854",
+        "640x480",
+        "854x480",
+        "1120x480",
+        "720x720",
+        "720x960",
+        "720x1280",
+        "720x1680",
+        "960x720",
+        "1280x720",
+        "1680x720"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "watermark",
+        "req_key"
+      ],
+      "inputModalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    "bytedance/seedance-2.5": {
+      "name": "ByteDance: Seedance 2.5",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_video_token",
+      "pricingFamily": "video_tokens",
+      "pricingSkus": {
+        "video_tokens": "0.0000107",
+        "video_tokens_without_audio": "0.0000107",
+        "video_tokens_with_video_input": "0.0000064"
+      },
+      "estimatable": false,
+      "supportedResolutions": [
+        "480p",
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16",
+        "21:9"
+      ],
+      "supportedDurations": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "supportedSizes": [
+        "854x480",
+        "752x560",
+        "640x640",
+        "560x752",
+        "480x854",
+        "992x432",
+        "1280x720",
+        "1112x834",
+        "960x960",
+        "834x1112",
+        "720x1280",
+        "1470x630"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "watermark",
+        "req_key",
+        "output_format"
+      ],
+      "inputModalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    "deepseek/deepseek-chat": {
+      "name": "DeepSeek: DeepSeek V3",
+      "type": "text",
+      "pricing": {
+        "input": 0.2574,
+        "output": 1.0287
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 163840,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ]
+    },
+    "deepseek/deepseek-r1": {
+      "name": "DeepSeek: R1",
+      "type": "text",
+      "pricing": {
+        "input": 0.7,
+        "output": 2.5
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 163840,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ]
+    },
+    "deepseek/deepseek-v4-flash": {
+      "name": "DeepSeek: DeepSeek V4 Flash 0423",
+      "type": "text",
+      "pricing": {
+        "input": 0.14,
+        "output": 0.28,
+        "cache_read": 0.028
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_a",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "deepseek/deepseek-v4-pro": {
+      "name": "DeepSeek: DeepSeek V4 Pro",
+      "type": "text",
+      "pricing": {
+        "input": 0.63168,
+        "output": 1.26336,
+        "cache_read": 0.053298
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "google/gemini-2.5-flash": {
+      "name": "Google: Gemini 2.5 Flash",
+      "type": "text",
+      "pricing": {
+        "input": 0.3,
+        "output": 2.5,
+        "audio_input": 1,
+        "cache_read": 0.03,
+        "cache_write": 0.083333,
+        "reasoning": 2.5
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "file",
+        "image",
+        "text",
+        "audio",
+        "video"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    },
+    "google/gemini-2.5-flash-image": {
+      "name": "Google: Nano Banana (Gemini 2.5 Flash Image)",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 0.3,
+        "image_output_per_million_tokens": 30
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "aspectRatios": [
+        "1:1",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:3",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 3,
+      "allowedPassthroughParameters": [
+        "cachedContent"
+      ],
+      "inputModalities": [
+        "image",
+        "text"
+      ]
+    },
+    "google/gemini-2.5-pro": {
+      "name": "Google: Gemini 2.5 Pro",
+      "type": "text",
+      "pricing": {
+        "input": 1.25,
+        "output": 10,
+        "audio_input": 1.25,
+        "cache_read": 0.125,
+        "cache_write": 0.375,
+        "reasoning": 10
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text",
+        "image",
+        "file",
+        "audio",
+        "video"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
       ]
     },
     "google/gemini-3-pro-image": {
-      "name": "Gemini 3 Pro Image (Nano Banana Pro)",
+      "name": "Google: Nano Banana Pro (Gemini 3 Pro Image)",
       "type": "image",
       "pricing": {
-        "input": 2.0,
-        "output": 12.0,
-        "image_per_image": 0.2
+        "input_image_per_million_tokens": 2,
+        "image_output_per_million_tokens": 120
       },
       "currency": "USD",
-      "unit": "per_million_tokens_or_per_image",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "1K",
+        "2K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:3",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 14,
+      "allowedPassthroughParameters": [
+        "cachedContent"
+      ],
+      "inputModalities": [
+        "image",
+        "text"
+      ]
+    },
+    "google/gemini-3-pro-image-preview": {
+      "name": "Google: Nano Banana Pro (Gemini 3 Pro Image Preview)",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 2,
+        "image_output_per_million_tokens": 120
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
       "resolutions": [
         "1K",
         "2K",
@@ -442,60 +1197,2437 @@
         "9:16",
         "16:9",
         "21:9"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 14,
+      "allowedPassthroughParameters": [
+        "cachedContent"
+      ],
+      "inputModalities": [
+        "image",
+        "text"
       ]
     },
     "google/gemini-3.1-flash-image": {
-      "name": "Gemini 3.1 Flash Image (Nano Banana 2)",
+      "name": "Google: Nano Banana 2 (Gemini 3.1 Flash Image)",
       "type": "image",
       "pricing": {
-        "input": 0.5,
-        "output": 3.0
+        "image_output_per_million_tokens": 60
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "512",
+        "1K",
+        "2K",
+        "4K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "1:4",
+        "1:8",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:1",
+        "4:3",
+        "4:5",
+        "5:4",
+        "8:1",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 14,
+      "allowedPassthroughParameters": [
+        "cachedContent"
+      ],
+      "inputModalities": [
+        "image",
+        "text"
+      ]
+    },
+    "google/gemini-3.1-flash-image-preview": {
+      "name": "Google: Nano Banana 2 (Gemini 3.1 Flash Image Preview)",
+      "type": "image",
+      "pricing": {
+        "image_output_per_million_tokens": 60
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "512",
+        "1K",
+        "2K",
+        "4K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "1:4",
+        "1:8",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:1",
+        "4:3",
+        "4:5",
+        "5:4",
+        "8:1",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 14,
+      "allowedPassthroughParameters": [
+        "cachedContent"
+      ],
+      "inputModalities": [
+        "image",
+        "text"
+      ]
+    },
+    "google/gemini-3.1-flash-lite-image": {
+      "name": "Google: Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
+      "type": "image",
+      "pricing": {
+        "image_output_per_million_tokens": 30
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "1K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "1:4",
+        "1:8",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:1",
+        "4:3",
+        "4:5",
+        "5:4",
+        "8:1",
+        "9:16",
+        "16:9",
+        "21:9"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 14,
+      "allowedPassthroughParameters": [
+        "cachedContent"
+      ],
+      "inputModalities": [
+        "image",
+        "text"
+      ]
+    },
+    "google/lyria-3-clip-preview": {
+      "name": "Google: Lyria 3 Clip Preview",
+      "type": "audio",
+      "pricing": {
+        "audio_per_generation": 0.04
+      },
+      "currency": "USD",
+      "unit": "per_clip",
+      "priceSource": "model description: \"$0.04 per clip\"",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text",
+        "audio"
+      ],
+      "supportedParameters": [
+        "max_tokens",
+        "response_format",
+        "seed",
+        "temperature",
+        "top_p"
+      ]
+    },
+    "google/lyria-3-pro-preview": {
+      "name": "Google: Lyria 3 Pro Preview",
+      "type": "audio",
+      "pricing": {
+        "audio_per_generation": 0.08
+      },
+      "currency": "USD",
+      "unit": "per_song",
+      "priceSource": "model description: \"$0.08 per song\"",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text",
+        "audio"
+      ],
+      "supportedParameters": [
+        "max_tokens",
+        "response_format",
+        "seed",
+        "temperature",
+        "top_p"
+      ]
+    },
+    "google/veo-3.1": {
+      "name": "Google: Veo 3.1",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds_with_audio": "0.40",
+        "duration_seconds_with_audio_4k": "0.60",
+        "duration_seconds_without_audio": "0.20",
+        "duration_seconds_without_audio_4k": "0.40"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p",
+        "4K"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "supportedDurations": [
+        4,
+        6,
+        8
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "1080x1920",
+        "1920x1080",
+        "720x1280",
+        "3840x2160",
+        "2160x3840"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "personGeneration",
+        "aspectRatio",
+        "negativePrompt",
+        "conditioningScale",
+        "enhancePrompt"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "google/veo-3.1-fast": {
+      "name": "Google: Veo 3.1 Fast",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds_with_audio": "0.12",
+        "duration_seconds_with_audio_4k": "0.30",
+        "duration_seconds_without_audio": "0.10",
+        "duration_seconds_with_audio_720p": "0.10",
+        "duration_seconds_without_audio_4k": "0.25",
+        "duration_seconds_without_audio_720p": "0.08"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p",
+        "4K"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "supportedDurations": [
+        4,
+        6,
+        8
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "1080x1920",
+        "1920x1080",
+        "720x1280",
+        "3840x2160",
+        "2160x3840"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "personGeneration",
+        "aspectRatio",
+        "negativePrompt",
+        "conditioningScale",
+        "enhancePrompt"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "google/veo-3.1-lite": {
+      "name": "Google: Veo 3.1 Lite",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds_with_audio": "0.08",
+        "duration_seconds_without_audio": "0.05",
+        "duration_seconds_with_audio_720p": "0.05",
+        "duration_seconds_without_audio_720p": "0.03"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "supportedDurations": [
+        8,
+        4,
+        6
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "1920x1080",
+        "1080x1920"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "personGeneration",
+        "aspectRatio",
+        "negativePrompt",
+        "conditioningScale",
+        "enhancePrompt"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "krea/krea-2-large": {
+      "name": "Krea: Krea 2 Large",
+      "type": "image",
+      "pricing": {
+        "image_output_per_million_tokens": 14.371257
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "1K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:2",
+        "16:9",
+        "4:5",
+        "2:3",
+        "9:16"
+      ],
+      "maxInputReferences": 1,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "image_style_references",
+        "moodboards",
+        "styles",
+        "creativity",
+        "intensity",
+        "complexity",
+        "movement",
+        "strength"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "krea/krea-2-medium": {
+      "name": "Krea: Krea 2 Medium",
+      "type": "image",
+      "pricing": {
+        "image_output_per_million_tokens": 7.185629
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "1K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:2",
+        "16:9",
+        "4:5",
+        "2:3",
+        "9:16"
+      ],
+      "maxInputReferences": 1,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "image_style_references",
+        "moodboards",
+        "styles",
+        "creativity",
+        "intensity",
+        "complexity",
+        "movement",
+        "strength"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "krea/krea-2-medium-turbo": {
+      "name": "Krea: Krea 2 Medium Turbo",
+      "type": "image",
+      "pricing": {
+        "image_output_per_million_tokens": 3.592814
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "resolutions": [
+        "1K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:2",
+        "16:9",
+        "4:5",
+        "2:3",
+        "9:16"
+      ],
+      "maxInputReferences": 1,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "image_style_references",
+        "moodboards",
+        "styles",
+        "creativity",
+        "intensity",
+        "complexity",
+        "movement",
+        "strength"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "kwaivgi/kling-v3.0-pro": {
+      "name": "Kling: Video v3.0 Pro",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds": "0.112",
+        "duration_seconds_with_audio": "0.168",
+        "text_to_video_duration_seconds_480p": "0.112",
+        "text_to_video_duration_seconds_720p": "0.112",
+        "image_to_video_duration_seconds_720p": "0.112",
+        "text_to_video_duration_seconds_1080p": "0.112",
+        "image_to_video_duration_seconds_1080p": "0.112"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "supportedDurations": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "720x720"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": false,
+      "allowedPassthroughParameters": [
+        "negative_prompt",
+        "cfg_scale"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "kwaivgi/kling-v3.0-std": {
+      "name": "Kling: Video v3.0 Standard",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds": "0.084",
+        "duration_seconds_with_audio": "0.126",
+        "text_to_video_duration_seconds_480p": "0.084",
+        "text_to_video_duration_seconds_720p": "0.084",
+        "image_to_video_duration_seconds_720p": "0.084",
+        "text_to_video_duration_seconds_1080p": "0.084",
+        "image_to_video_duration_seconds_1080p": "0.084"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "supportedDurations": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "720x720"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": false,
+      "allowedPassthroughParameters": [
+        "negative_prompt",
+        "cfg_scale"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "kwaivgi/kling-video-o1": {
+      "name": "Kling: Video O1",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds": "0.1120"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1"
+      ],
+      "supportedDurations": [
+        5,
+        10
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280",
+        "720x720"
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": false,
+      "allowedPassthroughParameters": [
+        "negative_prompt"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "meta-llama/llama-3.3-70b-instruct": {
+      "name": "Meta: Llama 3.3 70B Instruct",
+      "type": "text",
+      "pricing": {
+        "input": 0.1,
+        "output": 0.32
       },
       "currency": "USD",
       "unit": "per_million_tokens",
-      "contextWindow": 131000
+      "contextWindow": 131072,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
     },
-    "openai/dall-e-3": {
-      "name": "DALL-E 3",
+    "meta-llama/llama-4-maverick": {
+      "name": "Meta: Llama 4 Maverick",
+      "type": "text",
+      "pricing": {
+        "input": 0.2,
+        "output": 0.696
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "meta-llama/llama-4-scout": {
+      "name": "Meta: Llama 4 Scout",
+      "type": "text",
+      "pricing": {
+        "input": 0.1,
+        "output": 0.3
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1310720,
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ]
+    },
+    "microsoft/mai-image-2.5": {
+      "name": "Microsoft: MAI-Image-2.5",
       "type": "image",
       "pricing": {
-        "image_1024": 0.04,
-        "image_1792": 0.08
+        "input_text_per_million_tokens": 5,
+        "input_image_per_million_tokens": 8,
+        "image_output_per_million_tokens": 47
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "3:2",
+        "2:3",
+        "auto"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 1,
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "microsoft/mai-image-2.5-pro": {
+      "name": "Microsoft: MAI-Image-2.5 Pro",
+      "type": "image",
+      "pricing": {
+        "input_text_per_million_tokens": 5,
+        "input_image_per_million_tokens": 8,
+        "image_output_per_million_tokens": 108
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "3:2",
+        "2:3",
+        "auto"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 1,
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "minimax/hailuo-2.3": {
+      "name": "MiniMax: Hailuo 2.3",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds": "0.0817"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9"
+      ],
+      "supportedDurations": [
+        6,
+        10
+      ],
+      "supportedSizes": [
+        "1920x1080"
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "supportsAudio": false,
+      "allowedPassthroughParameters": [
+        "prompt_optimizer",
+        "fast_pretreatment"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "minimax/hailuo-3": {
+      "name": "MiniMax: H3",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds": "0.13",
+        "reference_images": "0.04"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "2K"
+      ],
+      "supportedAspectRatios": [
+        "21:9",
+        "16:9",
+        "4:3",
+        "1:1",
+        "3:4",
+        "9:16"
+      ],
+      "supportedDurations": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedFrameImages": [
+        "first_frame",
+        "last_frame"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": false,
+      "allowedPassthroughParameters": [
+        "aigc_watermark"
+      ],
+      "inputModalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    "minimax/minimax-m2.7": {
+      "name": "MiniMax: MiniMax M2.7",
+      "type": "text",
+      "pricing": {
+        "input": 0.3,
+        "output": 1.2,
+        "cache_read": 0.06
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 204800,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "minimax/minimax-m3": {
+      "name": "MiniMax: MiniMax M3",
+      "type": "text",
+      "pricing": {
+        "input": 0.3,
+        "output": 1.2,
+        "cache_read": 0.06
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1048576,
+      "inputModalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "mistralai/mistral-large": {
+      "name": "Mistral Large",
+      "type": "text",
+      "pricing": {
+        "input": 2,
+        "output": 6,
+        "cache_read": 0.2
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 128000,
+      "inputModalities": [
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "max_tokens",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    },
+    "openai/gpt-4.1": {
+      "name": "OpenAI: GPT-4.1",
+      "type": "text",
+      "pricing": {
+        "input": 2,
+        "output": 8,
+        "cache_read": 0.5
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1047576,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "max_completion_tokens",
+        "max_tokens",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    },
+    "openai/gpt-4.1-mini": {
+      "name": "OpenAI: GPT-4.1 Mini",
+      "type": "text",
+      "pricing": {
+        "input": 0.4,
+        "output": 1.6,
+        "cache_read": 0.1
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1047576,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "max_completion_tokens",
+        "max_tokens",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    },
+    "openai/gpt-4.1-nano": {
+      "name": "OpenAI: GPT-4.1 Nano",
+      "type": "text",
+      "pricing": {
+        "input": 0.1,
+        "output": 0.4,
+        "cache_read": 0.025
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1047576,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "max_completion_tokens",
+        "max_tokens",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ]
+    },
+    "openai/gpt-4o": {
+      "name": "OpenAI: GPT-4o",
+      "type": "text",
+      "pricing": {
+        "input": 2.5,
+        "output": 10,
+        "cache_read": 1.25
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 128000,
+      "inputModalities": [
+        "text",
+        "image",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "logprobs",
+        "max_completion_tokens",
+        "max_tokens",
+        "prediction",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p",
+        "web_search_options"
+      ]
+    },
+    "openai/gpt-4o-mini": {
+      "name": "OpenAI: GPT-4o-mini",
+      "type": "text",
+      "pricing": {
+        "input": 0.15,
+        "output": 0.6,
+        "cache_read": 0.075
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 128000,
+      "inputModalities": [
+        "text",
+        "image",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "logprobs",
+        "max_completion_tokens",
+        "max_tokens",
+        "prediction",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p",
+        "web_search_options"
+      ]
+    },
+    "openai/gpt-5-image": {
+      "name": "OpenAI: GPT-5 Image",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 10,
+        "image_output_per_million_tokens": 40
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "qualities": [
+        "auto",
+        "low",
+        "medium",
+        "high"
+      ],
+      "backgrounds": [
+        "auto",
+        "transparent",
+        "opaque"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 16,
+      "allowedPassthroughParameters": [
+        "moderation"
+      ],
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ]
+    },
+    "openai/gpt-5-image-mini": {
+      "name": "OpenAI: GPT-5 Image Mini",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 2.5,
+        "image_output_per_million_tokens": 8
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "qualities": [
+        "auto",
+        "low",
+        "medium",
+        "high"
+      ],
+      "backgrounds": [
+        "auto",
+        "transparent",
+        "opaque"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 16,
+      "allowedPassthroughParameters": [
+        "moderation"
+      ],
+      "inputModalities": [
+        "file",
+        "image",
+        "text"
+      ]
+    },
+    "openai/gpt-5.4-image-2": {
+      "name": "OpenAI: GPT-5.4 Image 2",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 8,
+        "image_output_per_million_tokens": 30
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "qualities": [
+        "auto",
+        "low",
+        "medium",
+        "high"
+      ],
+      "backgrounds": [
+        "auto",
+        "opaque"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 16,
+      "allowedPassthroughParameters": [
+        "moderation"
+      ],
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ]
+    },
+    "openai/gpt-5.6-luna": {
+      "name": "OpenAI: GPT-5.6 Luna",
+      "type": "text",
+      "pricing": {
+        "input": 0.1,
+        "output": 0.6,
+        "cache_read": 0.01,
+        "cache_write": 0.125
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1050000,
+      "inputModalities": [
+        "file",
+        "image",
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ]
+    },
+    "openai/gpt-5.6-luna-pro": {
+      "name": "OpenAI: GPT-5.6 Luna Pro",
+      "type": "text",
+      "pricing": {
+        "input": 0.1,
+        "output": 0.6,
+        "cache_read": 0.01,
+        "cache_write": 0.125
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 1050000,
+      "inputModalities": [
+        "file",
+        "image",
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ]
+    },
+    "openai/gpt-audio": {
+      "name": "OpenAI: GPT Audio",
+      "type": "audio",
+      "pricing": {
+        "input": 2.5,
+        "output": 10,
+        "audio_input": 32,
+        "audio_output": 64
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 128000,
+      "inputModalities": [
+        "text",
+        "audio"
+      ],
+      "outputModalities": [
+        "text",
+        "audio"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "openai/gpt-audio-mini": {
+      "name": "OpenAI: GPT Audio Mini",
+      "type": "audio",
+      "pricing": {
+        "input": 0.6,
+        "output": 2.4,
+        "audio_input": 0.6,
+        "audio_output": 2.4
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 128000,
+      "inputModalities": [
+        "text",
+        "audio"
+      ],
+      "outputModalities": [
+        "text",
+        "audio"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    "openai/gpt-image-1": {
+      "name": "OpenAI: GPT Image 1",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 10,
+        "input_text_per_million_tokens": 5,
+        "image_output_per_million_tokens": 40
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "auto"
+      ],
+      "qualities": [
+        "auto",
+        "low",
+        "medium",
+        "high"
+      ],
+      "backgrounds": [
+        "auto",
+        "transparent",
+        "opaque"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 16,
+      "allowedPassthroughParameters": [
+        "moderation"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "openai/gpt-image-1-mini": {
+      "name": "OpenAI: GPT Image 1 Mini",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 2.5,
+        "input_text_per_million_tokens": 2,
+        "image_output_per_million_tokens": 8
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "auto"
+      ],
+      "qualities": [
+        "auto",
+        "low",
+        "medium",
+        "high"
+      ],
+      "backgrounds": [
+        "auto",
+        "transparent",
+        "opaque"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 16,
+      "allowedPassthroughParameters": [
+        "moderation"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "openai/gpt-image-2": {
+      "name": "OpenAI: GPT Image 2",
+      "type": "image",
+      "pricing": {
+        "input_image_per_million_tokens": 8,
+        "input_text_per_million_tokens": 5,
+        "image_output_per_million_tokens": 30
+      },
+      "currency": "USD",
+      "unit": "per_output_image_token",
+      "aspectRatios": [
+        "1:1",
+        "3:2",
+        "2:3",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "qualities": [
+        "auto",
+        "low",
+        "medium",
+        "high"
+      ],
+      "backgrounds": [
+        "auto",
+        "opaque"
+      ],
+      "maxImagesPerRequest": 10,
+      "maxInputReferences": 16,
+      "allowedPassthroughParameters": [
+        "moderation"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "openai/o3": {
+      "name": "OpenAI: o3",
+      "type": "text",
+      "pricing": {
+        "input": 2,
+        "output": 8,
+        "cache_read": 0.5
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 200000,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ]
+    },
+    "openai/o3-mini": {
+      "name": "OpenAI: o3 Mini",
+      "type": "text",
+      "pricing": {
+        "input": 1.1,
+        "output": 4.4,
+        "cache_read": 0.55
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 200000,
+      "inputModalities": [
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ]
+    },
+    "openai/o4-mini": {
+      "name": "OpenAI: o4 Mini",
+      "type": "text",
+      "pricing": {
+        "input": 1.1,
+        "output": 4.4,
+        "cache_read": 0.275
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 200000,
+      "inputModalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ]
+    },
+    "openai/sora-2-pro": {
+      "name": "OpenAI: Sora 2 Pro",
+      "type": "video",
+      "currency": "USD",
+      "unit": "per_second",
+      "pricingFamily": "usd_per_second",
+      "pricingSkus": {
+        "duration_seconds_720p": "0.30",
+        "duration_seconds_1024p": "0.50",
+        "duration_seconds_1080p": "0.50"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "supportedDurations": [
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "1080x1920",
+        "1920x1080",
+        "720x1280"
+      ],
+      "supportsAudio": true,
+      "supportsSeed": false,
+      "allowedPassthroughParameters": [
+        "quality",
+        "style"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "qwen/qwen-2.5-72b-instruct": {
+      "name": "Qwen2.5 72B Instruct",
+      "type": "text",
+      "pricing": {
+        "input": 0.36,
+        "output": 0.4
+      },
+      "currency": "USD",
+      "unit": "per_million_tokens",
+      "contextWindow": 32768,
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "supportedParameters": [
+        "frequency_penalty",
+        "logit_bias",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ]
+    },
+    "qwen/qwen-image-3": {
+      "name": "Qwen: Qwen Image 3",
+      "type": "image",
+      "pricing": {
+        "input_image_per_image": 0.003,
+        "image_per_image_1k": 0.03,
+        "image_per_image_2k": 0.03
       },
       "currency": "USD",
       "unit": "per_image",
       "resolutions": [
-        "1024x1024",
-        "1024x1792",
-        "1792x1024"
+        "1K",
+        "2K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "1:2",
+        "1:4",
+        "2:1",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:1",
+        "4:3",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 4,
+      "supportsSeed": true,
+      "inputModalities": [
+        "text",
+        "image"
       ]
     },
-    "black-forest-labs/flux-1.1-pro": {
-      "name": "FLUX 1.1 Pro",
+    "qwen/qwen-image-3-pro": {
+      "name": "Qwen: Qwen Image 3 Pro",
+      "type": "image",
+      "pricing": {
+        "input_image_per_image": 0.003,
+        "image_per_image_1k": 0.04,
+        "image_per_image_2k": 0.075
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "resolutions": [
+        "1K",
+        "2K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "1:2",
+        "1:4",
+        "2:1",
+        "2:3",
+        "3:2",
+        "3:4",
+        "4:1",
+        "4:3",
+        "4:5",
+        "5:4",
+        "9:16",
+        "16:9"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 4,
+      "supportsSeed": true,
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v3": {
+      "name": "Recraft: Recraft V3",
       "type": "image",
       "pricing": {
         "image_per_image": 0.04
       },
       "currency": "USD",
-      "unit": "per_image"
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     },
-    "black-forest-labs/flux-schnell": {
-      "name": "FLUX Schnell",
+    "recraft/recraft-v4": {
+      "name": "Recraft: Recraft V4",
       "type": "image",
       "pricing": {
-        "image_per_image": 0.003
+        "image_per_image": 0.04
       },
       "currency": "USD",
-      "unit": "per_image"
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     },
-    "stability/sdxl": {
-      "name": "Stable Diffusion XL",
+    "recraft/recraft-v4-pro": {
+      "name": "Recraft: Recraft V4 Pro",
       "type": "image",
       "pricing": {
-        "image_per_image": 0.002
+        "image_per_image": 0.25
       },
       "currency": "USD",
-      "unit": "per_image"
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4-pro-vector": {
+      "name": "Recraft: Recraft V4 Pro Vector",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.3
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4-vector": {
+      "name": "Recraft: Recraft V4 Vector",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.08
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4.1": {
+      "name": "Recraft: Recraft V4.1",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.035
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4.1-pro": {
+      "name": "Recraft: Recraft V4.1 Pro",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.21
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4.1-pro-vector": {
+      "name": "Recraft: Recraft V4.1 Pro Vector",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.3
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4.1-utility": {
+      "name": "Recraft: Recraft V4.1 Utility",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.035
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4.1-utility-pro": {
+      "name": "Recraft: Recraft V4.1 Utility Pro",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.21
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "recraft/recraft-v4.1-vector": {
+      "name": "Recraft: Recraft V4.1 Vector",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.08
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "16:9",
+        "9:16",
+        "auto"
+      ],
+      "maxImagesPerRequest": 6,
+      "maxInputReferences": 1,
+      "allowedPassthroughParameters": [
+        "style",
+        "controls",
+        "text_layout"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "runway/aleph-2": {
+      "name": "Runway: Aleph 2.0",
+      "type": "video",
+      "currency": "USD",
+      "unit": "cents_per_second",
+      "pricingFamily": "cents_per_second",
+      "pricingSkus": {
+        "cents_per_second_output": "28",
+        "minimum_cents_per_generation": "56"
+      },
+      "estimatable": true,
+      "supportedAspectRatios": [
+        "16:9",
+        "4:3",
+        "3:2",
+        "1:1",
+        "2:3",
+        "3:4",
+        "9:16",
+        "21:9"
+      ],
+      "supportsAudio": false,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "contentModeration",
+        "keyframes"
+      ],
+      "inputModalities": [
+        "text",
+        "image",
+        "video"
+      ]
+    },
+    "runway/gen-4.5": {
+      "name": "Runway: Gen-4.5",
+      "type": "video",
+      "currency": "USD",
+      "unit": "cents_per_second",
+      "pricingFamily": "cents_per_second",
+      "pricingSkus": {
+        "cents_per_second_output": "12"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16"
+      ],
+      "supportedDurations": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "supportedSizes": [
+        "1280x720",
+        "720x1280"
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "supportsAudio": false,
+      "supportsSeed": true,
+      "allowedPassthroughParameters": [
+        "contentModeration"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "sourceful/riverflow-v2-fast": {
+      "name": "Sourceful: Riverflow V2 Fast",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.02,
+        "image_per_image_2k": 0.04,
+        "input_font_per_image": 0.03,
+        "input_reference_per_image": 0.2
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "resolutions": [
+        "1K",
+        "2K",
+        "4K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 4,
+      "allowedPassthroughParameters": [
+        "font_inputs"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "sourceful/riverflow-v2-pro": {
+      "name": "Sourceful: Riverflow V2 Pro",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.15,
+        "image_per_image_2k": 0.15,
+        "image_per_image_4k": 0.33,
+        "input_font_per_image": 0.03,
+        "input_reference_per_image": 0.2
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "resolutions": [
+        "1K",
+        "2K",
+        "4K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 10,
+      "allowedPassthroughParameters": [
+        "font_inputs"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "sourceful/riverflow-v2.5-fast": {
+      "name": "Sourceful: Riverflow V2.5 Fast",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.019,
+        "image_per_image_2k": 0.021
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "resolutions": [
+        "1K",
+        "2K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "backgrounds": [
+        "auto",
+        "transparent",
+        "opaque"
+      ],
+      "outputFormats": [
+        "jpeg"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 4,
+      "allowedPassthroughParameters": [
+        "font_inputs"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "sourceful/riverflow-v2.5-pro": {
+      "name": "Sourceful: Riverflow V2.5 Pro",
+      "type": "image",
+      "pricing": {
+        "image_per_image": 0.13,
+        "image_per_image_2k": 0.15,
+        "image_per_image_4k": 0.17
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "resolutions": [
+        "1K",
+        "2K",
+        "4K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3",
+        "16:9",
+        "9:16",
+        "21:9",
+        "auto"
+      ],
+      "backgrounds": [
+        "auto",
+        "transparent",
+        "opaque"
+      ],
+      "outputFormats": [
+        "png",
+        "jpeg",
+        "webp"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 10,
+      "allowedPassthroughParameters": [
+        "font_inputs"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "x-ai/grok-imagine-image-quality": {
+      "name": "SpaceXAI: Grok Imagine Image Quality",
+      "type": "image",
+      "pricing": {
+        "input_image_per_image": 0.01,
+        "image_per_image_1k": 0.05,
+        "image_per_image_2k": 0.07
+      },
+      "currency": "USD",
+      "unit": "per_image",
+      "resolutions": [
+        "1K",
+        "2K"
+      ],
+      "aspectRatios": [
+        "1:1",
+        "3:4",
+        "4:3",
+        "9:16",
+        "16:9",
+        "2:3",
+        "3:2",
+        "9:19.5",
+        "19.5:9",
+        "9:20",
+        "20:9",
+        "1:2",
+        "2:1",
+        "auto"
+      ],
+      "maxImagesPerRequest": 1,
+      "maxInputReferences": 3,
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "x-ai/grok-imagine-video": {
+      "name": "SpaceXAI: Grok Imagine Video",
+      "type": "video",
+      "currency": "USD",
+      "unit": "cents_per_second",
+      "pricingFamily": "cents_per_second",
+      "pricingSkus": {
+        "cents_per_image_input": "0.2",
+        "cents_per_video_output_second_480p": "5",
+        "cents_per_video_output_second_720p": "7"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "480p",
+        "720p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3"
+      ],
+      "supportedDurations": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedSizes": [
+        "854x480",
+        "1280x720",
+        "480x854",
+        "720x1280",
+        "480x480",
+        "720x720",
+        "640x480",
+        "960x720",
+        "480x640",
+        "720x960",
+        "720x480",
+        "1080x720",
+        "480x720",
+        "720x1080"
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
+    },
+    "x-ai/grok-imagine-video-1.5": {
+      "name": "SpaceXAI: Grok Imagine Video 1.5",
+      "type": "video",
+      "currency": "USD",
+      "unit": "cents_per_second",
+      "pricingFamily": "cents_per_second",
+      "pricingSkus": {
+        "cents_per_image_input": "1",
+        "cents_per_video_output_second_480p": "8",
+        "cents_per_video_output_second_720p": "14",
+        "cents_per_video_output_second_1080p": "25"
+      },
+      "estimatable": true,
+      "supportedResolutions": [
+        "480p",
+        "720p",
+        "1080p"
+      ],
+      "supportedAspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:3",
+        "3:4",
+        "3:2",
+        "2:3"
+      ],
+      "supportedDurations": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "supportedFrameImages": [
+        "first_frame"
+      ],
+      "inputModalities": [
+        "text",
+        "image"
+      ]
     }
   }
 }

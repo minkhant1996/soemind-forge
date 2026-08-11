@@ -46,6 +46,19 @@ import {
   seedance20Fast,
 } from '../openrouter/openrouter-provider.js';
 
+import {
+  getModelPricing as getOpenRouterModelPricing,
+  getAvailableModels as getOpenRouterModels,
+  getPricingMetadata as getOpenRouterPricingMetadata,
+  estimateVideoCost as estimateOpenRouterVideoCost,
+  estimateImageCost as estimateOpenRouterImageCost,
+  estimateAudioCost as estimateOpenRouterAudioCost,
+  estimateCost as estimateOpenRouterTextCost,
+  validateVideoRequest as validateOpenRouterVideoRequest,
+  validateImageRequest as validateOpenRouterImageRequest,
+  formatCost as formatOpenRouterCost,
+} from '../openrouter/cost-calculator.js';
+
 import type {
   OpenRouterVideoInput,
   OpenRouterVideoConfig,
@@ -917,6 +930,17 @@ function getMimeType(filePath: string): string {
     '.webm': 'video/webm',
   };
   return mimeTypes[ext] || 'image/jpeg';
+}
+
+/**
+ * Read a local file as a `data:` URL.
+ *
+ * The OpenRouter video API takes keyframes and references as data URLs or
+ * public https URLs — bare base64 is rejected.
+ */
+function toDataUrl(filePath: string): string {
+  const bytes = fs.readFileSync(filePath);
+  return `data:${getMimeType(filePath)};base64,${bytes.toString('base64')}`;
 }
 
 // =============================================================================
@@ -5316,9 +5340,8 @@ export async function seedanceImageToVideo(
 
     console.log(`[Seedance] Generating video from ${imagePaths.length} image(s) (${duration}s) via OpenRouter...`);
 
-    // Use primary image as first frame reference (base64 encoded)
-    const referenceImage = fs.readFileSync(imagePaths[0]);
-    const firstFrameBase64 = referenceImage.toString('base64');
+    // Use primary image as the opening keyframe
+    const firstFrameUrl = toDataUrl(imagePaths[0]);
 
     const result = await withRetry<OpenRouterResult<OpenRouterVideoResponse>>(
       () => generateOpenRouterVideo({
@@ -5327,7 +5350,7 @@ export async function seedanceImageToVideo(
         config: {
           aspectRatio: input.aspectRatio as '16:9' | '9:16' | '1:1' || '16:9',
           durationSeconds: duration,
-          firstFrameImage: firstFrameBase64,
+          frameImages: [{ image: firstFrameUrl, frameType: 'first_frame' }],
         },
       }),
       { maxRetries: 2, initialDelayMs: 5000, maxDelayMs: 60000 },
@@ -5464,9 +5487,8 @@ export async function seedanceSpeakingVideo(
 
     console.log(`[Seedance] Generating speaking video with lip-sync (${duration}s) via OpenRouter...`);
 
-    // Use character image as first frame reference (base64 encoded)
-    const referenceImage = fs.readFileSync(input.characterImagePath);
-    const firstFrameBase64 = referenceImage.toString('base64');
+    // Use character image as the opening keyframe
+    const firstFrameUrl = toDataUrl(input.characterImagePath);
 
     const result = await withRetry<OpenRouterResult<OpenRouterVideoResponse>>(
       () => generateOpenRouterVideo({
@@ -5475,7 +5497,7 @@ export async function seedanceSpeakingVideo(
         config: {
           aspectRatio: input.aspectRatio as '16:9' | '9:16' | '1:1' || '16:9',
           durationSeconds: duration,
-          firstFrameImage: firstFrameBase64,
+          frameImages: [{ image: firstFrameUrl, frameType: 'first_frame' }],
         },
       }),
       { maxRetries: 2, initialDelayMs: 5000, maxDelayMs: 60000 },
@@ -5636,8 +5658,10 @@ export async function seedanceMultiShotVideo(
 
       // Add character image as first frame if available
       if (input.characterImagePath) {
-        const referenceImage = fs.readFileSync(input.characterImagePath);
-        videoConfig.firstFrameImage = referenceImage.toString('base64');
+        videoConfig.frameImages = [{
+          image: toDataUrl(input.characterImagePath),
+          frameType: 'first_frame',
+        }];
       }
 
       const result = await withRetry<OpenRouterResult<OpenRouterVideoResponse>>(
@@ -5802,8 +5826,10 @@ export async function seedanceMultiRefVideo(
 
     // Use primary image reference as first frame if available
     if (imageRefs.length > 0) {
-      const referenceImage = fs.readFileSync(imageRefs[0].path);
-      videoConfig.firstFrameImage = referenceImage.toString('base64');
+      videoConfig.frameImages = [{
+        image: toDataUrl(imageRefs[0].path),
+        frameType: 'first_frame',
+      }];
     }
 
     const result = await withRetry<OpenRouterResult<OpenRouterVideoResponse>>(
@@ -7315,5 +7341,189 @@ export async function analyzeReferenceVideo(
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error(`[Workflow] analyzeReferenceVideo failed: ${message}`);
     return createErrorResult(code, message);
+  }
+}
+
+// =============================================================================
+// OPENROUTER MODEL CATALOG + COST ESTIMATION
+// =============================================================================
+//
+// Discovery and pre-flight pricing for the OpenRouter side of the kit. Both are
+// local reads of openrouter/pricing.json — no API call, no spend — so they are
+// safe to run before deciding what to generate.
+//
+// Refresh the catalog with: node openrouter/scripts/sync-pricing.mjs
+
+/**
+ * List the OpenRouter models the kit knows about, with their billing unit.
+ *
+ * @param type - optional filter: 'text' | 'image' | 'video' | 'audio'
+ *
+ * @example
+ * node workflows/cli.cjs listOpenRouterModels '["video"]'
+ */
+export async function listOpenRouterModels(
+  type?: 'text' | 'image' | 'video' | 'audio'
+): Promise<WorkflowResult<{
+  lastVerified?: string;
+  counts?: Record<string, number>;
+  models: Array<Record<string, unknown>>;
+}>> {
+  try {
+    const meta = getOpenRouterPricingMetadata();
+    // The CLI hands an empty object through when no argument is given, so only
+    // treat an actual string as a filter.
+    const wanted = typeof type === 'string' && type ? type : undefined;
+    const models = getOpenRouterModels()
+      .map(id => ({ id, info: getOpenRouterModelPricing(id) }))
+      .filter(({ info }) => info && (!wanted || info.type === wanted))
+      .map(({ id, info }) => {
+        const row: Record<string, unknown> = {
+          id,
+          name: info.name,
+          type: info.type,
+          unit: info.unit,
+        };
+        if (info.pricingUnavailable) row.pricingUnavailable = true;
+        if (info.type === 'video') {
+          row.durations = info.supportedDurations;
+          row.resolutions = info.supportedResolutions;
+          row.audio = info.supportsAudio;
+          row.estimatable = info.estimatable;
+          row.skus = info.pricingSkus;
+        } else if (info.type === 'image') {
+          row.resolutions = info.resolutions;
+          row.maxPerRequest = info.maxImagesPerRequest;
+          row.maxRefs = info.maxInputReferences;
+          row.pricing = info.pricing;
+        } else {
+          row.pricing = info.pricing;
+          row.contextWindow = info.contextWindow;
+        }
+        return row;
+      });
+
+    return {
+      success: true,
+      data: {
+        lastVerified: meta.lastVerified,
+        counts: meta.counts,
+        models,
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return createErrorResult(getErrorCode(new Error(message)), message);
+  }
+}
+
+/**
+ * Estimate what an OpenRouter generation will cost, before running it.
+ *
+ * Returns the estimate plus any parameter problems (unsupported duration,
+ * resolution, image count) so a bad request fails here rather than after a
+ * paid round trip. Video models billed per video token cannot be estimated —
+ * those come back with `source: 'unknown'`.
+ *
+ * @example
+ * node workflows/cli.cjs estimateOpenRouterCost '{"model":"google/veo-3.1-fast","durationSeconds":8,"resolution":"720p","withAudio":false}'
+ */
+export async function estimateOpenRouterCost(input: {
+  model: string;
+  /** video */
+  durationSeconds?: number;
+  resolution?: string;
+  aspectRatio?: string;
+  withAudio?: boolean;
+  imageToVideo?: boolean;
+  referenceImages?: number;
+  videoCount?: number;
+  /** image */
+  imageCount?: number;
+  /** audio */
+  text?: string;
+  /** text */
+  inputTokens?: number;
+  outputTokens?: number;
+}): Promise<WorkflowResult<{
+  model: string;
+  type: string;
+  cost: number;
+  currency: string;
+  source: string;
+  basis?: string;
+  note?: string;
+  formatted: string;
+  issues: Array<{ field: string; message: string }>;
+}>> {
+  try {
+    const info = getOpenRouterModelPricing(input.model);
+    if (!info) {
+      return createErrorResult(
+        'INVALID_INPUT',
+        `Unknown model '${input.model}'. Run listOpenRouterModels, or refresh the catalog with ` +
+        `node openrouter/scripts/sync-pricing.mjs`
+      );
+    }
+
+    let cost;
+    let issues: Array<{ field: string; message: string }> = [];
+
+    switch (info.type) {
+      case 'video':
+        issues = validateOpenRouterVideoRequest(input.model, {
+          durationSeconds: input.durationSeconds,
+          resolution: input.resolution,
+          aspectRatio: input.aspectRatio,
+        });
+        cost = estimateOpenRouterVideoCost(input.model, {
+          durationSeconds: input.durationSeconds ?? 5,
+          resolution: input.resolution,
+          withAudio: input.withAudio,
+          imageToVideo: input.imageToVideo,
+          referenceImages: input.referenceImages,
+          videoCount: input.videoCount ?? 1,
+        });
+        break;
+      case 'image':
+        issues = validateOpenRouterImageRequest(input.model, {
+          resolution: input.resolution,
+          aspectRatio: input.aspectRatio,
+          n: input.imageCount,
+        });
+        cost = estimateOpenRouterImageCost(input.model, {
+          imageCount: input.imageCount ?? 1,
+          resolution: input.resolution,
+          referenceCount: input.referenceImages,
+        });
+        break;
+      case 'audio':
+        cost = estimateOpenRouterAudioCost(input.model, input.text ?? '');
+        break;
+      default:
+        cost = estimateOpenRouterTextCost(
+          input.model,
+          input.inputTokens ?? 0,
+          input.outputTokens ?? 0
+        );
+    }
+
+    return {
+      success: true,
+      data: {
+        model: input.model,
+        type: info.type,
+        cost: cost.totalCost,
+        currency: cost.currency,
+        source: cost.source,
+        basis: cost.basis,
+        note: cost.note,
+        formatted: formatOpenRouterCost(cost),
+        issues,
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return createErrorResult(getErrorCode(new Error(message)), message);
   }
 }
