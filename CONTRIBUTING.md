@@ -14,7 +14,7 @@ fixes, and bug reports.
 | Add or improve a **skill** (agent slash command) | [`skills/README.md`](skills/README.md) and existing `skills/*/SKILL.md` |
 | Improve **prompt guides** (thumbnail/image/video prompting) | `workflows/*-GUIDE.md` + [`workflows/PROMPT-GUIDES-INDEX.md`](workflows/PROMPT-GUIDES-INDEX.md) |
 | Add a **provider** (new AI API) | Model it on `gemini/` or `openrouter/` — see below |
-| Update **model pricing** | `gemini/pricing.json`, `openrouter/pricing.json` |
+| Update **model pricing** | `gemini/pricing.json` (hand-maintained) · `openrouter/pricing.json` (**generated** — run `node openrouter/scripts/sync-pricing.mjs`, don't hand-edit) |
 
 ## Dev setup
 
@@ -65,6 +65,17 @@ Model a new provider directory on `gemini/` or `openrouter/`:
   ledger (`workflows/cost-tracker.ts`) stays accurate.
 - API keys come from the root `.env` only — document the variable in
   `.env.example`.
+
+**Pricing data.** Prefer a sync script over a hand-written table — a stale table
+fails silently ($0 reported for models the calculator can't find). `openrouter/`
+is the reference implementation: `scripts/sync-pricing.mjs` pulls the live
+listings, writes `pricing.json` stamped with `lastVerified`/`generatedBy`, and
+supports `--check` (report drift, write nothing) for CI. Expose discovery and
+estimation as CLI commands (`listOpenRouterModels`, `estimateOpenRouterCost`) so
+agents can price a call for $0 before making it, and have the estimator return
+**validation issues** (unsupported duration/resolution/count) plus an explicit
+"cost unknown" signal for models that only bill after rendering — never a
+fabricated number. `doctor` should report how old the pricing file is.
 
 ## Ground rules
 

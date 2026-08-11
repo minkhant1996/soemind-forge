@@ -605,7 +605,7 @@ The short version that changes decisions:
 |---|---|
 | English | Veo or Omni |
 | **Myanmar / Thai / non-Latin scripts** | **Omni Flash (image_to_video)** — better pronunciation, no filter drama |
-| Any language + lip-sync UGC realism | Seedance (needs OPENROUTER_API_KEY) |
+| Any language + lip-sync UGC realism | Seedance (needs OPENROUTER_API_KEY). Bills **per video token** — no up-front quote; say so and get consent before running. Check ids/limits with `listOpenRouterModels '["video"]'` ($0) |
 | **PROVIDED audio file (voice clone/recording)** | **`infiniteTalkLipsync` (RunPod)** — the ONLY working path; audio drives the mouth, no duration cap. Omni is policy-blocked for this (deepfake guard) — do not retry it. Recipe: VIDEO-PROMPT-GUIDE §8 |
 
 Veo + non-English script = silent filter blocks ($0, "No video was generated")

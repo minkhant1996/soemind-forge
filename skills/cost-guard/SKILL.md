@@ -49,6 +49,25 @@ Show it:
 If `c.ok === false` → tell the user it would exceed the cap, show by how much, and offer:
 use a cheaper model (Veo Lite), shorten, drop scenes, or raise the cap. **Do not run.**
 
+### OpenRouter models — get the number, don't recall it (RULES 3b)
+
+The rough rates above are Gemini's. For anything on OpenRouter, ask the catalog
+(free, local, no API call) and feed its answer into `checkBudget`:
+
+```bash
+node workflows/cli.cjs estimateOpenRouterCost \
+  '{"model":"google/veo-3.1-fast","durationSeconds":8,"resolution":"720p","withAudio":false}'
+# → { cost: 0.64, formatted: "$0.6400 USD (est.)", source: "estimate", issues: [] }
+```
+
+- `issues` non-empty → the parameters are unsupported; fix them before spending.
+- `formatted: "cost unknown"` / `source: "unknown"` → the model bills per video
+  token (Seedance 2.x, Sora 2 Pro) and **cannot be estimated**. Say so plainly,
+  budget with a worst-case placeholder the user agrees to, and reconcile from
+  the returned `usage.cost` after the render.
+- `Unknown model` → refresh the catalog:
+  `node openrouter/scripts/sync-pricing.mjs`.
+
 ## STEP 3: Record actual cost after each generation
 
 Every workflow returns `result.data.cost.totalCost`. Record it so the ledger stays accurate:

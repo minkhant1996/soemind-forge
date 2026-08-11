@@ -14,6 +14,19 @@
 | **Aspect Ratios** | 16:9, 9:16, 4:3, 3:4, 21:9, 1:1 |
 | **Audio** | Native dual-channel stereo (dialogue, SFX, music) |
 | **Inputs** | Up to 9 images, 3 videos, 3 audio files (12 total) |
+| **Model ids** | `bytedance/seedance-2.0`, `-2.0-fast`, `bytedance/seedance-2.5`, `bytedance/seedance-1-5-pro` (via OpenRouter) |
+| **Billing** | **Per video token** — the cost is only known after the render finishes |
+
+> **Before you run it:** confirm the id and its supported durations/resolutions
+> with `node workflows/cli.cjs listOpenRouterModels '["video"]'` ($0, local).
+> `estimateOpenRouterCost` will return `"cost unknown"` for Seedance — that's
+> expected (token billing), so tell the user the price can't be quoted up front,
+> get consent, and read the real figure from `usage.cost` in the result. It also
+> returns an `issues[]` list if your duration/resolution is unsupported — check
+> that first; it costs nothing and saves a rejected paid call.
+>
+> Keyframes/references are sent as `data:` URLs by the `seedance*` workflows
+> (the API rejects bare base64) — pass local file paths and let the CLI convert.
 
 ### Key Capabilities
 

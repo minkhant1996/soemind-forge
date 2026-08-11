@@ -10,8 +10,9 @@ One long asset → a week of content. Pipeline: transcribe → find the moments 
 cut clips → derive posts → package per platform.
 
 Commands used (argument shapes in `workflows/WORKFLOWS.md` § *Publish & Repurpose*):
-`transcribeVideo` (needs OPENROUTER_API_KEY) · `extractClip` · `packageContent`
-(both local/free) · `generateSingleImage` · `generateCaption`.
+`transcribeAudio` (Gemini — default) or `transcribeVideo` (OpenRouter) ·
+`extractClip` · `packageContent` (both local/free) · `generateSingleImage` ·
+`generateCaption`.
 
 ## STEP 1: Intake
 
@@ -26,14 +27,29 @@ Commands used (argument shapes in `workflows/WORKFLOWS.md` § *Publish & Repurpo
 
 ## STEP 2: Transcribe
 
+**Default — Gemini** (no second key, and it returns per-phrase timestamps, which
+makes STEP 3 exact instead of estimated). Extract the audio first if the source
+is video: `ffmpeg -y -i "<file>" -vn -ac 1 -ar 16000 "<file>.wav"`.
+
 ```bash
-node workflows/cli.cjs transcribeVideo '{"mediaPath":"<file>","outputPath":"projects/{name}/output-contents/{piece}/transcript.txt"}'
+node workflows/cli.cjs transcribeAudio '{"audioPath":"<file>.wav","outputPath":"projects/{name}/output-contents/{piece}/transcript.txt"}'
 ```
 
-- No OPENROUTER_API_KEY → tell the user transcription needs one
-  (https://openrouter.ai/keys), or ask them to paste a transcript/subtitles
-  file instead. Don't guess the content.
-- Cost is roughly $0.006/minute — state it for long files (>30 min) before running.
+**Alternative — OpenRouter** (only if the user prefers it; needs
+OPENROUTER_API_KEY and an explicit `model`, since OpenRouter has no Whisper
+endpoint — transcription runs on audio-capable chat models):
+
+```bash
+node workflows/cli.cjs transcribeVideo '{"mediaPath":"<file>","model":"openai/gpt-audio-mini","outputPath":"…/transcript.txt"}'
+```
+
+- Neither key available → ask the user to paste a transcript/subtitles file
+  instead. Don't guess the content.
+- State the cost before running on long files (>30 min). For the OpenRouter
+  path, take the per-token rates from
+  `listOpenRouterModels '["audio"]'` (gpt-audio-mini bills audio input per
+  million tokens) rather than quoting a remembered per-minute rate — the
+  duration drives the token count, so long recordings add up.
 
 ## STEP 3: Find the moments
 
@@ -41,8 +57,10 @@ Read the transcript and select clip candidates — **you** do this, no API call
 needed. Look for: strong hooks/claims, complete self-contained thoughts
 (15-60s), emotional peaks, concrete tips, quotable one-liners.
 
-> The transcript has no timestamps. Estimate each moment's position from its
-> word offset (spoken English ≈ 150 words/min), then cut generously (start
+> `transcribeAudio` (Gemini) gives one `[m:ss.d - m:ss.d]` line per phrase —
+> take clip start/end straight from those cues. Only if you transcribed the
+> OpenRouter way (plain text, no timestamps) estimate the position from word
+> offset (spoken English ≈ 150 words/min). Either way cut generously (start
 > ~5s early) — you'll verify in the next step.
 
 Present candidates and let the user pick:

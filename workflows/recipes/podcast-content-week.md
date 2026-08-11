@@ -3,8 +3,9 @@
 **Goal:** one recorded episode becomes a full week of multi-format posts.
 **When to use:** "repurpose my episode", "I have a long video, make content
 from it". Works for podcasts, webinars, talks, livestreams, long YouTube videos.
-**Prerequisites:** the recording file, OPENROUTER_API_KEY (transcription),
-platforms chosen. This recipe is the strategic wrapper around
+**Prerequisites:** the recording file, a transcription path (GEMINI_API_KEY →
+`transcribeAudio`, timestamped — recommended; or OPENROUTER_API_KEY →
+`transcribeVideo` with an explicit `model`), platforms chosen. This recipe is the strategic wrapper around
 [`/repurpose-content`](../../skills/repurpose-content/SKILL.md) — that skill
 does the mechanics.
 

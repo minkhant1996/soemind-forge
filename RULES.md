@@ -17,6 +17,16 @@
    commands hard-stop at `BUDGET_EXCEEDED`) and **auto-records** every real
    cost to the project ledger — call `recordCost` manually only for spend made
    outside the CLI. Preview cheap before rendering expensive (preview-pick skill).
+3b. **OpenRouter models: price them from the catalog, never from memory.**
+   `listOpenRouterModels '["video"]'` (or `text`/`image`/`audio`) is the only
+   valid source of model ids and limits; `estimateOpenRouterCost '{...}'` gives
+   the pre-flight price. Both are local reads of `openrouter/pricing.json` —
+   $0, no API call — so run them BEFORE quoting a cost or firing a paid call.
+   Two results are binding: a non-empty `issues[]` means the request would be
+   rejected (unsupported duration/resolution/count) — fix it, don't send it;
+   `source: "unknown"` means the model bills per video token and CANNOT be
+   quoted up front (Seedance 2.x, Sora) — tell the user that plainly, get
+   consent for an unbounded call, and record the real `usage.cost` afterwards.
 4. **Consistency comes from the asset registry** (`projects/{name}/config/assets.yaml`).
    Reuse locked assets by id; never re-describe a registered character/product.
 5. **Never fake social proof** — testimonials, stats, and press must come from
@@ -32,7 +42,10 @@
    the cap at https://ai.studio/billing, or set `GEMINI_USE_VERTEX=true` +
    `GOOGLE_CLOUD_PROJECT=<id>` to bill via Vertex AI instead (needs
    `gcloud auth application-default login`; see AGENT-GUIDE § Provider
-   Selection).
+   Selection). OpenRouter special case: an "unknown model" or a price that
+   contradicts `estimateOpenRouterCost` means the local catalog is stale —
+   refresh it with `node openrouter/scripts/sync-pricing.mjs` (`--check`
+   reports drift without writing). Never hand-edit `openrouter/pricing.json`.
 7. **Pipeline-first, ALWAYS.** Before generating ANY content (video, image,
    audio, even a single call), author `<content-id>.pipeline.json` IN the
    content folder — nodes = CLI commands, `{{node.data.field}}` refs wire

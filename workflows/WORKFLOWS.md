@@ -189,16 +189,27 @@ Platforms: `instagram` · `tiktok` · `youtube` · `facebook` · `linkedin` · `
 Content types: `feed` · `story` · `reel` · `short` · `long` (default: `reel` for
 video, `feed` for image; sensible fallback if a platform lacks the exact type).
 
-### transcribeVideo — video/audio → transcript (Whisper via OpenRouter)
+### transcribeVideo — video/audio → transcript (OpenRouter STT)
 
 ```bash
-node workflows/cli.cjs transcribeVideo '{"mediaPath":"video.mp4","language":"en"}'
+node workflows/cli.cjs transcribeVideo \
+  '{"mediaPath":"video.mp4","language":"en","model":"openai/gpt-audio-mini"}'
 # → { text, transcriptPath, durationMinutes, cost }
 ```
 
-Extracts mono 16 kHz audio locally, transcribes with `openai/whisper-large-v3`
-(override with `model`). Saves `<name>-transcript.txt` next to the media (or
-`outputPath`). **Requires OPENROUTER_API_KEY.**
+Extracts mono 16 kHz audio locally, then transcribes via OpenRouter. Saves
+`<name>-transcript.txt` next to the media (or `outputPath`).
+**Requires OPENROUTER_API_KEY.**
+
+> ⚠️ **Pass `model` explicitly.** OpenRouter has **no Whisper endpoint** —
+> transcription runs through chat models that accept audio input. Catalogued
+> options: `openai/gpt-audio-mini` (cheapest), `openai/gpt-audio`,
+> `google/gemini-2.5-flash` / `-pro` (stronger non-English). The built-in
+> default still names a retired Whisper id and will fail without an override.
+>
+> **Prefer `transcribeAudio` (Gemini)** for anything timestamped or non-English —
+> same result, no second API key, and it returns per-phrase timecodes that
+> `renderCaptionedVideo` consumes directly. See § Transcription below.
 
 ### extractClip — cut a segment from a long video
 
@@ -847,8 +858,12 @@ providers with different capabilities:
 
 | Provider | Video | Image | Text | TTS | Music | STT |
 |----------|-------|-------|------|-----|-------|-----|
-| **Gemini** | Veo 3.1 | Gemini 3 Image (Nano Banana) | Gemini 3.5 Flash | ✓ | Lyria | ✗ |
-| **OpenRouter** | Seedance 2.0 | ✗ | GPT-4, Claude, etc. | ✗ | ✗ | Whisper |
+| **Gemini** | Veo 3.1 · Omni Flash | Gemini 3 Image (Nano Banana) | Gemini 3.5 Flash | ✓ 30 voices | Lyria | ✓ `transcribeAudio` (timestamped, any language) |
+| **OpenRouter** | 22 models (Seedance 2.0, Veo 3.1, Kling v3, Wan, Hailuo, Runway, Sora) | 40 models (Seedream 4.5, FLUX.2, Recraft, GPT Image) | 25 curated ids (GPT-5.6 Luna, Claude 4, Llama 4, DeepSeek V4) | GPT Audio / Audio Mini | Lyria 3 (song + clip) | Audio-capable chat models — **no Whisper endpoint** |
+
+> The OpenRouter column is generated, not hand-maintained: see
+> § OpenRouter Catalog + Cost Estimation for `listOpenRouterModels` /
+> `estimateOpenRouterCost` and the `sync-pricing.mjs` refresh.
 
 ```typescript
 import { detectProviders, getProviderSummary, compareVideoProviders }
@@ -893,7 +908,8 @@ console.log(comparison.reason);         // 'Seedance has native lip-sync support
 | Video with SFX + music | Seedance | Native audio integration |
 | Background music | Gemini | Lyria music generation (say "fully instrumental, no vocals" — vocals are default) |
 | Complete song with sung vocals / exact lyrics | Gemini | Lyria 3 sings `Lyrics:` blocks in the prompt (8 langs, no Burmese — see skills/generate-music Step 3b) |
-| Model variety (GPT-4, Claude) | OpenRouter | Access to 100+ text models |
+| Model variety (GPT-4, Claude) | OpenRouter | 91 catalogued models — confirm the id with `listOpenRouterModels` |
+| Transcription | Gemini `transcribeAudio` | Timestamped, any language, no OpenRouter key |
 
 ### Environment Variables
 
@@ -907,7 +923,94 @@ GEMINI_API_KEYS=key1,key2,key3
 OPENROUTER_API_KEY=sk-or-v1-...
 # or multiple keys:
 OPENROUTER_API_KEYS=key1,key2,key3
+# optional attribution headers sent with every OpenRouter request:
+OPENROUTER_REFERER=http://localhost
+OPENROUTER_TITLE=AI App
 ```
+
+---
+
+## OpenRouter Catalog + Cost Estimation ($0 — local reads)
+
+Both commands read `openrouter/pricing.json`. **No API call, no spend** — run
+them freely before deciding what to generate. RULES 3b requires them before any
+OpenRouter price quote or paid OpenRouter call.
+
+### listOpenRouterModels — what exists, with limits
+
+```bash
+node workflows/cli.cjs listOpenRouterModels               # all 91
+node workflows/cli.cjs listOpenRouterModels '["video"]'   # text | image | video | audio
+# → { lastVerified, counts:{total:91,text:25,audio:4,image:40,video:22}, models:[…] }
+```
+
+Row shape depends on `type`:
+
+| type | Fields returned |
+|------|-----------------|
+| `video` | `unit`, `durations`, `resolutions`, `audio`, `estimatable`, `skus` |
+| `image` | `unit`, `resolutions`, `maxPerRequest`, `maxRefs`, `pricing` |
+| `text` / `audio` | `unit`, `pricing`, `contextWindow` |
+
+`pricingUnavailable: true` = the catalog has no price for that model; treat it
+as unquotable.
+
+### estimateOpenRouterCost — price + validate before paying
+
+```bash
+node workflows/cli.cjs estimateOpenRouterCost \
+  '{"model":"google/veo-3.1-fast","durationSeconds":8,"resolution":"720p","withAudio":false}'
+# → { model, type:"video", cost:0.64, currency:"USD", source:"estimate",
+#     basis:"8s × $0.08/s via duration_seconds_without_audio_720p",
+#     formatted:"$0.6400 USD (est.)", issues:[] }
+```
+
+Args by model type:
+
+| type | Accepted fields |
+|------|-----------------|
+| video | `durationSeconds`, `resolution`, `aspectRatio`, `withAudio`, `imageToVideo`, `referenceImages`, `videoCount` |
+| image | `imageCount`, `resolution`, `referenceImages` |
+| audio | `text` |
+| text | `inputTokens`, `outputTokens` |
+
+Two result fields are decisions, not decoration:
+
+- **`issues: [{field, message}]`** — the request would be rejected. Fix it and
+  re-estimate; never send it. Values are case-sensitive:
+  ```json
+  {"field":"durationSeconds","message":"30s not supported — allowed: 4, 5, … 15"}
+  {"field":"resolution","message":"'4k' not supported — allowed: 480p, 720p, 1080p, 4K"}
+  ```
+- **`source`** — `"estimate"` means a SKU matched and `formatted` is quotable.
+  `"unknown"` means the model bills per **video token** (Seedance 2.x, Sora 2 Pro)
+  or no SKU matched: the cost cannot be known until the render finishes. Tell the
+  user, get explicit consent, and take the real figure from `usage.cost` in the
+  response (the CLI records it to the ledger automatically).
+
+Unknown id → `INVALID_INPUT` with the fix in the message: refresh the catalog.
+
+### Refreshing the catalog
+
+```bash
+node openrouter/scripts/sync-pricing.mjs --check   # report drift, write nothing
+node openrouter/scripts/sync-pricing.mjs           # rewrite openrouter/pricing.json
+```
+
+Pulls text/audio from `/models`, image capabilities + per-model pricing from
+`/images/models/{id}/endpoints`, and video capabilities + `pricing_skus` from the
+video listing. The listings are public; a key (`OPENROUTER_API_KEY`, or the first
+of `OPENROUTER_API_KEYS`) is only needed for the image endpoints. Text models are
+curated in the script (the live catalog carries 400+ chat models); media models
+are taken wholesale. **Never hand-edit `pricing.json`** — `doctor` reports its
+age, and the file is stamped with `lastVerified` + `generatedBy`.
+
+### Keyframes on OpenRouter video
+
+The video API accepts `data:` URLs or public https URLs — **bare base64 is
+rejected**. The `seedance*` workflows convert local paths for you and send
+`frameImages: [{ image, frameType: 'first_frame' }]`; from the CLI just pass file
+paths as usual.
 
 ---
 

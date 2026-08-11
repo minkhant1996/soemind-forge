@@ -5,9 +5,10 @@
 >
 > **Optimized for Gemini** (Veo, Gemini 3 Image, Lyria, TTS, transcription, +
 > Omni Flash talking avatar with Gemini's own voice) — the whole kit runs on it.
-> Optional add-ons: OpenRouter (more models — GPT-4, Claude, and Seedance 2.0,
-> which makes a talking avatar from a **custom voice audio file**) and RunPod
-> (InfiniteTalk — talking avatar from a **custom/own voice, no duration cap**).
+> Optional add-ons: OpenRouter (a synced catalog of 91 models — GPT-5.6 Luna,
+> Claude, Seedream, Kling, Runway, and Seedance 2.0, which makes a talking avatar
+> from a **custom voice audio file**) and RunPod (InfiniteTalk — talking avatar
+> from a **custom/own voice, no duration cap**).
 
 ---
 
@@ -37,11 +38,15 @@
 2. Create a new API key
 3. Copy the key
 
-**Option B: OpenRouter** (optional) - A gateway to more models (GPT-4, Claude,
-Llama) plus **Seedance 2.0**, which lip-syncs a talking avatar to a **custom
-voice audio file you provide**. The agent adds whichever model you ask for.
+**Option B: OpenRouter** (optional) - A gateway to a catalog of **91 models**
+(25 text, 40 image, 22 video, 4 audio) — GPT-5.6 Luna, Claude 4, Seedream 4.5,
+FLUX.2, Kling v3, Runway Gen-4.5 — plus **Seedance 2.0**, which lip-syncs a
+talking avatar to a **custom voice audio file you provide**. The agent adds
+whichever model you ask for, and can tell you the price before running it.
 1. Go to https://openrouter.ai/keys
 2. Create a new API key (starts with `sk-or-v1-...`)
+3. Add it to `.env` as `OPENROUTER_API_KEY=sk-or-v1-...` (or
+   `OPENROUTER_API_KEYS=key1,key2,key3` to rotate keys on rate limits)
 
 **Option C: RunPod** (optional) - For InfiniteTalk: true lip-sync of a character
 image to YOUR audio recording (voice clone/recording drives the mouth, no
@@ -110,13 +115,14 @@ RunPod are optional add-ons.
 
 | Feature | Gemini (core) | OpenRouter (optional) | RunPod (optional) |
 |---------|--------|------------|--------|
-| **Video** | Veo 3.1 (high quality) · Omni Flash (video+audio) | Seedance 2.0 + other models — agent-added | — |
+| **Video** | Veo 3.1 (high quality) · Omni Flash (video+audio) | 22 models — Seedance 2.0, Veo 3.1, Kling v3, Wan 2.7, Hailuo 3, Runway Gen-4.5, Sora 2 Pro — agent-added | — |
 | **Talking avatar / lip-sync** | Omni Flash — Gemini's own voice only | Seedance 2.0 — your custom voice audio (short clip) | InfiniteTalk — custom/own voice, no duration cap |
-| **Image** | Gemini 3 Image (Nano Banana) | DALL-E, Stable Diffusion — agent-added | — |
-| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama | — |
-| **TTS** | 30 voices | Various | — |
-| **Music** | Lyria | ✗ | — |
-| **STT / transcription** | Gemini (any language) | Whisper | — |
+| **Image** | Gemini 3 Image (Nano Banana) | 40 models — Seedream 4.5, FLUX.2, Recraft v4.1, GPT Image, Qwen Image 3 — agent-added | — |
+| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-5.6 Luna, GPT-4.1, Claude 4, Llama 4, DeepSeek V4 | — |
+| **TTS** | 30 voices | GPT Audio / Audio Mini | — |
+| **Music** | Lyria | Lyria 3 (full song or clip) | — |
+| **STT / transcription** | Gemini (any language) | Audio-capable chat models — **there is no Whisper on OpenRouter** | — |
+| **Price known before you run it** | Yes, published rates | Yes for most models — the agent checks the catalog. Seedance 2.x / Sora bill per video token, so the cost only arrives with the render | Flat $0.25 / $0.50 per request |
 
 ### When to Use Which
 
@@ -129,7 +135,40 @@ RunPod are optional add-ons.
 | Talking avatar from **custom/own voice**, long-form | **RunPod (InfiniteTalk)** | Your recording drives the mouth, no duration cap (keep ≤60s) |
 | UGC testimonial | **OpenRouter** | Integrated dialogue |
 | Background music | **Gemini** | Lyria music generation |
-| Model variety | **OpenRouter** | GPT-4, Claude, etc. |
+| Transcription | **Gemini** (`transcribeAudio`) | Timestamped, any language, no extra key — OpenRouter STT needs an audio-capable chat model instead |
+| Model variety | **OpenRouter** | 91 catalogued models across text/image/video/audio |
+
+### Browsing OpenRouter models and prices (free)
+
+Two commands read the local catalog — **no API call, no charge** — so you can
+shop around before committing money. Just ask your agent "what video models can
+I use on OpenRouter?" or run them yourself:
+
+```bash
+# All 91, or filter: text | image | video | audio
+node workflows/cli.cjs listOpenRouterModels '["video"]'
+
+# Price a specific job before running it
+node workflows/cli.cjs estimateOpenRouterCost \
+  '{"model":"google/veo-3.1-fast","durationSeconds":8,"resolution":"720p","withAudio":false}'
+# → { "cost": 0.64, "formatted": "$0.6400 USD (est.)",
+#     "basis": "8s × $0.08/s via duration_seconds_without_audio_720p", "issues": [] }
+```
+
+Two answers matter:
+
+- **`issues` is not empty** — your settings aren't supported by that model
+  (e.g. "30s not supported — allowed: 4…15"). The call would have been rejected;
+  the message lists what *is* allowed.
+- **`"formatted": "cost unknown"`** — that model (Seedance 2.x, Sora 2 Pro)
+  charges per *video token*, which nobody can compute before the video is
+  rendered. The real cost comes back with the result and is recorded to your
+  project ledger. Your budget cap still applies, but treat these as open-ended.
+
+**Keeping prices current:** the catalog is regenerated from OpenRouter's live
+API — run `node openrouter/scripts/sync-pricing.mjs` (add `--check` to only
+report what changed). `node workflows/cli.cjs doctor` shows how many days old it
+is. Don't edit `openrouter/pricing.json` by hand; the script overwrites it.
 
 ### Configuration
 
@@ -584,6 +623,22 @@ Each command prints its JSON result (`pass`, issues, suggestions) to stdout.
 | Cover image | $0.10 |
 | Full brand set | ~$1.00-1.50 |
 
+### OpenRouter models (optional)
+
+These change often, so the kit keeps a synced price catalog instead of a table
+here — ask for an estimate rather than trusting a number you remember:
+
+```bash
+node workflows/cli.cjs estimateOpenRouterCost '{"model":"<id>","durationSeconds":8,"resolution":"720p"}'
+```
+
+| Example | Cost |
+|---------|------|
+| Veo 3.1 Fast, 8s, 720p, no audio | $0.64 ($0.08/s) |
+| HappyHorse 1.0, 720p | $0.0988/s |
+| Lyria 3 clip / full song | $0.04 / $0.08 per generation |
+| Seedance 2.x, Sora 2 Pro | **Per video token — not quotable in advance**; the actual charge comes back with the render |
+
 ---
 
 ## Troubleshooting
@@ -605,6 +660,15 @@ node workflows/cli.cjs doctor
 - Wait for quota reset
 - Use different quality tier (Lite instead of Standard)
 - Use different API key
+
+### "Unknown model '<id>'" from an OpenRouter command
+The local catalog is out of date (or the id is wrong). Refresh it:
+```bash
+node openrouter/scripts/sync-pricing.mjs --check   # what changed
+node openrouter/scripts/sync-pricing.mjs           # apply
+node workflows/cli.cjs listOpenRouterModels        # confirm the id exists
+```
+Same fix if a real OpenRouter charge doesn't match the estimate you were quoted.
 
 ### "Character looks different each time"
 - Store character reference in `assets/characters/`

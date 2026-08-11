@@ -95,6 +95,7 @@ What are you generating?
 | **PRODUCT-SHOT-GUIDE.md** | 26 e-commerce presets (`productShot` ids): packshots, scale/trust shots, lifestyle, mood, seasonal; channel→shot mapping; fidelity rules | Product photos, listing images, ad variations, seasonal versions |
 | **VIDEO-PROMPT-GUIDE.md** | Camera movements, shot types, lighting, effects, transitions, clip chaining, character dialogue, § Gemini Omni Flash (4 video tasks, 10 art styles, conversational editing) | Generating video with Gemini Veo or Omni Flash |
 | **SEEDANCE-PROMPT-GUIDE.md** | 6-part prompt structure, multimodal refs, integrated audio (dialogue + SFX + music), lip-sync, multi-shot narratives | Seedance 2.0 videos, lip-sync, audio integration |
+| **WORKFLOWS.md** § OpenRouter Catalog | Model ids, supported durations/resolutions, and $0 cost estimates for all 91 OpenRouter models (`listOpenRouterModels`, `estimateOpenRouterCost`) | Before quoting a price or running ANY OpenRouter model — RULES 3b |
 | **BRAND-ASSETS-GUIDE.md** | Logo variations, profile images, cover/banner images, Instagram highlights, YouTube watermarks | Setting up brand presence on social platforms |
 | **STYLE-GUIDE.md** | Visual styles (Pixar, anime, vintage, cyberpunk, meme, etc.) | Generating ANY visual content |
 | **TEXT-OVERLAY-DESIGN-GUIDE.md** | Text placement depth (behind/front/side), X/Y position patterns, size hierarchy, color, font-pairing, capability matrix (what's supported now vs roadmap), Myanmar shaping rules | Any hero title, kinetic reel, meme-style overlay, or "text behind subject" request |

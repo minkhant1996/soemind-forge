@@ -25,9 +25,27 @@ A content-generation toolkit built on Google Gemini AI and OpenRouter with suppo
 **OpenRouter** (optional — a model gateway; the kit is optimized for Gemini, so
 the agent adds these models only on request)
 - **Video Generation** - Seedance 2.0 — talking avatar driven by a **custom voice
-  audio file you supply** (integrated audio, clip-length ~4–15s) + other models
-- **Text Generation** - GPT-4, Claude, Llama, Mistral, and 100+ models
-- **Speech-to-Text** - Whisper transcription
+  audio file you supply** (integrated audio, clip-length ~4–15s) + 21 other video
+  models (Veo 3.1 family, Seedance 1.5/2.5, Kling v3, Wan 2.6/2.7, Hailuo 2.3/3,
+  Runway Aleph-2/Gen-4.5, Sora 2 Pro, Grok Imagine, FLUX.3 Video, HappyHorse)
+- **Image Generation** - 40 models (Seedream 4.5, Gemini 3 Pro / 3.1 Flash image,
+  GPT Image 1/2, FLUX.2, Recraft v4.1, Qwen Image 3, Krea 2, Riverflow)
+- **Text Generation** - GPT-5.6 Luna, GPT-4.1/4o, Claude 4, Gemini 2.5,
+  DeepSeek V4, MiniMax M3, Llama 4, Mistral, Qwen — 25 curated ids
+- **Audio** - GPT Audio / Audio Mini (speech), Lyria 3 pro + clip (music)
+- **Speech-to-Text** - **no Whisper endpoint on OpenRouter**; transcription runs
+  through chat models that accept audio (`openai/gpt-audio-mini`,
+  `google/gemini-2.5-flash`). Gemini's own `transcribeAudio` stays the
+  recommended path — and `transcribeVideo`'s built-in default is a retired
+  Whisper id, so pass `model` explicitly if you use it.
+
+> **Model ids and prices come from the local catalog, never from memory** —
+> `openrouter/pricing.json` (91 models, stamped `lastVerified`) is generated from
+> the live OpenRouter API by `node openrouter/scripts/sync-pricing.mjs`
+> (`--check` reports drift without writing). Two $0 CLI commands read it:
+> `listOpenRouterModels` (ids, units, supported durations/resolutions) and
+> `estimateOpenRouterCost` (pre-flight price + parameter validation). See
+> § OpenRouter Catalog below — this is RULES 3b.
 
 **RunPod** (optional — talking avatar with the longest, freest voice control)
 - **Talking Avatar / Lip-Sync** - InfiniteTalk: a character's mouth follows a
@@ -43,8 +61,9 @@ the agent adds these models only on request)
 **Required**: At least one API key in root .env file:
 - `GEMINI_API_KEY` - For Veo, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria, TTS, transcription
 - `OPENROUTER_API_KEY` (optional) - For Seedance 2.0 (talking avatar from a
-  custom voice audio file), GPT-4, Claude, and other OpenRouter models
-  (agent-added on request)
+  custom voice audio file), GPT-4, Claude, and the other 91 catalogued
+  OpenRouter models (agent-added on request). `OPENROUTER_API_KEYS=k1,k2,k3`
+  rotates keys on rate limits
 - `RUNPOD_API_KEY` (optional) - For InfiniteTalk: true lip-sync to user-provided audio files
 
 ---
@@ -263,9 +282,12 @@ what each enables. `GEMINI_API_KEY` (the core — everything runs on it) unlocks
 Veo video, Gemini image models (Nano Banana 2 / Pro / Lite), Lyria music, TTS,
 transcription, and Omni Flash speaking characters (talking avatar with Gemini's
 own voice); `OPENROUTER_API_KEY` (optional) unlocks Seedance 2.0 (talking avatar
-from a custom voice audio file), Whisper, and GPT-4/Claude text models
-(agent-added on request); `RUNPOD_API_KEY` (optional) unlocks InfiniteTalk
-talking-avatar lip-sync from a custom/own voice, no duration cap.
+from a custom voice audio file) plus the 91-model catalog — video, image, text,
+audio, and audio-capable chat models for transcription (agent-added on request);
+`RUNPOD_API_KEY` (optional) unlocks InfiniteTalk talking-avatar lip-sync from a
+custom/own voice, no duration cap. `doctor` also reports how old each
+`pricing.json` is — refresh OpenRouter's with
+`node openrouter/scripts/sync-pricing.mjs`.
 
 > **Vertex AI mode (billing fallback):** if Gemini calls fail with
 > `RESOURCE_EXHAUSTED` / "monthly spending cap" (an AI Studio billing-account
@@ -296,7 +318,54 @@ talking-avatar lip-sync from a custom/own voice, no duration cap.
 | Background music | **Gemini** | Lyria music generation (prompt must say "fully instrumental, no vocals" — vocals are default) |
 | Complete song with sung vocals / your exact lyrics | **Gemini** | Lyria 3 sings `Lyrics:` blocks in the prompt (rap/sung, 8 langs: EN/DE/ES/FR/HI/JA/KO/PT — no Burmese; leave MM sections instrumental and overlay) |
 | Free voiceover (any language incl. Myanmar) | **Edge TTS** `generateEdgeTTSVoiceover` | $0, no API key, not budget-gated — needs `pip install edge-tts` |
-| Model variety | **OpenRouter** | GPT-4, Claude, etc. |
+| Model variety | **OpenRouter** | 91-model catalog — run `listOpenRouterModels` first, never guess an id |
+
+---
+
+## OpenRouter Catalog — discovery + pre-flight pricing ($0, local)
+
+Both commands read `openrouter/pricing.json` only: no API call, no spend, safe
+to run before deciding anything. **RULES 3b makes this mandatory** before you
+quote an OpenRouter price or fire a paid OpenRouter call.
+
+```bash
+# What models exist, with billing unit + limits. Filter: text | image | video | audio
+node workflows/cli.cjs listOpenRouterModels '["video"]'
+node workflows/cli.cjs listOpenRouterModels          # all 91
+
+# What will this specific call cost?
+node workflows/cli.cjs estimateOpenRouterCost \
+  '{"model":"google/veo-3.1-fast","durationSeconds":8,"resolution":"720p","withAudio":false}'
+# → { cost: 0.64, source: "estimate",
+#     basis: "8s × $0.08/s via duration_seconds_without_audio_720p",
+#     formatted: "$0.6400 USD (est.)", issues: [] }
+```
+
+Fields that change what you do:
+
+| Field | Meaning | Required action |
+|---|---|---|
+| `issues: [...]` | The parameters would be rejected (duration/resolution/image count outside the model's support) | Fix the request — do NOT send it. The message lists the allowed values (note: resolutions are case-sensitive, e.g. `4K` not `4k`) |
+| `source: "estimate"` | Priced from a matched SKU | Quote `formatted` to the user, `checkBudget`, then run |
+| `source: "unknown"` | Model bills per video token (Seedance 2.x, Sora 2 Pro) or no SKU matched — the price is only knowable after rendering | Tell the user it can't be quoted up front, get explicit consent, then record the real `usage.cost` from the response |
+| `pricingUnavailable` (on a list row) | The catalog has no price for that model | Treat as unquotable — same handling as `source: "unknown"` |
+
+Per-type args for `estimateOpenRouterCost`: **video** —
+`durationSeconds`, `resolution`, `aspectRatio`, `withAudio`, `imageToVideo`,
+`referenceImages`, `videoCount`; **image** — `imageCount`, `resolution`,
+`referenceImages`; **audio** — `text`; **text** — `inputTokens`, `outputTokens`.
+
+**Refreshing the catalog:** `node openrouter/scripts/sync-pricing.mjs` pulls the
+live listings (text/audio from `/models`, image from `/images/models/{id}/endpoints`,
+video from the video listing with `pricing_skus`) and rewrites `pricing.json`;
+`--check` reports drift and writes nothing. Never hand-edit that file — `doctor`
+prints how many days old it is. Symptoms of staleness: `Unknown model '<id>'`
+from `estimateOpenRouterCost`, or a real charge that contradicts the estimate.
+
+**Keyframes for OpenRouter video:** the API takes `data:` URLs or public https
+URLs — bare base64 is rejected. The Seedance workflows handle this internally
+(`frameImages: [{ image, frameType: 'first_frame' }]`); just pass local file
+paths to the CLI commands as usual.
 
 ---
 
@@ -484,6 +553,7 @@ projects/{name}/
 | Image (cheapest) | Nano Banana 2 Lite (`imageModel:"lite"`) | $0.0336 flat |
 | TTS | - | ~$0.001/sentence |
 | Music | Lyria | $0.04/30s |
+| **Any OpenRouter model** | 91-model catalog | **Don't quote from this table — run `estimateOpenRouterCost` (RULES 3b).** Reference points from the current catalog: Veo 3.1 Fast $0.08/s (720p, no audio) · HappyHorse 1.0 $0.0988/s 720p · Lyria 3 clip $0.04/generation · Seedance 2.x + Sora 2 Pro = per-video-token, **not quotable up front** |
 
 ---
 
@@ -519,6 +589,9 @@ projects/{name}/
 | `workflows/MANIFEST-GUIDE.md` | Generation audit trail guide |
 | `templates/ASSETS-GUIDE.md` | Asset folder guide |
 | `templates/assets.config.template.yaml` | Asset registry template |
+| `workflows/SEEDANCE-PROMPT-GUIDE.md` | Seedance prompting (OpenRouter video) |
+| `openrouter/pricing.json` | Generated model catalog + prices — read via `listOpenRouterModels`, never hand-edit |
+| `openrouter/scripts/sync-pricing.mjs` | Regenerates that catalog from the live API (`--check` = drift report) |
 
 ---
 

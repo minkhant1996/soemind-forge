@@ -37,8 +37,9 @@ AI content without babysitting the spend — no coding required.
    this kit is **optimized for Gemini models**. The free tier works to start;
    pay-as-you-go unlocks higher-quality video and images. Everything core
    (video, images, voiceover, music, transcription) runs on Gemini alone.
-   *Optional add-ons:* [OpenRouter](https://openrouter.ai/keys) — more models
-   (GPT-4, Claude) plus **Seedance 2.0**, which makes a talking avatar from a
+   *Optional add-ons:* [OpenRouter](https://openrouter.ai/keys) — a synced
+   catalog of 91 models (GPT-5.6 Luna, Claude, Seedream, Kling, Runway…) plus
+   **Seedance 2.0**, which makes a talking avatar from a
    **custom voice audio file you supply**; and [RunPod](https://runpod.io?ref=z1r0sgie)
    — **InfiniteTalk** talking avatar from a **custom/own voice with no duration
    cap**. The agent wires either in on request.
@@ -58,10 +59,14 @@ the agent warns before big generations. See [Cost Reference](#cost-reference).
   characters (talking avatar using **Gemini's own voice**) all run here. A free
   key gets you started; pay-as-you-go is only for higher-quality video/image
   generations. **You can run the whole kit on Gemini alone.**
-- **OpenRouter** (optional) — a gateway to more models: 100+ text models (GPT-4,
-  Claude, Llama) plus **Seedance 2.0**, which drives a **talking avatar from a
-  custom voice audio file you supply**. The kit is tuned around Gemini, so the
-  agent adds these on request.
+- **OpenRouter** (optional) — a gateway to a **synced catalog of 91 models**:
+  25 text (GPT-5.6 Luna, Claude 4, DeepSeek V4, Llama 4…), 40 image (Seedream 4.5,
+  FLUX.2, Recraft, GPT Image), 22 video (Veo 3.1, Kling v3, Runway Gen-4.5,
+  Hailuo, Sora 2 Pro) and 4 audio — including **Seedance 2.0**, which drives a
+  **talking avatar from a custom voice audio file you supply**. Prices come from
+  the catalog, so the agent can quote a model *before* running it
+  (`estimateOpenRouterCost`, $0). The kit is tuned around Gemini, so the agent
+  adds these on request.
 - **RunPod** (optional) — **InfiniteTalk**: a talking avatar from a **custom
   voice, even your own recording** (same idea as Seedance) with **no duration
   cap** — though keep clips ≤60s, since longer runs raise the odds of model or
@@ -167,20 +172,32 @@ RunPod are optional add-ons.
 
 | Feature | Gemini (core) | OpenRouter (optional) | RunPod (optional) |
 |---------|--------|------------|--------|
-| **Video** | Veo 3.1 (high quality, multi-reference consistency) · Omni Flash (video+audio, 4 tasks incl. edit-video, art styles) | Seedance 2.0 + other video models — agent-added on request | — |
+| **Video** | Veo 3.1 (high quality, multi-reference consistency) · Omni Flash (video+audio, 4 tasks incl. edit-video, art styles) | 22 models — Seedance 2.0, Veo 3.1, Kling v3, Wan 2.7, Hailuo 3, Runway Gen-4.5, Sora 2 Pro — agent-added on request | — |
 | **Talking avatar / lip-sync** | Omni Flash — Gemini's own voice only (no custom audio) | Seedance 2.0 — lip-syncs to a custom voice audio file you provide | InfiniteTalk — custom/own voice, no duration cap (≤60s best) |
-| **Image** | Gemini 3 Image (Nano Banana) | DALL-E, SD, etc. — agent-added | — |
-| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-4, Claude, Llama, 100+ models | — |
-| **TTS** | 30 styled voices (Gemini) · **Microsoft Edge TTS — free, no key, incl. Burmese** | Various | — |
-| **Music** | Lyria | ✗ | — |
-| **STT / transcription** | Gemini (timestamped, any language) | Whisper | — |
+| **Image** | Gemini 3 Image (Nano Banana) | 40 models — Seedream 4.5, FLUX.2, Recraft v4.1, GPT Image, Qwen Image 3 — agent-added | — |
+| **Text** | Gemini 3.5 Flash (2.5 still available) | GPT-5.6 Luna, GPT-4.1, Claude 4, Llama 4, DeepSeek V4 — 25 curated ids | — |
+| **TTS** | 30 styled voices (Gemini) · **Microsoft Edge TTS — free, no key, incl. Burmese** | GPT Audio / Audio Mini | — |
+| **Music** | Lyria | Lyria 3 (pro song / clip) | — |
+| **STT / transcription** | Gemini (timestamped, any language) | Audio-capable chat models (`gpt-audio-mini`, Gemini) — **no Whisper endpoint** | — |
+| **Cost known before running?** | Yes — published per-second / per-image rates | Yes for most, via `estimateOpenRouterCost` ($0 local read); Seedance 2.x & Sora bill per video token and can only be costed after the render | Flat $0.25 / $0.50 per request |
 
 **When to use which:**
 - **Gemini (default)** — video, images, music, TTS, transcription. Start and
   finish here; it's what everything is tuned for.
-- **OpenRouter (optional)** — models Gemini doesn't offer (GPT-4/Claude text) and
-  **Seedance 2.0**, which lip-syncs a talking avatar to a **custom voice audio
-  file you provide** (clip-length limited, ~4–15s). Agent-added on request.
+- **OpenRouter (optional)** — models Gemini doesn't offer (GPT-4/Claude text,
+  Seedream/FLUX/Recraft images, Kling/Runway/Hailuo video) and **Seedance 2.0**,
+  which lip-syncs a talking avatar to a **custom voice audio file you provide**
+  (clip-length limited, ~4–15s). Agent-added on request. Browse and price them
+  for free before spending anything:
+  ```bash
+  node workflows/cli.cjs listOpenRouterModels '["video"]'      # ids, durations, resolutions
+  node workflows/cli.cjs estimateOpenRouterCost \
+    '{"model":"google/veo-3.1-fast","durationSeconds":8,"resolution":"720p"}'
+  # → $0.6400 USD (est.)   ·   both commands are local reads: no API call, no spend
+  ```
+  The catalog (`openrouter/pricing.json`) is generated from the live OpenRouter
+  API by `node openrouter/scripts/sync-pricing.mjs` (`--check` reports drift
+  without writing); `doctor` tells you how old it is.
 - **RunPod (optional)** — **InfiniteTalk**: talking avatar from a **custom/own
   voice with no duration cap** (keep ≤60s for reliability). Pick this over
   Seedance for long-form or your own recorded voice.
@@ -309,6 +326,9 @@ project-root/
 │
 ├── gemini/               # Gemini API provider
 └── openrouter/           # OpenRouter provider
+    ├── pricing.json          # Generated model catalog (91 models) — never hand-edit
+    └── scripts/
+        └── sync-pricing.mjs  # Regenerates it from the live API (--check = drift only)
 ```
 
 ---
@@ -383,6 +403,8 @@ See `templates/ASSETS-GUIDE.md` for complete guide.
 | Music (30s) | Lyria | $0.04 |
 | Slide/reel text rendering | Remotion (local) | $0 |
 | Film/reel assembly, publish packs | ffmpeg (local) | $0 |
+| Anything on OpenRouter | 91-model catalog | Ask the kit: `estimateOpenRouterCost` ($0). E.g. Veo 3.1 Fast $0.08/s at 720p, HappyHorse 1.0 $0.0988/s, Lyria 3 clip $0.04. **Seedance 2.x and Sora 2 Pro bill per video token — no up-front quote is possible; the real cost comes back with the render.** |
+| Model catalog lookup / cost estimate | Local read of `openrouter/pricing.json` | $0 |
 
 ---
 
